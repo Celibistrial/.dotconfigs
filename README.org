@@ -2,6 +2,7 @@
 
 * .dotconfigs
 This repo contains my personal config files , feel free to use it as a base template (do be warned it is quite messy)
+
 Most of it has been chopped from other config files
 
 * Why did i make a repo for this?
