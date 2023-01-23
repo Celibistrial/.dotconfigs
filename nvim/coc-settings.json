@@ -1,0 +1,6 @@
+{
+	"diagnostic.virtualText": true,
+	"diagnostic.virtualTextCurrentLineOnly": false,
+	"codeLens.enable":true,
+	"python.linting.pylintEnabled": true
+}
