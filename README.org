@@ -1,6 +1,6 @@
-#+title: README.org
+#+title: ReadMe
 
-* .dotconfigs
+* ~.dotconfigs~
 This repo contains my personal config files , feel free to use it as a base template (do be warned it is quite messy)
 
 Most of it has been chopped from other config files
