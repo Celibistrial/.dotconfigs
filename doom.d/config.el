@@ -33,7 +33,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-henna)
+(setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -84,7 +84,7 @@
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-ui-doc-enable t)
-  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-modeline-code-actions-enable t)
@@ -94,3 +94,15 @@
   (setq lsp-completion-show-kind t))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
+
+(setq org-crypt-key "Celibistrial")
+(setenv "GPG_AGENT_INFO" nil)
+
+(setq org-journal-encrypt-journal t)
+(setq org-journal-encrypt-on t)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+
+
+(map! "C-x <f12>" #'org-decrypt-entry)
+(map! "C-x <f11>" #'org-encrypt-entry)
