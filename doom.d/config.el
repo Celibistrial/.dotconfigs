@@ -40,7 +40,7 @@
 (setq org-directory "~/org/")
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
-;
+                                        ;
 ;;(setq doom-font (font-spec :family "JetBrains Mono" :size 13))
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -98,11 +98,77 @@
 (setq org-crypt-key "Celibistrial")
 (setenv "GPG_AGENT_INFO" nil)
 
-(setq org-journal-encrypt-journal t)
-(setq org-journal-encrypt-on t)
+(setq org-journal-encrypt-journal nil)
+(setq org-journal-encrypt-on nil)
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
 
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  (unless (eq org-journal-file-type 'daily)
+    (org-narrow-to-subtree))
+  (goto-char (point-max)))
+
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  (unless (eq org-journal-file-type 'daily)
+    (org-narrow-to-subtree))
+  (goto-char (point-max)))
+
+;; (setq org-capture-templates '(("t" "Personal todo" entry (file+headline +org-capture-todo-file "Inbox") "* [ ] %?
+;; %i
+;; %a" :prepend t) ("n" "Personal notes" entry (file+headline +org-capture-notes-file "Inbox") "* %u %?
+;; %i
+;; %a" :prepend t) ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
+;; %i
+;; %a" :prepend t) ("pn" "Project-local notes" entry (file+headline +org-capture-project-notes-file "Inbox") "* %U %?
+;; %i
+;; %a" :prepend t) ("pc" "Project-local changelog" entry (file+headline +org-capture-project-changelog-file "Unreleased") "* %U %?
+;; %i
+;; %a" :prepend t) ("o" "Centralized templates for projects") ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?
+;;  %i
+;;  %a" :heading "Tasks" :prepend nil) ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?
+;;  %i
+;;  %a" :heading "Notes" :prepend t) ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?
+;;  %i
+;;  %a" :heading "Changelog" :prepend t) ("j" "Journal entry" plain (function org-journal-find-location)
+;;                                "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
+;;                                :jump-to-captured t :immediate-finish t) ))
+(defun my-save-word ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+(after! org
+  (map!      :prefix "C-x"
+             :map org-mode-map
+             :nv "w" #'my-save-word))
+(setq langtool-java-classpath
+      "/usr/share/languagetool:/usr/share/java/languagetool/*")
+;; (setq langtool-http-server-host "localhost"
+;;       langtool-http-server-port 8081)
+;; (setq langtool-server-user-arguments '("-p" "8081"))
+(require 'langtool)
+;; (use-package! lsp-grammarly)
+;; (add-hook! text-mode
+;;            (lambda ()
+;;                        (require 'lsp-grammarly)
+;;                        (lsp)))
+(defun correct-buffer ()
+  (interactive)
+  (langtool-check-buffer)
+  (langtool-correct-buffer))
+(setq langtool-default-language "en-GB")
+(global-set-key "\C-x4w" 'langtool-check)
+(global-set-key "\C-x4W" 'langtool-check-done)
+(global-set-key "\C-x4l" 'langtool-switch-default-language)
+(global-set-key "\C-x44" 'langtool-show-message-at-point)
+(global-set-key "\C-x4c" 'langtool-correct-buffer)
