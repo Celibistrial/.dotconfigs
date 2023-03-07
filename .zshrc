@@ -119,3 +119,5 @@ alias icat="kitty +kitten icat"
 alias emacs="emacsclient -c -a 'emacs'"
 alias cat='bat'
 alias ls='exa'
+alias push=~/scripts/git-push.sh
+alias cpfile="xclip -sel c <"
