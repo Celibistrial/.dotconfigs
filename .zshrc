@@ -121,3 +121,4 @@ alias cat='bat'
 alias ls='exa'
 alias push=~/scripts/git-push.sh
 alias cpfile="xclip -sel c <"
+alias remacs="pkill emacs && /usr/bin/emacs --daemon"

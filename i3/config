@@ -62,7 +62,7 @@ floating_modifier $mod
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec kitty
-
+bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -170,7 +170,6 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -179,32 +178,33 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym l resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym i resize shrink height 10 px or 10 ppt
-        bindsym j resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 6 px or 6 ppt
+        bindsym k resize grow height 6 px or 6 ppt
+        bindsym j resize shrink height 6 px or 6 ppt
+        bindsym l resize grow width 6 px or 6 ppt
 
-        # same bindings, but for the arrow keys
+        bindsym Shift+h resize shrink width 12 px or 12 ppt
+        bindsym Shift+k resize grow height 12 px or 12 ppt
+        bindsym Shift+j resize shrink height 12 px or 12 ppt
+        bindsym Shift+l resize grow width 12 px or 12 ppt        # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or $mod+r
+        # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
 }
 
 bindsym $mod+r mode "resize"
 bindsym $mod+m exec "rofimoji --max-recent 0"
 bindsym $mod+Shift+o exec "rofi -show file-browser-extended -file-browser-depth 5" 
-bindsym $mod+n exec "~/scripts/custom-mojis"
+bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
 bindsym $mod+Ctrl+Tab move scratchpad
 bindsym $mod+Tab scratchpad show
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-
 
 for_window [class="gnome-calculator"] floating enable
 for_window [class="gnome-todo"] floating enable
