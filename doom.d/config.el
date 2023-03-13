@@ -9,7 +9,15 @@
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "celibistrial"
       user-mail-address "celibistrial@gmail.com")
-
+(setq select-enable-clipboard nil)
+(map!
+ "C-S-v" #'clipboard-yank)
+(map!
+ "C-S-c" #'clipboard-kill-ring-save)
+(map!
+ :leader
+ :nv
+ "z" #'comint-dynamic-complete-filename)
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
@@ -121,7 +129,6 @@
   (unless (eq org-journal-file-type 'daily)
     (org-narrow-to-subtree))
   (goto-char (point-max)))
-
 ;; (setq org-capture-templates '(("t" "Personal todo" entry (file+headline +org-capture-todo-file "Inbox") "* [ ] %?
 ;; %i
 ;; %a" :prepend t) ("n" "Personal notes" entry (file+headline +org-capture-notes-file "Inbox") "* %u %?
@@ -150,7 +157,8 @@
 (after! org
   (map!      :prefix "C-x"
              :map org-mode-map
-             :nv "w" #'my-save-word))
+             :nv "w" #'my-save-word)
+  )
 (setq langtool-java-classpath
       "/usr/share/languagetool:/usr/share/java/languagetool/*")
 ;; (setq langtool-http-server-host "localhost"
@@ -172,3 +180,129 @@
 (global-set-key "\C-x4l" 'langtool-switch-default-language)
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
 (global-set-key "\C-x4c" 'langtool-correct-buffer)
+(after! org
+  (add-to-list 'org-capture-templates
+               '("x" "Temp"
+                 entry (file "~/org/temp.org")
+                 "* %?"))
+  )
+;; ORG-PUBLISH
+(set-language-environment "UTF-8")
+(defun my/org-html-src-block (html)
+  "Modify the output of org-html-src-block for highlight.js"
+  (replace-regexp-in-string
+   "</pre>" "</code></pre>"
+   (replace-regexp-in-string
+    "<pre class=\"src src-\\(.*\\)\">"
+    "<pre><code class=\"\\1\">"
+    html)))
+
+(advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
+                                        ; Customize the HTML output
+(setq org-html-validation-link nil            ;; Don't show validation link
+      org-html-head-include-scripts nil       ;; Use our own scripts
+      org-html-head-include-default-style nil ;; Use our own styles
+      org-html-head "<link rel=\"stylesheet\" href=\"simple.min.css\" />
+<meta name=\"google-site-verification\" content=\"y7aQP8bFOYT2JGYy4gLKMZt2AtHrFMFIMMWPFYlzP-I\" />
+ ")
+
+;; Define the publishing project
+(setq org-publish-project-alist
+      (list
+       (list "org-main"
+             :recursive t
+             :base-directory "~/org/celibistrial-website/content"
+             :publishing-function 'org-html-publish-to-html
+             :publishing-directory "~/org/celibistrial-website/public"
+             :with-author nil           ;; Don't include author name
+             :footnote-section-p t
+             :html-footnotes-section t
+             :html-doctype "<!doctype html>"
+             :html-preamble "<script type=\"text/javascript\"> function goBack() {window.history.back();}</script>
+<link rel=\"stylesheet\" href=\"https://unpkg.com/highlightjs@9.16.2/styles/obsidian.css\">
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js\"></script>
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/lisp.min.js\"></script>
+"
+             :html-postamble "
+<div class=\"navigation\">
+<font size=\"-1\">
+	    <div class=\"footer\"></div>
+            <center>
+
+<a href=\"index.html\">Go to home page</a>
+<script>hljs.highlightAll();</script>
+            </center>
+	    </div>
+    </font>
+</div>
+<footer class=\"blog-footer\"><div class=\"container\"><div class=\"row\"><div class=\"col-sm col-md text-sm-left text-md-right text-lg-right text-xl-right\"><p>Made with Emacs (Org mode)</p></div></div></div></footer>
+"
+             :with-creator nil            ;; Include Emacs and Org versions in footer
+             :with-toc nil                ;; Include a table of contents
+             :auto-sitemap t
+             :sitemap-filename "sitemap.org"
+             :header t
+             :section-numbers nil       ;; Don't include section numbers
+             :time-stamp-file nil)
+
+       )
+      )
+(add-to-list 'org-publish-project-alist
+             '( "org-static"
+                :base-directory "~/org/celibistrial-website/content"
+                :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|svg"
+                :publishing-directory "~/org/celibistrial-website/public"
+                :recursive t
+                :publishing-function org-publish-attachment
+                ))
+(defun publish-sitemap (plist filename pub-dir)
+  "Publish an Org-mode file as a sitemap XML file."
+  (let* ((outfile (concat pub-dir (file-name-sans-extension filename) ".xml"))
+         (sitemap-table (with-current-buffer (find-file-noselect filename)
+                           (org-table-to-lisp (org-element-parse-buffer)))))
+    (with-temp-buffer
+      (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+              "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")
+      (dolist (row sitemap-table)
+        (let ((url (nth 0 row))
+              (lastmod (nth 1 row)))
+          (when (stringp url)
+            (insert "  <url>\n"
+                    "    <loc>" url "</loc>\n"
+                    "    <lastmod>" (format-time-string "%Y-%m-%dT%H:%M:%S+00:00" lastmod) "</lastmod>\n"
+                    "  </url>\n"))))
+      (insert "</urlset>\n")
+      (write-file outfile))
+    (message "Wrote sitemap to %s" outfile)))
+(add-to-list 'org-publish-project-alist
+             '( "org-sitemap"
+                :base-directory "~/org/celibistrial-website/content"
+                :base-extension "org"
+                :publishing-directory "~/org/celibistrial-website/public"
+                :recursive t
+                :publishing-function publish-sitemap
+                :sitemap-filename "sitemap.xml"
+                ))
+
+(defun git-commit-and-push-celibistrial ()
+  "Commit changes to Git repository in ~/org/celibistrial and push them to the remote origin with commit message 'e'."
+
+  (interactive)
+  (let ((commit-msg (read-string "Commit message: ")))
+    (let ((default-directory "~/org/celibistrial-website"))
+      (unless (file-directory-p default-directory)
+        (error "Directory not found: %s" default-directory))
+
+      (shell-command (format "git add --all"))
+      (shell-command (format "git commit -m '%s'" commit-msg))
+      (shell-command "git push origin HEAD"))
+    (let ((default-directory "~/org/celibistrial-website/public"))
+      (unless (file-directory-p default-directory)
+        (error "Directory not found: %s" default-directory))
+      (shell-command (format "git add --all"))
+      (shell-command (format "git commit -m '%s'" commit-msg))
+      (shell-command "git push origin HEAD"))))
+(map!
+ "C-x 6 p"
+ #'git-commit-and-push-celibistrial)
+(setq evil-want-fine-undo t)
