@@ -1,3 +1,32 @@
+#+TITLE: Celi's DOOM emacs config
+#+PROPERTY: header-args:emacs-lisp :tangle yes :cache yes :results silent :padline no
+* Table of contents :toc:
+- [[#note][NOTE]]
+- [[#my-doom-config][My doom config]]
+  - [[#setting-doom--evil-variables][Setting doom & evil variables]]
+  - [[#helm][helm]]
+  - [[#vertico][vertico]]
+  - [[#kill-ring][kill-ring]]
+  - [[#smartparens][smartparens]]
+  - [[#lsp][LSP]]
+  - [[#custom-function][custom function]]
+  - [[#langtool-vars][langtool vars]]
+  - [[#org][org]]
+
+* NOTE
+You have byte compiled your config.
+#+begin_src
+❯ doom compile
+WARNING: Changes made to your config after compiling it won't take effect until
+this command is rerun or you run 'doom clean'! It will also make error backtraces
+much more difficult to decipher.
+
+If you intend to use it anyway, remember this or it will come back to bite you!
+#+end_src
+
+* My doom config
+** Setting doom & evil variables
+#+begin_src emacs-lisp
 (setq user-full-name "celibistrial"
       user-mail-address "celibistrial@gmail.com")
 (setq doom-theme 'doom-one)
@@ -19,6 +48,13 @@
 (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 (setq emojify-display-style "ascii")
 (setq vterm-font "JetBrainsMono Nerd Font:size=12")
+#+end_src
+** helm
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+*** helm-config
+#+begin_src emacs-lisp
 (after! helm
 (setq projectile-indexing-method 'alien)
 (map!
@@ -34,6 +70,9 @@
 (after! company
   (setq company-backends '(company-files company-dabbrev-code company-dabbrev helm-company)))
 )
+#+end_src
+*** helm-themes (defun)
+#+begin_src emacs-lisp
 (after! helm
   (defsubst helm-themes--delete-theme ()
     "Delete theme."
@@ -77,18 +116,33 @@
             (load-theme orig-theme t))))))
 
   )
+#+end_src
+** vertico
+#+begin_src emacs-lisp
 (setq projectile-indexing-method 'alien)
 (map!
  :leader
  :nv
  "C-v" #'consult-yank-from-kill-ring)
 (setq projectile-enable-caching t)
+
+#+end_src
+** kill-ring
+#+begin_src emacs-lisp
 (defun clear-kill-ring()
     (interactive)
   (progn (setq kill-ring nil) (garbage-collect)))
+#+end_src
+** smartparens
+#+begin_src emacs-lisp
 (after! smartparens
   (smartparens-mode 1)
   (smartparens-global-mode 1))
+
+#+end_src
+** LSP
+*** LSP UI
+ #+begin_src emacs-lisp
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions t)
   (setq lsp-headerline-breadcrumb-enable t)
@@ -104,7 +158,13 @@
   (setq lsp-completion-show-kind t))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
+ #+end_src
+ #+begin_src emacs-lisp
 (setq org-src-window-setup 'current-window)
+ #+end_src
+** custom function
+*** create cpp/c project
+#+begin_src emacs-lisp
 (defun create-cpp-project ()
   "Create a new C++ project with CMake configuration files."
   (interactive)
@@ -141,6 +201,24 @@
     (insert "}\n")
     (cd project-dir)
     (shell-command "cmake -H. -Bbuild")))
+#+end_src
+*** save word to dictionary
+#+begin_src emacs-lisp :tangle no
+(defun my-save-word ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+(after! org
+  (map!      :prefix "C-x"
+             :map org-mode-map
+             :nv "w" #'my-save-word)
+  )
+#+end_src
+
+** langtool vars
+#+begin_src emacs-lisp
 (setq langtool-java-classpath
       "/usr/share/languagetool:/usr/share/java/languagetool/*")
 (require 'langtool)
@@ -154,6 +232,10 @@
 (global-set-key "\C-x4l" 'langtool-switch-default-language)
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
 (global-set-key "\C-x4c" 'correct-buffer)
+#+end_src
+** org
+*** org-journal vars
+#+begin_src emacs-lisp
 (setq org-journal-encrypt-journal nil)
 (setq org-journal-encrypt-on nil)
 (defun org-journal-find-location ()
@@ -171,6 +253,11 @@
   (unless (eq org-journal-file-type 'daily)
     (org-narrow-to-subtree))
   (goto-char (point-max)))
+
+#+end_src
+*** org-capture
+#+begin_src emacs-lisp
+
 (after! org
   (setq org-capture-templates
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
@@ -193,6 +280,9 @@
  %i
  %a" :heading "Changelog" :prepend t))
         ))
+#+end_src
+*** org-publish
+#+begin_src emacs-lisp
 (set-language-environment "UTF-8")
 (defun my/org-html-src-block (html)
   "Modify the output of org-html-src-block for highlight.js"
@@ -279,6 +369,9 @@
 (map!
  "C-x 6 p"
  #'git-commit-and-push-celibistrial)
+#+end_src
+*** org-crypt vars
+#+begin_src emacs-lisp
 (setq org-crypt-key "Celibistrial")
 (setenv "GPG_AGENT_INFO" nil)
 
@@ -287,3 +380,4 @@
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
+#+end_src

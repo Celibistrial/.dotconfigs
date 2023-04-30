@@ -22,7 +22,7 @@
 
        :completion
        company           ; the ultimate code completion backend
-       ;;helm              ; the *other* search engine for love and life
+       ;;(helm +fuzzy +icons)             ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
        vertico           ; the search engine of the future
@@ -32,14 +32,14 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)  ; 🙂
+       (emoji +unicode)  ;☠💀🐂🗿🐂
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
-       indent-guides     ; highlighted indent columns
+       ;;indent-guides     ; highlighted indent columns
        ligatures         ; ligatures and symbols to make your code pretty again
-       ;;minimap           ; show a map of the code on the side
+       minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
-       ;;nav-flash         ; blink cursor line after big motions
+       nav-flash         ; blink cursor line after big motions
        neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
@@ -121,7 +121,7 @@
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
-       ;;data              ; config/data formats
+       data              ; config/data formats
        ;;(dart +flutter)   ; paint ui and not much else
        ;;dhall
        ;;elixir            ; erlang done right
@@ -190,41 +190,5 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
-(defun create-cpp-project ()
-  "Create a new C++ project with CMake configuration files."
-  (interactive)
-  (let ((project-dir (read-directory-name "Project directory: ")))
-    (make-directory project-dir)
-    (find-file (expand-file-name "CMakeLists.txt" project-dir))
-    (insert "cmake_minimum_required(VERSION 3.10)\n")
-    (insert (format "project(%s)\n" (file-name-nondirectory project-dir)))
-    (insert (format "add_executable(%s src/main.cpp)\n" (file-name-nondirectory project-dir)))
-    (make-directory (expand-file-name "src" project-dir))
-    (find-file (expand-file-name "src/main.cpp" project-dir))
-    (insert "#include <iostream>\n")
-    (insert "int main() {\n")
-    (insert "    std::cout << \"Hello, World!\" << std::endl;\n")
-    (insert "    return 0;\n")
-    (insert "}\n")
-    (cd project-dir)
-    (shell-command "cmake -H. -Bbuild")))
-(defun create-c-project ()
-  "Create a new C project with CMake configuration files."
-  (interactive)
-  (let ((project-dir (read-directory-name "Project directory: ")))
-    (make-directory project-dir)
-    (make-directory (expand-file-name "src" project-dir))
-    (find-file (expand-file-name "CMakeLists.txt" project-dir))
-    (insert "cmake_minimum_required(VERSION 3.10)\n")
-    (insert (format "project(%s)\n" (file-name-nondirectory project-dir)))
-    (insert (format "add_executable(%s src/main.c)\n" (file-name-nondirectory project-dir)))
-    (find-file (expand-file-name "src/main.c" project-dir))
-    (insert "#include <stdio.h>\n")
-    (insert "int main() {\n")
-    (insert "    printf(\"Hello, World!\\n\");\n")
-    (insert "    return 0;\n")
-    (insert "}\n")
-    (cd project-dir)
-    (shell-command "cmake -H. -Bbuild")))
