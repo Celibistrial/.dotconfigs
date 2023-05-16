@@ -2,7 +2,7 @@
 :set number
 :set mouse=a
 set cursorline
-set encoding=utf-8
+set encoding=UTF-8
 set hidden
 set nocompatible
 set cmdheight=2
@@ -34,7 +34,7 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 "Applying codeAction t0 the se lected region.
-" 
+"
 "Example: <leader>Aap for current paragraph
 xmap <leader>A <Plug>(coc-codeaction-selected )
 nmap <leader>A <Plug>(coc-codeaction-selected)
@@ -89,11 +89,11 @@ Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation
 Plug 'ayu-theme/ayu-vim'
 Plug 'https://github.com/mg979/vim-visual-multi'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 Plug 'mhinz/vim-startify'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug '907th/vim-auto-save'
 Plug 'elkowar/yuck.vim'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'eraserhd/parinfer-rust', {'do':
         \  'cargo build --release'}
 " JSON front matter highlight plugin
@@ -103,9 +103,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'vijaymarupudi/nvim-fzf'
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 " optional for icon support
-Plug 'kyazdani42/nvim-web-devicons'
 Plug 'andymass/vim-matchup'
 Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 call plug#end()
 " --- Just Some Notes ---
 " :PlugClean :PlugInstall :UpdateRemotePlugins
@@ -121,11 +121,11 @@ call plug#end()
 "let g:lightline = { 'colorscheme': 'onehalfdark' }
 " air-line
 " rust settings
-set termguicolors  
+set termguicolors
 let ayucolor="mirage"
 colorscheme ayu
 let g:rustfmt_autosave = 1
-let g:rustfmt_emit_files = 1 
+let g:rustfmt_emit_files = 1
 let g:startify_custom_header =
           \ 'startify#center(startify#fortune#cowsay())'
 " Reopen the last edited position in files
