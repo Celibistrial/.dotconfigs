@@ -1,4 +1,6 @@
 " Basic nvim config
+
+set clipboard+=unnamedplus
 :set number
 :set mouse=a
 set cursorline
@@ -24,6 +26,7 @@ endif
 " other plugin before putting this into your config.
 " use tab to go through the list
 "
+inoremap <expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ CheckBackspace() ? "\<TAB>" :
@@ -256,5 +259,13 @@ if exists("g:neovide")
 	cnoremap <C-S-v> <c-r>+
 endif
 
-
-
+" " Copy to clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+nnoremap  <leader>yy  "+yy
+" " Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
