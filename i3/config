@@ -1,4 +1,5 @@
 # Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+exec_always xrandr --output eDP-1-1 --auto
 set $mode_gaps Gaps: (o) outer, (i) inner
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
 set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
@@ -66,8 +67,11 @@ exec_always autotiling
 exec --no-startup-id picom
 exec_always ~/.dotconfigs/scripts/monitor
 exec polkit-dumb-agent
-exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
 exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" -v|grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.2; done
+exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
+exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1, 0; done
+exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Natural Scrolling Enabled' 1; done
+exec_always libinput-gestures-setup autostart start 
 exec --no-startup-id "pactl load-module module-null-sink media.class=Audio/Source/Virtual sink_name=my-source channel_map=front-left,front-right"
 #exec --no-startup-id scripts/mic
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
