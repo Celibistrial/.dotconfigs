@@ -123,6 +123,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 alias icat="kitty +kitten icat"
 alias emacs="emacsclient -c -a 'emacs'"
 alias ls='exa'
+alias cat='bat'
 alias push=~/scripts/git-push.sh
 alias cpfile="xclip -sel c <"
 alias remacs="pkill emacs && /usr/bin/emacs --daemon"
