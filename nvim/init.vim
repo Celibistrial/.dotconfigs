@@ -1,5 +1,6 @@
 " Basic nvim config
-
+"
+let mapleader="\<Space>"
 set clipboard+=unnamedplus
 :set number
 :set mouse=a
@@ -269,3 +270,4 @@ nnoremap <leader>p "+p
 nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
+let g:airline_powerline_fonts = 1
