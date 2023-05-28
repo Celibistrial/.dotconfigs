@@ -16,7 +16,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$HOME/.emacs.d/bin:$PATH"
+export PATH="$HOME/.config/emacs/bin:$PATH"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -121,16 +121,13 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias icat="kitty +kitten icat"
-alias emacs="emacsclient -c -a 'emacs'"
+alias em="swallow emacsclient -c -a 'emacs'"
 alias ls='exa'
 alias cat='bat'
-alias push=~/scripts/git-push.sh
 alias cpfile="xclip -sel c <"
 alias remacs="pkill emacs && /usr/bin/emacs --daemon"
 alias btop="btop --utf-force"
-alias em="emacsclient -t"
 #eval "$(starship init zsh)"
-alias windows="~/scripts/windows"
-alias walpaper="~/scripts/walpaper"
+alias walpaper="source ~/.fehbg"
 alias resetbg="~/scripts/resetbg"
 bindkey -v

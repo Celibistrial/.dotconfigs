@@ -19,6 +19,8 @@
 (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 (setq emojify-display-style "ascii")
 (setq vterm-font "JetBrainsMono Nerd Font:size=12")
+(after! company
+  (add-to-list 'company-backends 'company-files))
 (after! helm
 (setq projectile-indexing-method 'alien)
 (map!
@@ -90,7 +92,7 @@
   (smartparens-mode 1)
   (smartparens-global-mode 1))
 (after! lsp-ui
-  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-ui-doc-enable t)
@@ -102,6 +104,10 @@
   (setq lsp-eldoc-enable-hover t)
   (setq lsp-completion-show-detail t)
   (setq lsp-completion-show-kind t))
+
+  (defun lsp-ui-sideline--compute-height nil '(height unspecified))
+
+(custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
 (setq org-src-window-setup 'current-window)
