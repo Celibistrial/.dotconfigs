@@ -1,5 +1,7 @@
-#+TITLE: Celi's DOOM emacs config
-#+PROPERTY: header-args:emacs-lisp :tangle yes :cache yes :results silent :padline no
+# Created 2023-05-29 Mon 15:35
+#+title: Celibistrial's DOOM Emacs config
+#+author: celibistrial
+#+property: header-args:emacs-lisp :tangle yes :cache yes :results silent :padline no
 * Table of contents :toc:
 - [[#note][NOTE]]
 - [[#my-doom-config][My doom config]]
@@ -56,9 +58,6 @@ If you intend to use it anyway, remember this or it will come back to bite you!
   (add-to-list 'company-backends 'company-files))
 #+end_src
 ** helm
-:PROPERTIES:
-:header-args: :tangle no
-:END:
 *** helm-config
 #+begin_src emacs-lisp
 (after! helm
@@ -131,7 +130,6 @@ If you intend to use it anyway, remember this or it will come back to bite you!
  :nv
  "C-v" #'consult-yank-from-kill-ring)
 (setq projectile-enable-caching t)
-
 #+end_src
 ** kill-ring
 #+begin_src emacs-lisp
@@ -144,11 +142,10 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 (after! smartparens
   (smartparens-mode 1)
   (smartparens-global-mode 1))
-
 #+end_src
 ** LSP
 *** LSP UI
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
@@ -168,10 +165,10 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 (custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
- #+end_src
- #+begin_src emacs-lisp
+#+end_src
+#+begin_src emacs-lisp
 (setq org-src-window-setup 'current-window)
- #+end_src
+#+end_src
 ** custom function
 *** create cpp/c project
 #+begin_src emacs-lisp
@@ -213,7 +210,7 @@ If you intend to use it anyway, remember this or it will come back to bite you!
     (shell-command "cmake -H. -Bbuild")))
 #+end_src
 *** save word to dictionary
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (defun my-save-word ()
   (interactive)
   (let ((current-location (point))
@@ -227,6 +224,24 @@ If you intend to use it anyway, remember this or it will come back to bite you!
   )
 #+end_src
 
+*** format org documents
+#+begin_src emacs-lisp
+(defun org-format ()
+  "A messed up way to auto-format org docs"
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (exported-file (concat current-file ".org")))
+    (org-org-export-to-org)
+    (delete-file current-file)
+    (rename-file exported-file current-file)
+    (revert-buffer)
+    ))
+(map!
+ :leader
+ :after org
+ :map org-mode-map
+ :nv "c F" #'org-format)
+#+end_src
 ** langtool vars
 #+begin_src emacs-lisp
 (setq langtool-java-classpath
@@ -244,6 +259,10 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 (global-set-key "\C-x4c" 'correct-buffer)
 #+end_src
 ** org
+*** org
+#+begin_src emacs-lisp
+(setq org-log-done 'time)
+#+end_src
 *** org-journal vars
 #+begin_src emacs-lisp
 (setq org-journal-encrypt-journal nil)
@@ -263,7 +282,6 @@ If you intend to use it anyway, remember this or it will come back to bite you!
   (unless (eq org-journal-file-type 'daily)
     (org-narrow-to-subtree))
   (goto-char (point-max)))
-
 #+end_src
 *** org-capture
 #+begin_src emacs-lisp
