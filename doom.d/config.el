@@ -147,6 +147,32 @@
     (insert "}\n")
     (cd project-dir)
     (shell-command "cmake -H. -Bbuild")))
+(defun my-save-word ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+(after! org
+  (map!      :prefix "C-x"
+             :map org-mode-map
+             :nv "w" #'my-save-word)
+  )
+(defun org-format ()
+  "A messed up way to auto-format org docs"
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (exported-file (concat current-file ".org")))
+    (org-org-export-to-org)
+    (delete-file current-file)
+    (rename-file exported-file current-file)
+    (revert-buffer)
+    ))
+(map!
+ :leader
+ :after org
+ :map org-mode-map
+ :nv "c F" #'org-format)
 (setq langtool-java-classpath
       "/usr/share/languagetool:/usr/share/java/languagetool/*")
 (require 'langtool)
@@ -160,6 +186,7 @@
 (global-set-key "\C-x4l" 'langtool-switch-default-language)
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
 (global-set-key "\C-x4c" 'correct-buffer)
+(setq org-log-done 'time)
 (setq org-journal-encrypt-journal nil)
 (setq org-journal-encrypt-on nil)
 (defun org-journal-find-location ()
