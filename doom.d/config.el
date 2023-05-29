@@ -261,6 +261,9 @@
 <link rel=\"stylesheet\" href=\"https://unpkg.com/highlightjs@9.16.2/styles/obsidian.css\">
 <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js\"></script>
 <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/lisp.min.js\"></script>
+<script src=\"particles.min.js\"></script>
+<div id=\"particles-js\"></div>
+<script>particlesJS.load(\'particles-js\',\"particlesjs-config.json\");</script>
 "
              :html-postamble "
 <div class=\"navigation\">
