@@ -15,6 +15,9 @@
   - [[#custom-function][custom function]]
   - [[#langtool-vars][langtool vars]]
   - [[#org][org]]
+- [[#packages][Packages]]
+  - [[#beacon][Beacon]]
+  - [[#emojify][Emojify]]
 
 * NOTE
 You have byte compiled your config.
@@ -34,7 +37,8 @@ If you intend to use it anyway, remember this or it will come back to bite you!
       user-mail-address "celibistrial@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq org-directory "~/org/")
+(setq org-directory "~/org")
+(setq org-agenda-files '("~/org"))
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
 (setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
@@ -48,9 +52,9 @@ If you intend to use it anyway, remember this or it will come back to bite you!
  :nv
  "z" #'comint-dynamic-complete-filename)
 (setq evil-want-fine-undo t)
-(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-(setq emojify-display-style "ascii")
-(setq vterm-font "JetBrainsMono Nerd Font:size=12")
+;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+(setq emojify-display-style "unicode")
+;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
 #+end_src
 ** company
 #+begin_src emacs-lisp
@@ -146,11 +150,14 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 ** LSP
 *** LSP UI
 #+begin_src emacs-lisp
+(after! eldoc
+  (setq lsp-eldoc-hook nil))
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-ui-doc-enable t)
+  (setq lsp-signature-auto-activate nil)
+
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-enable t)
@@ -262,6 +269,11 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 *** org
 #+begin_src emacs-lisp
 (setq org-log-done 'time)
+#+end_src
+*** org-roam
+#+begin_src emacs-lisp
+(after! org
+  (setq org-roam-directory "~/org-roam"))
 #+end_src
 *** org-journal vars
 #+begin_src emacs-lisp
@@ -411,4 +423,16 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
+#+end_src
+
+* Packages
+** Beacon
+#+begin_src emacs-lisp
+(beacon-mode 1)
+#+end_src
+
+** Emojify
+#+begin_src emacs-lisp
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
 #+end_src

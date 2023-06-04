@@ -2,7 +2,8 @@
       user-mail-address "celibistrial@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq org-directory "~/org/")
+(setq org-directory "~/org")
+(setq org-agenda-files '("~/org"))
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
 (setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
@@ -16,9 +17,9 @@
  :nv
  "z" #'comint-dynamic-complete-filename)
 (setq evil-want-fine-undo t)
-(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-(setq emojify-display-style "ascii")
-(setq vterm-font "JetBrainsMono Nerd Font:size=12")
+;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+(setq emojify-display-style "unicode")
+;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
 (after! company
   (add-to-list 'company-backends 'company-files))
 (after! helm
@@ -91,11 +92,14 @@
 (after! smartparens
   (smartparens-mode 1)
   (smartparens-global-mode 1))
+(after! eldoc
+  (setq lsp-eldoc-hook nil))
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-ui-doc-enable t)
+  (setq lsp-signature-auto-activate nil)
+
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-enable t)
@@ -187,6 +191,8 @@
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
 (global-set-key "\C-x4c" 'correct-buffer)
 (setq org-log-done 'time)
+(after! org
+  (setq org-roam-directory "~/org-roam"))
 (setq org-journal-encrypt-journal nil)
 (setq org-journal-encrypt-on nil)
 (defun org-journal-find-location ()
@@ -323,3 +329,6 @@
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
+(beacon-mode 1)
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
