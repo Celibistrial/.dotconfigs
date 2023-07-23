@@ -20,4 +20,3 @@ vim.api.nvim_create_autocmd({ "VimLeave" }, {
     vim.cmd('sleep 10m')
   end,
 })
-

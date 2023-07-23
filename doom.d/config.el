@@ -2,8 +2,8 @@
       user-mail-address "celibistrial@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq org-directory "~/org")
-(setq org-agenda-files '("~/org"))
+(setq org-directory "~/org/")
+(setq org-agenda-files '("~/org/"))
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
 (setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
@@ -114,7 +114,6 @@
 (custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
-(setq org-src-window-setup 'current-window)
 (defun create-cpp-project ()
   "Create a new C++ project with CMake configuration files."
   (interactive)
@@ -177,6 +176,7 @@
  :after org
  :map org-mode-map
  :nv "c F" #'org-format)
+(after! langtool
 (setq langtool-java-classpath
       "/usr/share/languagetool:/usr/share/java/languagetool/*")
 (require 'langtool)
@@ -189,7 +189,20 @@
 (global-set-key "\C-x4W" 'langtool-check-done)
 (global-set-key "\C-x4l" 'langtool-switch-default-language)
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
-(global-set-key "\C-x4c" 'correct-buffer)
+(global-set-key "\C-x4c" 'correct-buffer))
+;; (setq org-src-window-setup 'current-window)
+(after! org
+(setq org-src-window-setup 'current-window))
+(after! org
+  (set-popup-rule! "^\\*Org Src" :ignore t))
+(after! org
+  (require 'org-download)
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  )
+(setq org-file-apps '((auto-mode . emacs)
+                      ("\\.pdf\\'" . "firefox %s")))
+(after! org
+(require 'org-protocol))
 (setq org-log-done 'time)
 (after! org
   (setq org-roam-directory "~/org-roam"))
@@ -231,7 +244,8 @@
  %a" :heading "Notes" :prepend t) ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?
  %i
  %a" :heading "Changelog" :prepend t))
-        ))
+        )
+  )
 (set-language-environment "UTF-8")
 (defun my/org-html-src-block (html)
   "Modify the output of org-html-src-block for highlight.js"

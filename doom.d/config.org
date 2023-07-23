@@ -37,8 +37,8 @@ If you intend to use it anyway, remember this or it will come back to bite you!
       user-mail-address "celibistrial@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq org-directory "~/org")
-(setq org-agenda-files '("~/org"))
+(setq org-directory "~/org/")
+(setq org-agenda-files '("~/org/"))
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
 (setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
@@ -173,9 +173,7 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
 #+end_src
-#+begin_src emacs-lisp
-(setq org-src-window-setup 'current-window)
-#+end_src
+
 ** custom function
 *** create cpp/c project
 #+begin_src emacs-lisp
@@ -251,6 +249,7 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 #+end_src
 ** langtool vars
 #+begin_src emacs-lisp
+(after! langtool
 (setq langtool-java-classpath
       "/usr/share/languagetool:/usr/share/java/languagetool/*")
 (require 'langtool)
@@ -263,9 +262,37 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 (global-set-key "\C-x4W" 'langtool-check-done)
 (global-set-key "\C-x4l" 'langtool-switch-default-language)
 (global-set-key "\C-x44" 'langtool-show-message-at-point)
-(global-set-key "\C-x4c" 'correct-buffer)
+(global-set-key "\C-x4c" 'correct-buffer))
 #+end_src
 ** org
+*** org-babel
+#+begin_src emacs-lisp
+;; (setq org-src-window-setup 'current-window)
+(after! org
+(setq org-src-window-setup 'current-window))
+(after! org
+  (set-popup-rule! "^\\*Org Src" :ignore t))
+
+#+end_src
+*** org-download
+#+begin_src emacs-lisp
+(after! org
+  (require 'org-download)
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  )
+#+end_src
+*** org-open
+#+begin_src emacs-lisp
+(setq org-file-apps '((auto-mode . emacs)
+                      ("\\.pdf\\'" . "firefox %s")))
+
+#+end_src
+*** org-protocol
+#+begin_src emacs-lisp
+(after! org
+(require 'org-protocol))
+
+#+end_src
 *** org
 #+begin_src emacs-lisp
 (setq org-log-done 'time)
@@ -319,7 +346,8 @@ If you intend to use it anyway, remember this or it will come back to bite you!
  %a" :heading "Notes" :prepend t) ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?
  %i
  %a" :heading "Changelog" :prepend t))
-        ))
+        )
+  )
 #+end_src
 *** org-publish
 #+begin_src emacs-lisp

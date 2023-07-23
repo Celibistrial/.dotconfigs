@@ -1,0 +1,11 @@
+#!/bin/bash
+pkill polybar
+sleep 2
+pkill polybar
+pkill polybar
+source ~/.fehbg
+polybar & 
+# source ~/.fehbg
+# pkill polybar
+# polybar & 
+#

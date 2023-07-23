@@ -6,6 +6,7 @@ return require("packer").startup(function(use)
 			require("orgmode").setup({})
 		end,
 	})
+  use({"dylanaraps/wal.vim"})
 	use("akinsho/org-bullets.nvim")
 	-- use({
 	-- 	"lukas-reineke/headlines.nvim",

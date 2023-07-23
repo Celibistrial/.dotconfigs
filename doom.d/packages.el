@@ -55,3 +55,4 @@
 (package! beacon)
 (package! emojify)
 (package! eldoc :disable t)
+(package! org-download)

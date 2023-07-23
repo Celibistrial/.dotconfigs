@@ -1,2 +1,5 @@
 #!/bin/bash
-nbfc status -a | grep "Temperature" | sed 's/.*: //'
+while true
+do
+  nbfc status -a | grep "Temperature" | sed 's/.*: //' && sleep 10
+done

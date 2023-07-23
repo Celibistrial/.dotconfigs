@@ -115,7 +115,6 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-export PATH=$PATH:/home/celibistrial/.spicetify
 GITSTATUS_LOG_LEVEL=DEBUG
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
