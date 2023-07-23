@@ -9,8 +9,8 @@ if [ $num_monitors -gt 1 ]; then
     #inbuilt_monitor=$(xrandr | grep " connected primary" | cut -d " " -f 1)
 inbuilt_monitor="eDP-1-1"
     # Turn off the built-in monitor
-    xrandr --output $inbuilt_monitor --off
-
+#    xrandr --output $inbuilt_monitor --off
+xrandr --output HDMI-0 --auto --output eDP-1-1 --auto --left-of HDMI-0
     # Wait for a few seconds to ensure the monitor has been turned off
 #    sleep 5
 
