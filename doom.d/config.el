@@ -1,5 +1,5 @@
-(setq user-full-name "celibistrial"
-      user-mail-address "celibistrial@gmail.com")
+(setq user-full-name "Gaurav Choudhury"
+      user-mail-address "gauravchoudhury80222@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
 (setq org-directory "~/org/")
@@ -17,8 +17,13 @@
  :nv
  "z" #'comint-dynamic-complete-filename)
 (setq evil-want-fine-undo t)
+;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
+(set-fontset-font t 'symbol "Apple Color Emoji")
+(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+(set-fontset-font t 'symbol "Symbola" nil 'append)
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-(setq emojify-display-style "unicode")
+;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
 (after! company
   (add-to-list 'company-backends 'company-files))
@@ -192,7 +197,7 @@
 (global-set-key "\C-x4c" 'correct-buffer))
 ;; (setq org-src-window-setup 'current-window)
 (after! org
-(setq org-src-window-setup 'current-window))
+(setq org-src-window-setup 'reorganize-frame))
 (after! org
   (set-popup-rule! "^\\*Org Src" :ignore t))
 (after! org
@@ -205,7 +210,7 @@
 (require 'org-protocol))
 (setq org-log-done 'time)
 (after! org
-  (setq org-roam-directory "~/org-roam"))
+  (setq org-roam-directory "~/org/org-roam"))
 (setq org-journal-encrypt-journal nil)
 (setq org-journal-encrypt-on nil)
 (defun org-journal-find-location ()
