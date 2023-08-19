@@ -1,9 +1,8 @@
 # Created 2023-05-29 Mon 15:35
 #+title: Celibistrial's DOOM Emacs config
-#+author: celibistrial
+#+AUTHOR: Gaurav Choudhury
 #+property: header-args:emacs-lisp :tangle yes :cache yes :results silent :padline no
 * Table of contents :toc:
-- [[#note][NOTE]]
 - [[#my-doom-config][My doom config]]
   - [[#setting-doom--evil-variables][Setting doom & evil variables]]
   - [[#company][company]]
@@ -19,22 +18,11 @@
   - [[#beacon][Beacon]]
   - [[#emojify][Emojify]]
 
-* NOTE
-You have byte compiled your config.
-#+begin_src
-❯ doom compile
-WARNING: Changes made to your config after compiling it won't take effect until
-this command is rerun or you run 'doom clean'! It will also make error backtraces
-much more difficult to decipher.
-
-If you intend to use it anyway, remember this or it will come back to bite you!
-#+end_src
-
 * My doom config
 ** Setting doom & evil variables
 #+begin_src emacs-lisp
-(setq user-full-name "celibistrial"
-      user-mail-address "celibistrial@gmail.com")
+(setq user-full-name "Gaurav Choudhury"
+      user-mail-address "gauravchoudhury80222@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
 (setq org-directory "~/org/")
@@ -52,8 +40,13 @@ If you intend to use it anyway, remember this or it will come back to bite you!
  :nv
  "z" #'comint-dynamic-complete-filename)
 (setq evil-want-fine-undo t)
+;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
+(set-fontset-font t 'symbol "Apple Color Emoji")
+(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+(set-fontset-font t 'symbol "Symbola" nil 'append)
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-(setq emojify-display-style "unicode")
+;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
 #+end_src
 ** company
@@ -269,7 +262,7 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 #+begin_src emacs-lisp
 ;; (setq org-src-window-setup 'current-window)
 (after! org
-(setq org-src-window-setup 'current-window))
+(setq org-src-window-setup 'reorganize-frame))
 (after! org
   (set-popup-rule! "^\\*Org Src" :ignore t))
 
@@ -300,7 +293,7 @@ If you intend to use it anyway, remember this or it will come back to bite you!
 *** org-roam
 #+begin_src emacs-lisp
 (after! org
-  (setq org-roam-directory "~/org-roam"))
+  (setq org-roam-directory "~/org/org-roam"))
 #+end_src
 *** org-journal vars
 #+begin_src emacs-lisp
