@@ -288,7 +288,7 @@
 <script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/lisp.min.js\"></script>
 <script src=\"particles.min.js\"></script>
 <div id=\"particles-js\"></div>
-<script>particlesJS.load(\'particles-js\',\"particlesjs-config.json\");</script>
+<!--<script>particlesJS.load(\'particles-js\',\"particlesjs-config.json\");</script> -->
 "
              :html-postamble "
 <div class=\"navigation\">
@@ -348,6 +348,7 @@
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
+(setq org-clock-sound "~/Music/service-bell-ring-14610.mp3")
 (beacon-mode 1)
 (use-package emojify
   :hook (after-init . global-emojify-mode))
