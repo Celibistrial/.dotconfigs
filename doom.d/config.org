@@ -51,8 +51,9 @@
 #+end_src
 ** company
 #+begin_src emacs-lisp
-(after! company
-  (add-to-list 'company-backends 'company-files))
+;; (after! company
+;;   (set-company-backend! 'org-mode 'company-capf 'company-files)
+;; (set-company-backend! 'org-mode 'company-files 'company-capf))
 #+end_src
 ** helm
 *** helm-config
@@ -267,6 +268,38 @@
   (set-popup-rule! "^\\*Org Src" :ignore t))
 
 #+end_src
+*** org-latex
+#+begin_src emacs-lisp
+  (map!
+   :leader
+   :after org
+   :map org-mode-map
+   :nv
+   "p l" #'org-latex-preview)
+#+end_src
+*** org-is-beautiful
+#+begin_src emacs-lisp
+(after! org
+    (setq org-hide-emphasis-markers t)
+    )
+#+end_src
+*** org-anki-integration
+#+begin_src emacs-lisp
+;; (use-package! anki-editor
+;;   :commands anki-editor-mode
+;;   :custom (anki-editor-latex-style 'mathjax))
+
+;; (use-package! ankiorg
+;;   :commands
+;;   ankiorg-pull-notes
+;;   ankiorg-buffer-get-media-files
+;;   ankiorg-pull-tags
+;;   :custom
+;;   (ankiorg-sql-database
+;;    "/home/gaurav/.local/share/Anki2/User 1/collection.anki2")
+;;   (ankiorg-media-directory
+;;    "/home/gaurav/.local/share/Anki2/User 1/collection.media/"))
+#+end_src
 *** org-download
 #+begin_src emacs-lisp
 (after! org
@@ -317,14 +350,22 @@
 #+end_src
 *** org-capture
 #+begin_src emacs-lisp
-
 (after! org
   (setq org-capture-templates
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
           ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO  %? %i
  %a")
           ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
-%i %a" :prepend t) ("j" "Journal" entry (file+olp+datetree +org-capture-journal-file) "* %U %?
+%i %a" :prepend t) ("j" "Journal" entry (file+olp+datetree +org-capture-journal-file) "
+
+
+
+,* %U %?
+,** TODO Have-to-do-list [0%]
++ [ ] Revise class notes [0%]
+  + [ ] Physics
+  + [ ] Chemistry
+  + [ ] Maths
 %i
 %a" :prepend t) ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
@@ -450,10 +491,9 @@
 
 *** org-timer
 #+begin_src emacs-lisp
-(setq org-clock-sound "~/Music/service-bell-ring-14610.mp3")
+(setq org-clock-sound "~/Music/service-bell-ring-14610.wav")
 
 #+end_src
-
 
 * Packages
 ** Beacon

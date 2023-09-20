@@ -6,7 +6,7 @@ return require("packer").startup(function(use)
 			require("orgmode").setup({})
 		end,
 	})
-  use({"dylanaraps/wal.vim"})
+	use({ "dylanaraps/wal.vim" })
 	use("akinsho/org-bullets.nvim")
 	-- use({
 	-- 	"lukas-reineke/headlines.nvim",
@@ -27,9 +27,9 @@ return require("packer").startup(function(use)
 	use({
 		"shaun-mathew/Chameleon.nvim",
 		config = function()
-      if vim.g.neovide == nil then
-		  	require("chameleon").setup()
-      end
+			if vim.g.neovide == nil then
+				require("chameleon").setup()
+			end
 		end,
 	})
 	-- file explorer
@@ -98,7 +98,18 @@ return require("packer").startup(function(use)
 	})
 	use({ "hrsh7th/cmp-nvim-lua" })
 	use("jose-elias-alvarez/null-ls.nvim")
-  use({
-    "folke/trouble.nvim",
-  })
+	use({
+		"folke/trouble.nvim",
+	})
+	use({
+		"nvim-neorg/neorg",
+		config = function()
+			require("neorg").setup({
+				-- configuration here
+				load = {
+					["core.defaults"] = {},
+				},
+			})
+		end,
+	})
 end)
