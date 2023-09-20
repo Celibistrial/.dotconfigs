@@ -25,8 +25,9 @@
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
-(after! company
-  (add-to-list 'company-backends 'company-files))
+;; (after! company
+;;   (set-company-backend! 'org-mode 'company-capf 'company-files)
+;; (set-company-backend! 'org-mode 'company-files 'company-capf))
 (after! helm
 (setq projectile-indexing-method 'alien)
 (map!
@@ -200,6 +201,29 @@
 (setq org-src-window-setup 'reorganize-frame))
 (after! org
   (set-popup-rule! "^\\*Org Src" :ignore t))
+(map!
+ :leader
+ :after org
+ :map org-mode-map
+ :nv
+ "p l" #'org-latex-preview)
+(after! org
+    (setq org-hide-emphasis-markers t)
+    )
+;; (use-package! anki-editor
+;;   :commands anki-editor-mode
+;;   :custom (anki-editor-latex-style 'mathjax))
+
+;; (use-package! ankiorg
+;;   :commands
+;;   ankiorg-pull-notes
+;;   ankiorg-buffer-get-media-files
+;;   ankiorg-pull-tags
+;;   :custom
+;;   (ankiorg-sql-database
+;;    "/home/gaurav/.local/share/Anki2/User 1/collection.anki2")
+;;   (ankiorg-media-directory
+;;    "/home/gaurav/.local/share/Anki2/User 1/collection.media/"))
 (after! org
   (require 'org-download)
   (add-hook 'dired-mode-hook 'org-download-enable)
@@ -234,7 +258,16 @@
           ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO  %? %i
  %a")
           ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
-%i %a" :prepend t) ("j" "Journal" entry (file+olp+datetree +org-capture-journal-file) "* %U %?
+%i %a" :prepend t) ("j" "Journal" entry (file+olp+datetree +org-capture-journal-file) "
+
+
+
+* %U %?
+** TODO Have-to-do-list [0%]
++ [ ] Revise class notes [0%]
+  + [ ] Physics
+  + [ ] Chemistry
+  + [ ] Maths
 %i
 %a" :prepend t) ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
@@ -348,7 +381,7 @@
 
 (map! "C-x <f12>" #'org-decrypt-entry)
 (map! "C-x <f11>" #'org-encrypt-entry)
-(setq org-clock-sound "~/Music/service-bell-ring-14610.mp3")
+(setq org-clock-sound "~/Music/service-bell-ring-14610.wav")
 (beacon-mode 1)
 (use-package emojify
   :hook (after-init . global-emojify-mode))
