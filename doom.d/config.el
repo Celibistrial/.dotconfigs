@@ -1,6 +1,6 @@
 (setq user-full-name "Gaurav Choudhury"
       user-mail-address "gauravchoudhury80222@gmail.com")
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-gruvbox)
 (setq display-line-numbers-type t)
 (setq org-directory "~/org/")
 (setq org-agenda-files '("~/org/"))

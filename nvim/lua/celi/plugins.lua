@@ -1,11 +1,5 @@
 return require("packer").startup(function(use)
 	use("nvim-treesitter/nvim-treesitter")
-	use({
-		"nvim-orgmode/orgmode",
-		config = function()
-			require("orgmode").setup({})
-		end,
-	})
 	use({ "dylanaraps/wal.vim" })
 	use("akinsho/org-bullets.nvim")
 	-- use({
@@ -20,7 +14,7 @@ return require("packer").startup(function(use)
 	use({
 		"Shatur/neovim-ayu",
 		config = function()
-			vim.cmd("colorscheme ayu-dark")
+			-- vim.cmd("colorscheme ayu-dark")
 		end,
 	})
 	-- fix for kitty borders
@@ -101,15 +95,10 @@ return require("packer").startup(function(use)
 	use({
 		"folke/trouble.nvim",
 	})
-	use({
-		"nvim-neorg/neorg",
-		config = function()
-			require("neorg").setup({
-				-- configuration here
-				load = {
-					["core.defaults"] = {},
-				},
-			})
-		end,
-	})
+	use({ "ellisonleao/gruvbox.nvim",
+  config = function()
+    vim.o.background = "dark" -- or "light" for light mode
+    vim.cmd([[colorscheme gruvbox]])
+  end,
+ })
 end)

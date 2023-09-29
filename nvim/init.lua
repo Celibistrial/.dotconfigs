@@ -9,7 +9,6 @@ require('celi.autopairs')
 require('celi.telescope')
 require('celi.cmp')
 require('celi.lsp')
-require('celi.org')
 if vim.g.neovide then
   require('celi.neovide')
 end
