@@ -1,3 +1,11 @@
+#+title:     i3-wm config file
+#+author:    Gaurav Choudhury
+#+PROPERTY: header-args :tangle config
+* i3-config
+This is my personal i3-config , parts of it are taken from various parts of the internet
+** Keybinds
+*** Base
+#+begin_src conf
 bindsym $mod+Ctrl+Tab move scratchpad
 bindsym $mod+Tab scratchpad show
 set $mod Mod4
@@ -7,7 +15,9 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
+#+end_src
+*** Moving windows around
+#+begin_src conf
 floating_modifier $mod
 # change focus
 bindsym $mod+h focus left
@@ -92,7 +102,9 @@ bindsym $mod+Shift+7 move container to workspace number $ws7
 bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
-
+#+end_src
+*** Resizing windows
+#+begin_src conf
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -120,7 +132,9 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-
+#+end_src
+*** Starting programs
+#+begin_src conf
 bindsym $mod+m exec "rofimoji --max-recent 0"
 bindsym $mod+Shift+o exec "rofi -show file-browser-extended -file-browser-depth 5"
 bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
@@ -131,7 +145,9 @@ bindsym $mod+c exec "rofi -show calc -modi calc -no-show-match -no-sort"
 bindsym $mod+d exec "rofi -show drun"
 bindsym $mod+Ctrl+v exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 bindsym $mod+shift+s exec "/usr/bin/flameshot gui"
-
+#+end_src
+** Cool screenshot
+#+begin_src conf
 # Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
 
 set $mode_gaps Gaps: (o) outer, (i) inner
@@ -169,7 +185,10 @@ mode "$mode_gaps_outer" {
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-
+#+end_src
+** Startup scripts/programs
+*** Startup
+#+begin_src conf
 exec --no-startup-id "~/.dotconfigs/scripts/bar"
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
@@ -184,14 +203,18 @@ exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec --no-startup-id "greenclip daemon"
 exec ~/.dotconfigs/scripts/monitor
-
+#+end_src
+*** Auto move to workspace
+#+begin_src conf
 for_window [class="gnome-calculator"] floating enable
 for_window [class="gnome-todo"] floating enable
 for_window [class="discord"] move scratchpad,resize set 1720 780
 assign [class="Carla2"] $ws9
 assign [class="carla"] $ws9
 assign [class="Free Download Manager"] $ws10
-
+#+end_src
+** Lock screen/suspend
+#+begin_src conf
 bindsym $mod+x mode "lock"
 
 mode "lock" {
@@ -200,10 +223,16 @@ mode "lock" {
     bindsym h exec xrandr --output eDP-1-1 --auto, mode "default"
 }
 
+
+#+end_src
+** Mouse config
+#+begin_src conf
 exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" -v|grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.2; done
 exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
 exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1, 0; done
-
+#+end_src
+** Audio magic
+#+begin_src conf
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -211,6 +240,10 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+
+#+end_src
+** Color Scheme
+#+begin_src conf
 # primary
 set $colorp #d4be98
 # secondary
@@ -237,5 +270,10 @@ client.focused          $colorpCC $colorpCC #ffffff   $colorsCC $colorpCC
 client.focused_inactive $colorf   $colorf   #ffffff   $colorsCC $colorf
 client.unfocused        $colorf   $colorf   #888888   $colorsCC $colorf
 
+
+#+end_src
+** Borders / Misc
+#+begin_src conf
 for_window [class="^.*"] border pixel 2
 font pango:DejaVu Sans Mono 12
+#+end_src

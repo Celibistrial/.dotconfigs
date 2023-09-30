@@ -130,3 +130,4 @@ alias btop="btop --utf-force"
 alias walpaper="source ~/.fehbg"
 alias resetbg="~/scripts/resetbg"
 bindkey -v
+export PATH=$PATH:/home/gaurav/.spicetify
