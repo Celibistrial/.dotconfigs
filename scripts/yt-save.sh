@@ -11,7 +11,7 @@ extracted_text=$(echo "$content" | sed -n 's/.*\[6\]\(.*\)\[7\].*/\1/p')
 # Print the extracted text
 if [[ -n "$extracted_text" ]]; then
   echo "$extracted_text"
-  echo "* Watch \"$extracted_text\" on YouTube" >> ~/org/refile.org
+  echo "* TODO Watch \"$extracted_text\" on YouTube" >> ~/org/refile.org
   echo "$url" >> ~/org/refile.org
 else
   echo "Text not found."

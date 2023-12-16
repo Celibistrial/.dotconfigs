@@ -1,16 +1,18 @@
 #
-figlet "You are wasting your time"
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 #
 #
-#colorscript random
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+  exec startx
+fi
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 export TERM="xterm-256color"                      # getting proper colors
-#export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -83,7 +85,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting nix-shell nix-zsh-completions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -116,18 +118,55 @@ source $ZSH/oh-my-zsh.sh
 
 
 GITSTATUS_LOG_LEVEL=DEBUG
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+source ~/.powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias icat="kitty +kitten icat"
+alias zm="swallow zathura"
+alias zr="swallow zaread"
 alias em="swallow emacsclient -c -a 'emacs'"
 alias ls='exa'
 alias cat='bat'
 alias cpfile="xclip -sel c <"
-alias remacs="pkill emacs && /usr/bin/emacs --daemon"
+alias remacs="pkill emacs && emacs --daemon"
 alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
 alias walpaper="source ~/.fehbg"
 alias resetbg="~/scripts/resetbg"
 bindkey -v
-export PATH=$PATH:/home/gaurav/.spicetify
+alias rebuild="~/.dotconfigs/scripts/rebuild.sh"
+export JDK_BASE=/usr/lib/jvm/
+
+function switch-java() {
+    jvms=( $(ls -1 $JDK_BASE) )
+    pref='jdk-'
+
+    if [ "$1" = "8" ]; then
+        pref='jdk1.'
+    fi
+
+    if [ -n "$1" ]; then
+        SELECTION=$(ls -1 $JDK_BASE | grep "$pref$1")
+    fi
+
+    if [ -z "$SELECTION" ]; then
+        echo "Switch to which JVM?"
+        for i in $jvms; do
+            printf "   %s\n" $i
+        done
+
+        read -q "SELECTION?Select a JVM: "
+    fi
+
+    echo '-----------------------------------------------------------------'
+    echo "Switching to Java: $SELECTION"
+    echo "Full path: $JDK_BASE/$SELECTION/Contents/Home"
+    echo ":java-cmd \"$JDK_BASE/$SELECTION/Contents/Home/bin/java\""
+    echo '-----------------------------------------------------------------'
+    export JAVA_HOME="$JDK_BASE/$SELECTION/Contents/Home"
+    export JAVA_CMD="$JAVA_HOME/bin/java"
+    export PATH="$JAVA_HOME/bin:$PATH"
+    java -version
+    echo '-----------------------------------------------------------------'
+}
+eval "$(zoxide init zsh)"
