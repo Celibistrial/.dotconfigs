@@ -1,7 +1,5 @@
 return require("packer").startup(function(use)
 	use("nvim-treesitter/nvim-treesitter")
-	use({ "dylanaraps/wal.vim" })
-	use("akinsho/org-bullets.nvim")
 	-- use({
 	-- 	"lukas-reineke/headlines.nvim",
 	-- 	after = "nvim-treesitter",
@@ -12,9 +10,13 @@ return require("packer").startup(function(use)
 	use("nvim-lua/plenary.nvim")
 	-- Color Schemes
 	use({
-		"Shatur/neovim-ayu",
+		"catppuccin/nvim",
+		as = "catppuccin",
 		config = function()
-			-- vim.cmd("colorscheme ayu-dark")
+      vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
+			require("catppuccin").setup()
+
+			vim.cmd([[colorscheme catppuccin]])
 		end,
 	})
 	-- fix for kitty borders
@@ -95,10 +97,4 @@ return require("packer").startup(function(use)
 	use({
 		"folke/trouble.nvim",
 	})
-	use({ "ellisonleao/gruvbox.nvim",
-  config = function()
-    vim.o.background = "dark" -- or "light" for light mode
-    vim.cmd([[colorscheme gruvbox]])
-  end,
- })
 end)

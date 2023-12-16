@@ -14,6 +14,7 @@
   - [[#custom-function][custom function]]
   - [[#langtool-vars][langtool vars]]
   - [[#org][org]]
+  - [[#aspell][aspell]]
 - [[#packages][Packages]]
   - [[#beacon][Beacon]]
   - [[#emojify][Emojify]]
@@ -23,17 +24,21 @@
 #+begin_src emacs-lisp
 (setq user-full-name "Gaurav Choudhury"
       user-mail-address "gauravchoudhury80222@gmail.com")
-(setq doom-theme 'doom-gruvbox)
+(setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
 (setq org-directory "~/org/")
 (setq org-agenda-files '("~/org/"))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
-(setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
+(add-hook 'text-mode-hook #'variable-pitch-mode)
+;;(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
+;;      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
+;;(setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
 (setq select-enable-clipboard nil)
 (map!
+ :nv
  "C-S-v" #'clipboard-yank)
+
 (map!
+ :nv
  "C-S-c" #'clipboard-kill-ring-save)
 (map!
  :leader
@@ -50,10 +55,10 @@
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
 #+end_src
 ** company
+Gives auto completion for files (it really should be the default)
 #+begin_src emacs-lisp
-;; (after! company
-;;   (set-company-backend! 'org-mode 'company-capf 'company-files)
-;; (set-company-backend! 'org-mode 'company-files 'company-capf))
+(after! company
+  (add-to-list 'company-backends 'company-files))
 #+end_src
 ** helm
 *** helm-config
@@ -144,8 +149,6 @@
 ** LSP
 *** LSP UI
 #+begin_src emacs-lisp
-(after! eldoc
-  (setq lsp-eldoc-hook nil))
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
@@ -160,8 +163,8 @@
   (setq lsp-eldoc-enable-hover t)
   (setq lsp-completion-show-detail t)
   (setq lsp-completion-show-kind t))
-
-  (defun lsp-ui-sideline--compute-height nil '(height unspecified))
+;; //(setq lsp-auto-guess-root t)
+(defun lsp-ui-sideline--compute-height nil '(height unspecified))
 
 (custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
@@ -259,6 +262,61 @@
 (global-set-key "\C-x4c" 'correct-buffer))
 #+end_src
 ** org
+*** Easy printing from org file
+#+begin_src emacs-lisp
+;; put your css files there
+(defvar org-theme-css-dir "~/.doom.d/css/")
+
+(defun toggle-org-custom-inline-style ()
+  (interactive)
+  (let ((hook 'org-export-before-parsing-hook)
+        (fun 'set-org-html-style))
+    (if (memq fun (eval hook))
+        (progn
+          (remove-hook hook fun 'buffer-local)
+          (message "Removed %s from %s" (symbol-name fun) (symbol-name hook)))
+      (add-hook hook fun nil 'buffer-local)
+      (message "Added %s to %s" (symbol-name fun) (symbol-name hook)))))
+
+(defun org-theme ()
+  (interactive)
+  (let* ((cssdir org-theme-css-dir)
+         (css-choices (directory-files cssdir nil ".css$"))
+         (css (completing-read "theme: " css-choices nil t)))
+    (concat cssdir css)))
+
+(defun set-org-html-style (&optional backend)
+  (interactive)
+  (when (or (null backend) (eq backend 'html))
+    (let ((f (or (and (boundp 'org-theme-css) org-theme-css) (org-theme))))
+      (if (file-exists-p f)
+          (progn
+            (set (make-local-variable 'org-theme-css) f)
+            (set (make-local-variable 'org-html-head)
+                 (with-temp-buffer
+                   (insert "<style type=\"text/css\">\n<!--/*--><![CDATA[/*><!--*/\n")
+                   (insert-file-contents f)
+                   (goto-char (point-max))
+                   (insert "\n/*]]>*/-->\n</style>\n")
+                   (buffer-string)))
+            (set (make-local-variable 'org-html-head-include-default-style)
+                 nil)
+            (message "Set custom style from %s" f))
+        (message "Custom header file %s doesnt exist")))))
+#+end_src
+*** org-capture-HACK
+
+#+begin_src emacs-lisp
+(after! org
+  (defadvice! dan/+org--restart-mode-h-careful-restart (fn &rest args)
+    :around #'+org--restart-mode-h
+    (let ((old-org-capture-current-plist (and (bound-and-true-p org-capture-mode)
+                                              (bound-and-true-p org-capture-current-plist))))
+      (apply fn args)
+      (when old-org-capture-current-plist
+        (setq-local org-capture-current-plist old-org-capture-current-plist)
+        (org-capture-mode +1)))))
+#+end_src
 *** org-babel
 #+begin_src emacs-lisp
 ;; (setq org-src-window-setup 'current-window)
@@ -270,12 +328,12 @@
 #+end_src
 *** org-latex
 #+begin_src emacs-lisp
-  (map!
-   :leader
-   :after org
-   :map org-mode-map
-   :nv
-   "p l" #'org-latex-preview)
+  ;; (map!
+  ;;  :leader
+  ;;  :after org
+  ;;  :map org-mode-map
+  ;;  :nv
+  ;;  "p l" #'org-latex-preview)
 #+end_src
 *** org-is-beautiful
 #+begin_src emacs-lisp
@@ -328,46 +386,40 @@
 (after! org
   (setq org-roam-directory "~/org/org-roam"))
 #+end_src
-*** org-journal vars
+*** org-journal
 #+begin_src emacs-lisp
-(setq org-journal-encrypt-journal nil)
-(setq org-journal-encrypt-on nil)
-(defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
-  (org-journal-new-entry t)
-  (unless (eq org-journal-file-type 'daily)
-    (org-narrow-to-subtree))
-  (goto-char (point-max)))
+(after! org-journal
+  (setq org-journal-enable-encryption t)
+  ;;(setq org-journal-file-type 'weekly)
+  )
 
-(defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
-  (org-journal-new-entry t)
-  (unless (eq org-journal-file-type 'daily)
-    (org-narrow-to-subtree))
-  (goto-char (point-max)))
 #+end_src
 *** org-capture
 #+begin_src emacs-lisp
+(defun org-random-choice (file)
+  "Return a random line from FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (let ((lines (split-string (buffer-string) "\n" t)))
+      (nth (random (length lines)) lines))))
+
 (after! org
   (setq org-capture-templates
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
           ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO  %? %i
  %a")
           ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
-%i %a" :prepend t) ("j" "Journal" entry (file+olp+datetree +org-capture-journal-file) "
-
-
-
-,* %U %?
-,** TODO Have-to-do-list [0%]
-+ [ ] Revise class notes [0%]
-  + [ ] Physics
-  + [ ] Chemistry
-  + [ ] Maths
+%i %a" :prepend t)
+         ("j" "Journal Entry" entry
+           (file+olp+datetree "~/org/journal.org.gpg")
+           "* %<%H:%M> \n%?")
+          ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
-%a" :prepend t) ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
+%a" :prepend t)
+("J" "Journal Entry With Prompt" entry
+           (file+olp+datetree "~/org/journal.org.gpg")
+           "* %<%H:%M> \n** Prompt:%(org-random-choice \"~/org/journaling_prompts.org\")  \n%?")
+          ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
 %a" :prepend t) ("pn" "Project-local notes" entry (file+headline +org-capture-project-notes-file "Inbox") "* %U %?
 %i
@@ -477,22 +529,24 @@
 #+end_src
 *** org-crypt vars
 #+begin_src emacs-lisp
-(setq org-crypt-key "Celibistrial")
-(setenv "GPG_AGENT_INFO" nil)
-
+(after! org-crypt
+(setq org-crypt-key "B1DB6B99A199E14D7AF85BBBE577B32870E99F38")
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-
+(setq auto-save-default nil)
 (map! "C-x <f12>" #'org-decrypt-entry)
-(map! "C-x <f11>" #'org-encrypt-entry)
+(map! "C-x <f11>" #'org-encrypt-entry))
+
+#+end_src
+*** epa-file
+#+begin_src emacs-lisp
+(after! epa
+  (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
 #+end_src
 
-*** org-archive
-
-*** org-timer
+** aspell
 #+begin_src emacs-lisp
-(setq org-clock-sound "~/Music/service-bell-ring-14610.wav")
-
+(setq ispell-local-dictionary "en_GB")
 #+end_src
 
 * Packages

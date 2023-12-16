@@ -1,6 +1,18 @@
 #+title:     i3-wm config file
 #+author:    Gaurav Choudhury
-#+PROPERTY: header-args :tangle config
+#+PROPERTY: header-args :tangle config :cache yes :results silent :padline no
+* Table of contents :toc:
+- [[#i3-config][i3-config]]
+  - [[#keybinds][Keybinds]]
+  - [[#cool-screenshot][Cool screenshot]]
+  - [[#startup-scriptsprograms][Startup scripts/programs]]
+  - [[#lock-screensuspend][Lock screen/suspend]]
+  - [[#mouse-config][Mouse config]]
+  - [[#audio-magic][Audio magic]]
+  - [[#color-scheme][Color Scheme]]
+  - [[#borders--misc][Borders / Misc]]
+  - [[#i3bar][i3bar]]
+
 * i3-config
 This is my personal i3-config , parts of it are taken from various parts of the internet
 ** Keybinds
@@ -189,12 +201,17 @@ mode "$mode_gaps_outer" {
 ** Startup scripts/programs
 *** Startup
 #+begin_src conf
-exec --no-startup-id "~/.dotconfigs/scripts/bar"
+#exec --no-startup-id "~/.dotconfigs/scripts/bar"
+exec /usr/lib/geoclue-2.0/demos/agent
+exec redshift
+exec ~/.dotconfigs/scripts/monitor
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
 exec_always autotiling
-exec --no-startup-id picom
-exec polkit-dumb-agent
+#exec --no-startup-id picom
+exec picom
+#exec polkit-dumb-agent
+exec /usr/lib/polkit-kde-authentication-agent-1
 exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"
@@ -202,7 +219,6 @@ exec --no-startup-id "/usr/bin/emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec --no-startup-id "greenclip daemon"
-exec ~/.dotconfigs/scripts/monitor
 #+end_src
 *** Auto move to workspace
 #+begin_src conf
@@ -215,11 +231,14 @@ assign [class="Free Download Manager"] $ws10
 #+end_src
 ** Lock screen/suspend
 #+begin_src conf
-bindsym $mod+x mode "lock"
+bindsym $mod+x mode "Utility"
 
-mode "lock" {
+mode "Utility" {
     bindsym l exec betterlockscreen --lock dimblur 2>/dev/null, mode "default"
-    bindsym s exec betterlockscreen --lock dimblur & systemctl suspend, mode "default"
+    bindsym b exec xrandr --output HDMI-0 --brightness 1,mode "default"
+    bindsym g exec ~/.screenlayout/gaming.sh,mode "default"
+    bindsym m exec ~/.dotconfigs/scripts/monitor,mode "default"
+    bindsym s exec  betterlockscreen --lock dimblur 2>/dev/null & systemctl suspend, mode "default"
     bindsym h exec xrandr --output eDP-1-1 --auto, mode "default"
 }
 
@@ -245,9 +264,9 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 ** Color Scheme
 #+begin_src conf
 # primary
-set $colorp #d4be98
+set $colorp #96CDFBff
 # secondary
-set $colors #ffffff
+set $colors  #ffffff
 # foreground
 set $colorf #3c3836
 # alt foreground
@@ -260,14 +279,14 @@ set $coloru #ea6962
 set $bar_bg #00000000
 
 gaps inner 10
-gaps outer 10
+gaps outer 0
 
 smart_gaps on
 hide_edge_borders vertical
 
 # class                 border    backgr.   text      indicator child_border
-client.focused          $colorpCC $colorpCC #ffffff   $colorsCC $colorpCC
-client.focused_inactive $colorf   $colorf   #ffffff   $colorsCC $colorf
+client.focused          $colorpCC $colorpCC #ffffff   $colorpCC $colorpCC
+client.focused_inactive $colorf   $colorf   #ffffff   $colorfCC $colorf
 client.unfocused        $colorf   $colorf   #888888   $colorsCC $colorf
 
 
@@ -276,4 +295,28 @@ client.unfocused        $colorf   $colorf   #888888   $colorsCC $colorf
 #+begin_src conf
 for_window [class="^.*"] border pixel 2
 font pango:DejaVu Sans Mono 12
+mode  "Passthrough Mode - Press Alt+F12 to exit" {
+        bindsym $mod+F12 mode "default"
+}
+bindsym $mod+F12 mode "Passthrough Mode - Press Alt+F12 to exit"
+#+end_src
+
+** i3bar
+#+begin_src conf
+bar {
+  tray_output primary
+    font pango:DejaVu Sans Mono, FontAwesome 12
+    position top
+    status_command i3status-rs
+    colors {
+        separator #666666
+        background #24273a
+        statusline #dddddd
+        focused_workspace #414769 #414769 #ffffff
+        active_workspace #333333 #333333 #ffffff
+        inactive_workspace #24273a #24273a #888888
+        urgent_workspace #2f343a #900000 #ffffff
+    }
+}
+
 #+end_src

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+xrandr --auto
 # Get the number of connected monitors using xrandr
 num_monitors=$(xrandr | grep " connected" | wc -l)
 
@@ -10,7 +10,7 @@ if [ $num_monitors -gt 1 ]; then
     inbuilt_monitor="eDP-1-1"
     # Turn off the built-in monitor
     xrandr --output $inbuilt_monitor --off
-#xrandr --output HDMI-0 --auto --output eDP-1-1 --auto --left-of HDMI-0
+#    xrandr --output HDMI-1-0 --primary --auto --output eDP1 --auto --right-of HDMI-1-0
     # Wait for a few seconds to ensure the monitor has been turned off
 #    sleep 5
 

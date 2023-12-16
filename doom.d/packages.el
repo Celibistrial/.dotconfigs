@@ -48,19 +48,11 @@
                                         ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
-(package! transient :pin "c2bdf7e12c530eb85476d3aef317eb2941ab9440")
-(package! with-editor :pin "391e76a256aeec6b9e4cbd733088f30c677d965b")
+;; (package! transient :pin "c2bdf7e12c530eb85476d3aef317eb2941ab9440")
+;; (package! with-editor :pin "391e76a256aeec6b9e4cbd733088f30c677d965b")
 ;; (package! lsp-grammarly
 ;;   :recipe(:repo "emacs-grammarly/lsp-grammarly" :host github))
-(package! beacon)
-(package! emojify)
 (package! eldoc :disable t)
 (package! org-download)
 (package! math-preview)
-(package! anki-editor
-  :recipe (:host github :repo "orgtre/anki-editor"))
-
-(package! ankiorg
-  :recipe (:host github :repo "orgtre/ankiorg"))
-(package! sqlite3
-  :recipe (:host github :repo "pekingduck/emacs-sqlite3-api"))
+(package! beacon)
