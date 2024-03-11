@@ -169,4 +169,5 @@ function switch-java() {
     java -version
     echo '-----------------------------------------------------------------'
 }
+eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"

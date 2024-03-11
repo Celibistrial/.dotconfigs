@@ -16,7 +16,7 @@ set -e
 pushd ~/.dotconfigs/nixos/
 
 # Edit your config
-$EDITOR configuration.nix
+#swallow emacsclient -c -a 'emacs' configuration.nix
 
 # Autoformat your nix files
 alejandra . >/dev/null -q

@@ -166,8 +166,8 @@ mode "$mode_gaps_outer" {
         bindsym Escape mode "default"
 }
 #exec --no-startup-id "~/.dotconfigs/scripts/bar"
-exec /usr/lib/geoclue-2.0/demos/agent
-exec redshift
+#exec /usr/lib/geoclue-2.0/demos/agent
+#exec redshift
 exec ~/.dotconfigs/scripts/monitor
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
@@ -175,7 +175,8 @@ exec_always autotiling
 #exec --no-startup-id picom
 exec picom
 #exec polkit-dumb-agent
-exec /usr/lib/polkit-kde-authentication-agent-1
+#exec /usr/lib/polkit-kde-authentication-agent-1
+exec /nix/store/$(ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{print $9}')/libexec/polkit-kde-authentication-agent-1 &
 exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"
