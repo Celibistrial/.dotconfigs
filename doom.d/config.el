@@ -4,7 +4,7 @@
 (setq display-line-numbers-type t)
 (setq org-directory "~/org/")
 (setq org-agenda-files '("~/org/"))
-(add-hook 'text-mode-hook #'variable-pitch-mode)
+;;(add-hook 'text-mode-hook #'variable-pitch-mode)
 ;;(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Medium)
 ;;      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
 ;;(setq! doom-unicode-font (font-spec :family "JetBrainsMono Nerd Font" :style "Regular" :size 11))
@@ -236,20 +236,19 @@
                  nil)
             (message "Set custom style from %s" f))
         (message "Custom header file %s doesnt exist")))))
+;; (after! org
+;;   (defadvice! dan/+org--restart-mode-h-careful-restart (fn &rest args)
+;;     :around #'+org--restart-mode-h
+;;     (let ((old-org-capture-current-plist (and (bound-and-true-p org-capture-mode)
+;;                                               (bound-and-true-p org-capture-current-plist))))
+;;       (apply fn args)
+;;       (when old-org-capture-current-plist
+;;         (setq-local org-capture-current-plist old-org-capture-current-plist)
+;;         (org-capture-mode +1)))))
 (after! org
-  (defadvice! dan/+org--restart-mode-h-careful-restart (fn &rest args)
-    :around #'+org--restart-mode-h
-    (let ((old-org-capture-current-plist (and (bound-and-true-p org-capture-mode)
-                                              (bound-and-true-p org-capture-current-plist))))
-      (apply fn args)
-      (when old-org-capture-current-plist
-        (setq-local org-capture-current-plist old-org-capture-current-plist)
-        (org-capture-mode +1)))))
-;; (setq org-src-window-setup 'current-window)
+(set-popup-rule! "^\\*Org Src" :ignore t))
 (after! org
-(setq org-src-window-setup 'reorganize-frame))
-(after! org
-  (set-popup-rule! "^\\*Org Src" :ignore t))
+  (setq org-src-window-setup 'split-window-right))
 ;; (map!
 ;;  :leader
 ;;  :after org

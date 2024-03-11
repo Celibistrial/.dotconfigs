@@ -12,6 +12,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./nvidia.nix
+    #./nbfc.nix
   ];
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -76,7 +77,7 @@
   ];
   services.xserver = {
     enable = true;
-    displayManager.sddm.enable = true;
+    displayManager.gdm.enable = true;
     windowManager.i3 = {
       enable = true;
       extraPackages = with pkgs; [
@@ -84,7 +85,6 @@
         arandr
         lxappearance
         xidlehook
-        kitty
         i3status-rust
         autotiling
       ];
@@ -104,15 +104,20 @@
       eza
       feh
       networkmanagerapplet
+      i3-swallow
       bat
       catppuccin-gtk
-      emacs
       papirus-icon-theme
-      kora-icon-theme
+      fd
       cinnamon.nemo
       firefox
+      chromium
+      htop
       zoxide
       tree
+      zathura
+      anki
+      hplip
       neofetch
     ];
   };
@@ -121,18 +126,55 @@
   environment.systemPackages = with pkgs; [
     alejandra
     libnotify
+    python3
     dunst
     wget
     curl
     ripgrep
+    kitty
     vim
     git
     picom
     gnupg
+    pavucontrol
+    polkit-kde-agent
     pciutils
     inputs.envycontrol.packages.x86_64-linux.default
   ];
   # List services that you want to enable:
+  services.btrbk = {
+    instances.data.settings = {
+      snapshot_preserve = "7d";
+      snapshot_preserve_min = "2d";
+
+      volume = {
+        "/data" = {
+          snapshot_dir = "/dataSnaps";
+          subvolume = {
+            "." = {
+            };
+          };
+        };
+      };
+    };
+  };
+  services.emacs = {
+    enable = true;
+  };
+  location.provider = "geoclue2";
+  services.geoclue2 = {
+    enable = true;
+  };
+  services.redshift = {
+    enable = true;
+  };
+  services = {
+    syncthing = {
+      enable = true;
+      user = "gaurav";
+      configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
+    };
+  };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

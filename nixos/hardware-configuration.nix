@@ -32,6 +32,12 @@
     fsType = "btrfs";
     options = ["subvol=@data"];
   };
+  fileSystems."/dataSnaps" = {
+    device = "/dev/disk/by-uuid/d827308c-517a-4955-a0ff-ec1b9b9d7c67";
+    fsType = "btrfs";
+    options = ["subvol=@data_snapshots"];
+  };
+
   fileSystems."/nocow" = {
     device = "/dev/disk/by-uuid/d827308c-517a-4955-a0ff-ec1b9b9d7c67";
     fsType = "btrfs";

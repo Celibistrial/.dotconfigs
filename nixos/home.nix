@@ -29,4 +29,14 @@
       nix-direnv.enable = true;
     };
   };
+  gtk.enable = true;
+
+  gtk.cursorTheme.package = pkgs.bibata-cursors;
+  gtk.cursorTheme.name = "Bibata-Modern-Classic";
+
+  gtk.theme.package = pkgs.catppuccin-gtk;
+  gtk.theme.name = "Catppuccin-Frappe-Standard-Blue-Dark";
+
+  gtk.iconTheme.package = pkgs.papirus-icon-theme;
+  gtk.iconTheme.name = "Papirus";
 }
