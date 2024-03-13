@@ -180,10 +180,11 @@ exec /nix/store/$(ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{
 exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"
-exec --no-startup-id "/usr/bin/emacs --daemon"
+exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
-exec --no-startup-id "greenclip daemon"
+exec xsetroot -cursor_name left_ptr
+#exec --no-startup-id "greenclip daemon"
 for_window [class="gnome-calculator"] floating enable
 for_window [class="gnome-todo"] floating enable
 for_window [class="discord"] move scratchpad,resize set 1720 780

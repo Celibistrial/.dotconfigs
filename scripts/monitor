@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 xrandr --auto
 # Get the number of connected monitors using xrandr
 num_monitors=$(xrandr | grep " connected" | wc -l)

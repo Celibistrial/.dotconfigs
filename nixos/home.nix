@@ -29,10 +29,17 @@
       nix-direnv.enable = true;
     };
   };
+  home.pointerCursor = {
+    x11.enable = true;
+    name = "Bibata-Modern-Classic";
+    package = pkgs.bibata-cursors;
+    size = 16;
+    gtk.enable = true;
+  };
   gtk.enable = true;
 
-  gtk.cursorTheme.package = pkgs.bibata-cursors;
-  gtk.cursorTheme.name = "Bibata-Modern-Classic";
+  # gtk.cursorTheme.package = pkgs.bibata-cursors;
+  # gtk.cursorTheme.name = "Bibata-Modern-Classic";
 
   gtk.theme.package = pkgs.catppuccin-gtk;
   gtk.theme.name = "Catppuccin-Frappe-Standard-Blue-Dark";

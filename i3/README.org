@@ -219,6 +219,7 @@ exec --no-startup-id "pulsemeeter init"
 exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
+exec xsetroot -cursor_name left_ptr
 #exec --no-startup-id "greenclip daemon"
 #+end_src
 *** Auto move to workspace

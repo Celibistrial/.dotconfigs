@@ -2,4 +2,25 @@ activating the configuration...
 setting up /etc...
 reloading user units for gaurav...
 restarting sysinit-reactivation.target
-nfigs' is dirty
+the following newarning: error(s) occurred while switching to the new configuration
+resetup.service
+warning: the following units failed: home-manager-gaurav.service
+
+[0;1;31m×[0m home-manager-gaurav.service - Home Manager environment for gaurav
+     Loaded: loaded (]8;;file://hp-pav/etc/systemd/system/home-manager-gaurav.service/etc/systemd/system/home-manager-gaurav.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Thu 2024-03-14 18:40:13 IST; 53ms ago
+    Process: 4077 ExecStart=/nix/store/0l615v39ak6wbnsi1zlmv88xz5grwvn9-hm-setup-env /nix/store/7milg9hx6wzslddrhh9r641d686z8fwj-home-manager-generation [0;1;31m(code=exited, status=1/FAILURE)[0m
+   Main PID: 4077 (code=exited, status=1/FAILURE)
+         IP: 0B in, 0B out
+        CPU: 88ms
+
+Mar 14 18:40:13 hp-pav systemd[1]: Starting Home Manager environment for gaurav...
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4077]: Starting Home Manager activation
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4077]: Activating checkFilesChanged
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4077]: Activating checkLinkTargets
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4175]: Existing file '/home/gaurav/.config/gtk-3.0/settings.ini' is in the way of '/nix/store/kxgvnzx328b0ix5mh1syjj7dwysvh17m-home-manager-files/.config/gtk-3.0/settings.ini'
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4175]: Existing file '/home/gaurav/.gtkrc-2.0' is in the way of '/nix/store/kxgvnzx328b0ix5mh1syjj7dwysvh17m-home-manager-files/.gtkrc-2.0'
+Mar 14 18:40:13 hp-pav hm-activate-gaurav[4175]: Please move the above files and try again or use 'home-manager switch -b backup' to back up existing files automatically.
+Mar 14 18:40:13 hp-pav systemd[1]: [0;1;39m[0;1;31m[0;1;39mhome-manager-gaurav.service: Main process exited, code=exited, status=1/FAILURE[0m
+Mar 14 18:40:13 hp-pav systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mhome-manager-gaurav.service: Failed with result 'exit-code'.[0m
+Mar 14 18:40:13 hp-pav systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start Home Manager environment for gaurav.[0m
