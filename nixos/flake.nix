@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    envycontrol.url = "github:bayasdev/envycontrol";
+    # envycontrol.url = "github:bayasdev/envycontrol";
     # nbfc-linux = {
     # url = "github:nbfc-linux/nbfc-linux";
     # inputs.nixpkgs.follows = "nixpkgs";

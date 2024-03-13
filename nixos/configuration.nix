@@ -27,6 +27,8 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.nftables.enable = true;
+  networking.firewall.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
@@ -94,6 +96,9 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
+  programs.steam = {
+    enable = true;
+  };
   programs.zsh.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
@@ -125,6 +130,7 @@
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     alejandra
+    emacs
     libnotify
     python3
     dunst
@@ -139,7 +145,7 @@
     pavucontrol
     polkit-kde-agent
     pciutils
-    inputs.envycontrol.packages.x86_64-linux.default
+    # inputs.envycontrol.packages.x86_64-linux.default
   ];
   # List services that you want to enable:
   services.btrbk = {
@@ -158,9 +164,7 @@
       };
     };
   };
-  services.emacs = {
-    enable = true;
-  };
+
   location.provider = "geoclue2";
   services.geoclue2 = {
     enable = true;
