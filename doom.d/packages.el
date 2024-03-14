@@ -52,7 +52,7 @@
 ;; (package! with-editor :pin "391e76a256aeec6b9e4cbd733088f30c677d965b")
 ;; (package! lsp-grammarly
 ;;   :recipe(:repo "emacs-grammarly/lsp-grammarly" :host github))
-(package! eldoc :disable t)
+;; (package! eldoc :disable t)
 (package! org-download)
 (package! math-preview)
-(package! beacon)
+;; (package! beacon)

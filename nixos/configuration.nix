@@ -12,7 +12,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./nvidia.nix
-    #./nbfc.nix
+    ./nbfc.nix
   ];
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -45,25 +45,12 @@
     LC_TIME = "en_IN";
   };
   environment.sessionVariables = rec {
-    EDITOR = "vim";
+    EDITOR = "nvim";
   };
 
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
@@ -77,21 +64,6 @@
     dejavu_fonts
     nerdfonts
   ];
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        betterlockscreen
-        arandr
-        lxappearance
-        xidlehook
-        i3status-rust
-        autotiling
-      ];
-    };
-  };
   # Define a user account. Don't forget to set a password with ‘passwd’.
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
@@ -105,6 +77,7 @@
     description = "Gaurav Choudhury";
     extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.zsh;
+
     packages = with pkgs; [
       eza
       feh
@@ -117,20 +90,27 @@
       cinnamon.nemo
       firefox
       chromium
-      htop
+      btop
       zoxide
       tree
       zathura
       anki
       hplip
       neofetch
+      fzf
+      nil
+      alejandra
+      obs-studio
+      flameshot
+      pandoc
+      emacs
+      jupyter
+      gnome.eog
     ];
   };
   zramSwap.enable = true;
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
-    alejandra
-    emacs
     libnotify
     python3
     dunst
@@ -138,7 +118,7 @@
     curl
     ripgrep
     kitty
-    vim
+    neovim
     git
     picom
     gnupg
@@ -148,49 +128,77 @@
     # inputs.envycontrol.packages.x86_64-linux.default
   ];
   # List services that you want to enable:
-  services.btrbk = {
-    instances.data.settings = {
-      snapshot_preserve = "7d";
-      snapshot_preserve_min = "2d";
+  location.provider = "geoclue2";
+  services = {
+    xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      windowManager.i3 = {
+        enable = true;
+        extraPackages = with pkgs; [
+          betterlockscreen
+          arandr
+          lxappearance
+          xidlehook
+          i3status-rust
+          autotiling
+        ];
+      };
+    };
 
-      volume = {
-        "/data" = {
-          snapshot_dir = "/dataSnaps";
-          subvolume = {
-            "." = {
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      # If you want to use JACK applications, uncomment this
+      #jack.enable = true;
+
+      # use the example session manager (no others are packaged yet so this is enabled by default,
+      # no need to redefine it in your config for now)
+      #media-session.enable = true;
+    };
+
+    btrbk = {
+      instances.data.settings = {
+        snapshot_preserve = "7d";
+        snapshot_preserve_min = "2d";
+
+        volume = {
+          "/data" = {
+            snapshot_dir = "/dataSnaps";
+            subvolume = {
+              "." = {
+              };
             };
           };
         };
       };
     };
-  };
 
-  location.provider = "geoclue2";
-  services.geoclue2 = {
-    enable = true;
-  };
-  services.redshift = {
-    enable = true;
-  };
-  services = {
+    geoclue2 = {
+      enable = true;
+    };
+    redshift = {
+      enable = true;
+    };
     syncthing = {
       enable = true;
       user = "gaurav";
       configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
     };
+
+    # Enable CUPS to print documents.
+    printing.enable = true;
+
+    # Enable touchpad support (enabled default in most desktopManager).
+    xserver.libinput.enable = true;
+
+    #services.openssh.enable = true;
+    gvfs.enable = true;
+    gnome.core-os-services.enable = true;
+    greenclip.enable = true;
   };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
-
-  #services.openssh.enable = true;
-  services.gvfs.enable = true;
-  services.gnome.core-os-services.enable = true;
-  services.greenclip.enable = true;
-
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
