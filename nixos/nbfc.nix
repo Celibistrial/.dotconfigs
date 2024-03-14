@@ -13,29 +13,19 @@
     src = pkgs.fetchFromGitHub {
       owner = "Celibistrial";
       repo = "nbfc-linux";
-      rev = "b656b01d1fa88e42f448032105c2269cac1e3597";
-      sha256 = "6AC8BVSDtPchasSx0KJGLEXYsbonumn+aoNOxl3D4c8=";
+      rev = "3edf9978ca12d71e7dca3ee863d3aef2e492c430";
+      sha256 = "OSrR05BJOcvzpAw68Bn3nhtAr5M9t42h12nAc+kay5I=";
     };
 
     buildFlags = ["PREFIX=$(out)" "confdir=/etc"];
-
-    installPhase = let
-      installFlags = ["PREFIX=$out"];
-    in ''
-      make ${builtins.concatStringsSep " " installFlags}\
-           install-core \
-           install-client-c\
-           install-configs\
-           install-docs\
-           install-completion
-    '';
+    installFlags = ["PREFIX=$(out)" "confdir=$(out)/etc"];
+    installTargets = ["install-core" "install-configs" "install-docs" "install-completion"];
   };
 in {
   environment.systemPackages = with pkgs; [
     nix-prefetch-github
     nbfc
   ];
-
   systemd.services.nbfc_service = {
     enable = true;
     description = "NoteBook FanControl service";

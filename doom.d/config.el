@@ -29,8 +29,8 @@
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
-(after! company
-  (add-to-list 'company-backends 'company-files))
+;; (after! company
+;;   (add-to-list 'company-backends 'company-files))
 (after! helm
 (setq projectile-indexing-method 'alien)
 (map!
@@ -105,9 +105,9 @@
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-auto-activate t)
 
-  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-modeline-code-actions-enable t)
@@ -121,6 +121,10 @@
 (custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
+(use-package! lsp-nix
+  :custom
+  (lsp-nix-nil-formatter
+   ["alejandra"]))
 (defun create-cpp-project ()
   "Create a new C++ project with CMake configuration files."
   (interactive)
@@ -424,6 +428,6 @@
 (after! epa
   (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
 (setq ispell-local-dictionary "en_GB")
-(beacon-mode 1)
-(use-package emojify
-  :hook (after-init . global-emojify-mode))
+;; (beacon-mode 1)
+;; (use-package emojify
+;;   :hook (after-init . global-emojify-mode))

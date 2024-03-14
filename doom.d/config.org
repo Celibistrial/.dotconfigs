@@ -57,8 +57,8 @@
 ** company
 Gives auto completion for files (it really should be the default)
 #+begin_src emacs-lisp
-(after! company
-  (add-to-list 'company-backends 'company-files))
+;; (after! company
+;;   (add-to-list 'company-backends 'company-files))
 #+end_src
 ** helm
 *** helm-config
@@ -153,9 +153,9 @@ Gives auto completion for files (it really should be the default)
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-auto-activate t)
 
-  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-enable t)
   (setq lsp-modeline-code-actions-enable t)
@@ -169,6 +169,13 @@ Gives auto completion for files (it really should be the default)
 (custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
+#+end_src
+*** lsp-nix
+#+begin_src emacs-lisp
+(use-package! lsp-nix
+  :custom
+  (lsp-nix-nil-formatter
+   ["alejandra"]))
 #+end_src
 ** custom function
 *** create cpp/c project
@@ -549,11 +556,11 @@ Gives auto completion for files (it really should be the default)
 * Packages
 ** Beacon
 #+begin_src emacs-lisp
-(beacon-mode 1)
+;; (beacon-mode 1)
 #+end_src
 
 ** Emojify
 #+begin_src emacs-lisp
-(use-package emojify
-  :hook (after-init . global-emojify-mode))
+;; (use-package emojify
+;;   :hook (after-init . global-emojify-mode))
 #+end_src

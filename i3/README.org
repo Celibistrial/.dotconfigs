@@ -14,7 +14,7 @@
   - [[#i3bar][i3bar]]
 
 * i3-config
-This is my personal i3-config , parts of it are taken from various parts of the internet
+Celibistrial's i3wm config
 ** Keybinds
 *** Base
 #+begin_src conf
@@ -156,7 +156,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+c exec "rofi -show calc -modi calc -no-show-match -no-sort"
 bindsym $mod+d exec "rofi -show drun"
 bindsym $mod+Ctrl+v exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
-bindsym $mod+shift+s exec "/usr/bin/flameshot gui"
+bindsym $mod+shift+s exec "flameshot gui"
 #+end_src
 ** Cool screenshot
 #+begin_src conf
@@ -266,11 +266,11 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 ** Color Scheme
 #+begin_src conf
 # primary
-set $colorp #96CDFBff
+set $colorp #96CDFB
 # secondary
 set $colors  #ffffff
 # foreground
-set $colorf #3c3836
+set $colorf #24273a
 # alt foreground
 set $colorb #282828
 # highlighted foreground
@@ -278,7 +278,7 @@ set $colorw #d4be98
 # urgent
 set $coloru #ea6962
 # bar background
-set $bar_bg #00000000
+set $bar_bg #000000
 
 gaps inner 10
 gaps outer 0
@@ -287,9 +287,9 @@ smart_gaps on
 hide_edge_borders vertical
 
 # class                 border    backgr.   text      indicator child_border
-client.focused          $colorpCC $colorpCC #ffffff   $colorpCC $colorpCC
-client.focused_inactive $colorf   $colorf   #ffffff   $colorfCC $colorf
-client.unfocused        $colorf   $colorf   #888888   $colorsCC $colorf
+client.focused          $colorp   $colorp   #ffffff   $colorp   $colorp
+client.focused_inactive $colorf   $colorf   #ffffff   $colorf   $colorf
+client.unfocused        $colorf   $colorf   #ffffff   $colors   $colorf
 
 
 #+end_src
