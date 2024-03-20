@@ -15,10 +15,52 @@
     ./nbfc.nix
   ];
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nixpkgs.overlays = [
+    (final: prev: {
+      # see https://github.com/svenstaro/rofi-calc/issues/117
+      libqalculate = prev.libqalculate.overrideAttrs (_: rec {
+        pname = "libqalculate";
+        version = "4.8.1";
 
+        src = pkgs.fetchFromGitHub {
+          owner = "qalculate";
+          repo = "libqalculate";
+          rev = "v${version}";
+          sha256 = "sha256-4WqKlwVf4/ixVr98lPFVfNL6EOIfHHfL55xLsYqxkhY=";
+        };
+      });
+    })
+  ];
+
+  boot = {
+    tmp.useTmpfs = true;
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    plymouth.enable = true;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
+
+    loader = {
+      # holding SPACE will make it appear
+      timeout = lib.mkDefault 0;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
+  };
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.auto-optimise-store = true;
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
   networking.hostName = "hp-pav"; # Define your hostname.
   networking.extraHosts = ''
     192.168.29.85 deb1
@@ -29,7 +71,6 @@
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.nftables.enable = true;
   networking.firewall.enable = true;
-
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_IN";
@@ -53,6 +94,7 @@
   security.rtkit.enable = true;
   fonts.packages = with pkgs; [
     noto-fonts
+    font-awesome
     noto-fonts-cjk
     noto-fonts-emoji
     liberation_ttf
@@ -82,20 +124,18 @@
       eza
       feh
       networkmanagerapplet
-      i3-swallow
       bat
       catppuccin-gtk
       papirus-icon-theme
       fd
       cinnamon.nemo
       firefox
+      xdg-user-dirs
       chromium
       btop
       zoxide
-      tree
       zathura
       anki
-      hplip
       neofetch
       fzf
       nil
@@ -103,7 +143,6 @@
       obs-studio
       flameshot
       pandoc
-      emacs
       jupyter
       gnome.eog
     ];
@@ -125,11 +164,17 @@
     pavucontrol
     polkit-kde-agent
     pciutils
-    # inputs.envycontrol.packages.x86_64-linux.default
   ];
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
+    # for printers
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+    emacs.enable = true;
     xserver = {
       enable = true;
       displayManager.gdm.enable = true;
@@ -141,6 +186,8 @@
           lxappearance
           xidlehook
           i3status-rust
+          i3-swallow
+          eww
           autotiling
         ];
       };
@@ -160,15 +207,19 @@
     };
 
     btrbk = {
-      instances.data.settings = {
-        snapshot_preserve = "7d";
-        snapshot_preserve_min = "2d";
+      instances.data = {
+        onCalendar = "hourly";
+        settings = {
+          # 48h means 48 hourly snapshots are preversed , 7d means 7 daily snapshots are preserved
+          snapshot_preserve = "7d";
+          snapshot_preserve_min = "2d";
 
-        volume = {
-          "/data" = {
-            snapshot_dir = "/dataSnaps";
-            subvolume = {
-              "." = {
+          volume = {
+            "/data" = {
+              snapshot_dir = "/dataSnaps";
+              subvolume = {
+                "." = {
+                };
               };
             };
           };
@@ -188,15 +239,17 @@
       configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
     };
 
+    openssh = {
+      enable = true;
+      settings.PasswordAuthentication = true;
+    };
     # Enable CUPS to print documents.
     printing.enable = true;
 
     # Enable touchpad support (enabled default in most desktopManager).
     xserver.libinput.enable = true;
 
-    #services.openssh.enable = true;
     gvfs.enable = true;
-    gnome.core-os-services.enable = true;
     greenclip.enable = true;
   };
   # This option defines the first version of NixOS you have installed on this particular machine,

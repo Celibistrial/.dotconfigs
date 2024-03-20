@@ -18,8 +18,17 @@
     };
 
     buildFlags = ["PREFIX=$(out)" "confdir=/etc"];
-    installFlags = ["PREFIX=$(out)" "confdir=$(out)/etc"];
-    installTargets = ["install-core" "install-configs" "install-docs" "install-completion"];
+
+    installPhase = let
+      installFlags = ["PREFIX=$out"];
+    in ''
+      make ${builtins.concatStringsSep " " installFlags}\
+           install-core \
+           install-client-c\
+           install-configs\
+           install-docs\
+           install-completion
+    '';
   };
 in {
   environment.systemPackages = with pkgs; [

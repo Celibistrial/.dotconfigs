@@ -216,7 +216,7 @@ exec /nix/store/$(ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{
 exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"
-exec --no-startup-id "emacs --daemon"
+# exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
