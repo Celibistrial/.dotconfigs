@@ -1,6 +1,6 @@
+set $mod Mod4
 bindsym $mod+Ctrl+Tab move scratchpad
 bindsym $mod+Tab scratchpad show
-set $mod Mod4
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)

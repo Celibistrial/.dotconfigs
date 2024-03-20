@@ -54,5 +54,5 @@
 ;;   :recipe(:repo "emacs-grammarly/lsp-grammarly" :host github))
 ;; (package! eldoc :disable t)
 (package! org-download)
-(package! math-preview)
+(package! git-timemachine)
 ;; (package! beacon)
