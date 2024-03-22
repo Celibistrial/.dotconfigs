@@ -2,10 +2,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # envycontrol.url = "github:bayasdev/envycontrol";
-    # nbfc-linux = {
-    # url = "github:nbfc-linux/nbfc-linux";
-    # inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nbfc-linux = {
+      url = "github:Celibistrial/nbfc-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
