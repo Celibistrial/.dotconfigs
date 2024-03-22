@@ -54,8 +54,6 @@
     };
   };
   nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.auto-optimise-store = true;
-
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -145,6 +143,7 @@
       pandoc
       jupyter
       gnome.eog
+      (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
     ];
   };
   zramSwap.enable = true;

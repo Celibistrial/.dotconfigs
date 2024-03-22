@@ -21,6 +21,27 @@
         "type": "github"
       }
     },
+    "nbfc-linux": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1711115957,
+        "narHash": "sha256-gSEQXdW+pI59W7KSvnJcj+cJbBpImrkNqfGwg6V+mN4=",
+        "owner": "Celibistrial",
+        "repo": "nbfc-linux",
+        "rev": "93a941c68d23f0615c19150ad562f7963e5a6138",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Celibistrial",
+        "repo": "nbfc-linux",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1710806803,
@@ -40,7 +61,41 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "nbfc-linux": "nbfc-linux",
         "nixpkgs": "nixpkgs"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1681202837,
+        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },
