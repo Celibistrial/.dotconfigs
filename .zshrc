@@ -135,4 +135,4 @@ alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
 bindkey -v
 eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
