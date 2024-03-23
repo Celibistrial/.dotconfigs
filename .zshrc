@@ -126,7 +126,8 @@ source ~/.powerlevel10k/powerlevel10k.zsh-theme
 alias icat="kitty +kitten icat"
 alias zm="swallow zathura"
 alias zr="swallow zaread"
-alias em="swallow emacsclient -c -a 'emacs'"
+alias vim="emacsclient -t -a 'emacs'"
+alias em="emacsclient -t -a 'emacs'"
 alias ls='exa'
 alias cat='bat'
 alias cpfile="xclip -sel c <"
@@ -136,3 +137,19 @@ alias btop="btop --utf-force"
 bindkey -v
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh --cmd cd)"
+if [ -n "${commands[fzf-share]}" ]; then
+  source "$(fzf-share)/key-bindings.zsh"
+  source "$(fzf-share)/completion.zsh"
+fi
+# USE LF TO SWITCH DIRECTORIES AND BIND IT TO CTRL-O
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+bindkey -s '^o' 'lfcd\n'
+

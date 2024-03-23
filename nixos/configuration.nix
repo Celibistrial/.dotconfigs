@@ -84,7 +84,30 @@
     LC_TIME = "en_IN";
   };
   environment.sessionVariables = rec {
-    EDITOR = "nvim";
+    EDITOR = "emacsclient -t -a ''";
+    # Tell xdg-open to chill and just use the following default applications.
+    # Without this setting, xdg-open will try to defer to exo-open despite not
+    # using XFCE.  exo-open will use whatever XFCE4 defaults you may have left
+    # over in your homedir.  Cursed.
+    XDG_CURRENT_DESKTOP = "X-Generic";
+  };
+
+  xdg.mime.defaultApplications = let
+    browser = "firefox.desktop";
+    documentViewer = "org.pwmt.zathura.desktop";
+    imageViewer = "org.gnome.eog.desktop";
+    emailClient = "thunderbird.desktop";
+  in {
+    "application/pdf" = documentViewer;
+    "x-scheme-handler/http" = browser;
+    "x-scheme-handler/https" = browser;
+    "x-scheme-handler/mailto" = emailClient;
+    "message/rfc822" = emailClient;
+    "text/calendar" = emailClient;
+    "text/x-vcard" = emailClient;
+    "text/html" = browser;
+    "image/jpeg" = imageViewer;
+    "image/gif" = imageViewer;
   };
 
   sound.enable = true;
@@ -108,9 +131,9 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
-  programs.steam = {
-    enable = true;
-  };
+  # programs.steam = {
+  #   enable = true;
+  # };
   programs.zsh.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
@@ -126,8 +149,9 @@
       catppuccin-gtk
       papirus-icon-theme
       fd
-      cinnamon.nemo
+      ranger
       firefox
+      gnome.eog
       xdg-user-dirs
       chromium
       btop
@@ -139,10 +163,10 @@
       nil
       alejandra
       obs-studio
+      mpv
       flameshot
       pandoc
       jupyter
-      gnome.eog
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
     ];
   };
@@ -156,7 +180,6 @@
     curl
     ripgrep
     kitty
-    neovim
     git
     picom
     gnupg
