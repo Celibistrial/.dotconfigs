@@ -19,6 +19,8 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/.config/emacs/bin:$PATH"
+# Path to scripts
+export PATH="$HOME/.local/bin:$PATH"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -131,43 +133,6 @@ alias cpfile="xclip -sel c <"
 alias remacs="pkill emacs && emacs --daemon"
 alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
-alias walpaper="source ~/.fehbg"
-alias resetbg="~/scripts/resetbg"
 bindkey -v
-alias rebuild="~/.dotconfigs/scripts/rebuild.sh"
-export JDK_BASE=/usr/lib/jvm/
-
-function switch-java() {
-    jvms=( $(ls -1 $JDK_BASE) )
-    pref='jdk-'
-
-    if [ "$1" = "8" ]; then
-        pref='jdk1.'
-    fi
-
-    if [ -n "$1" ]; then
-        SELECTION=$(ls -1 $JDK_BASE | grep "$pref$1")
-    fi
-
-    if [ -z "$SELECTION" ]; then
-        echo "Switch to which JVM?"
-        for i in $jvms; do
-            printf "   %s\n" $i
-        done
-
-        read -q "SELECTION?Select a JVM: "
-    fi
-
-    echo '-----------------------------------------------------------------'
-    echo "Switching to Java: $SELECTION"
-    echo "Full path: $JDK_BASE/$SELECTION/Contents/Home"
-    echo ":java-cmd \"$JDK_BASE/$SELECTION/Contents/Home/bin/java\""
-    echo '-----------------------------------------------------------------'
-    export JAVA_HOME="$JDK_BASE/$SELECTION/Contents/Home"
-    export JAVA_CMD="$JAVA_HOME/bin/java"
-    export PATH="$JAVA_HOME/bin:$PATH"
-    java -version
-    echo '-----------------------------------------------------------------'
-}
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
