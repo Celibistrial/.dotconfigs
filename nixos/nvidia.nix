@@ -54,6 +54,7 @@
   specialisation = {
     on-the-go.configuration = {
       system.nixos.tags = ["on-the-go"];
+      systemd.services.nbfc_service.enable = lib.mkForce false;
       hardware.nvidia = {
         prime.offload.enable = lib.mkForce true;
         prime.offload.enableOffloadCmd = lib.mkForce true;
@@ -61,6 +62,7 @@
       };
     };
     battery-saver.configuration = {
+      systemd.services.nbfc_service.enable = lib.mkForce false;
       system.nixos.tags = ["battery-saver"];
       boot.extraModprobeConfig = lib.mkForce ''
         blacklist nouveau

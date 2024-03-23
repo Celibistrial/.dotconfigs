@@ -1,6 +1,6 @@
-set $mod Mod4
 bindsym $mod+Ctrl+Tab move scratchpad
 bindsym $mod+Tab scratchpad show
+set $mod Mod4
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -106,7 +106,8 @@ mode "resize" {
         bindsym Shift+h resize shrink width 12 px or 12 ppt
         bindsym Shift+k resize grow height 12 px or 12 ppt
         bindsym Shift+j resize shrink height 12 px or 12 ppt
-        bindsym Shift+l resize grow width 12 px or 12 ppt        # same bindings, but for the arrow keys
+        # bindsym Shift+l resize grow width 12 px or 12 ppt        # same bindings, but for the arrow keys
+        bindsym Shift+l resize grow width 12 px or 12 ppt
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
@@ -180,7 +181,7 @@ exec /nix/store/$(ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{
 exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"
-exec --no-startup-id "emacs --daemon"
+# exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
