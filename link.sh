@@ -8,3 +8,6 @@ ln -s ~/.dotconfigs/dunst ~/.config/
 ln -s ~/.dotconfigs/i3status-rust/ ~/.config/
 ln -s ~/.dotconfigs/i3/ ~/.config/
 ln -s ~/.dotconfigs/.zshrc ~/.zshrc
+ln -s ~/.dotconfigs/nvim ~/.config
+mkdir ~/.local/
+ln -s ~/.dotconfigs/scripts/ ~/.local/bin/
