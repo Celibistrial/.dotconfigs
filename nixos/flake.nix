@@ -23,19 +23,24 @@
       system = "x86_64-linux";
       specialArgs = {inherit inputs;};
       modules = [
-        # Import the previous configuration.nix we used,
-        # so the old configuration file still takes effect
-        ./configuration.nix
+        ./hosts/hp-pav/configuration.nix
 
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
-          home-manager.users.gaurav = import ./home.nix;
+          home-manager.users.gaurav = import ./hosts/hp-pav/home.nix;
 
           # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
         }
+      ];
+    };
+    nixosConfigurations.deb1 = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {inherit inputs;};
+      modules = [
+        ./hosts/deb1/configuration.nix
       ];
     };
   };

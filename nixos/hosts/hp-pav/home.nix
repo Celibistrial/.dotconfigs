@@ -29,6 +29,7 @@
       nix-direnv.enable = true;
     };
   };
+  services.mpris-proxy.enable = true;
   home.pointerCursor = {
     x11.enable = true;
     name = "Bibata-Modern-Classic";
