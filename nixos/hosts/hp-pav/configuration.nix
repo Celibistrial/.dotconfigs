@@ -14,7 +14,6 @@
     ./nvidia.nix
     ./nbfc.nix
   ];
-  # Use the systemd-boot EFI boot loader.
   nixpkgs.overlays = [
     (final: prev: {
       # see https://github.com/svenstaro/rofi-calc/issues/117
@@ -33,6 +32,7 @@
   ];
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
     tmp.useTmpfs = true;
     consoleLogLevel = 0;
     initrd.verbose = false;
@@ -53,6 +53,11 @@
       systemd-boot.enable = true;
     };
   };
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.gc = {
     automatic = true;
@@ -113,6 +118,7 @@
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  security.polkit.enable = true;
   fonts.packages = with pkgs; [
     noto-fonts
     font-awesome
@@ -150,7 +156,10 @@
       papirus-icon-theme
       fd
       ranger
+      gnome.nautilus
+      sonixd
       firefox
+      emacs
       gnome.eog
       xdg-user-dirs
       chromium
@@ -190,13 +199,18 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
+    undervolt = {
+      enable = true;
+      coreOffset = -100;
+      gpuOffset = -100;
+    };
     # for printers
     avahi = {
       enable = true;
       nssmdns4 = true;
       openFirewall = true;
     };
-    emacs.enable = true;
+    blueman.enable = true;
     xserver = {
       enable = true;
       displayManager.gdm.enable = true;
@@ -222,10 +236,6 @@
       pulse.enable = true;
       # If you want to use JACK applications, uncomment this
       #jack.enable = true;
-
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
     };
 
     btrbk = {
