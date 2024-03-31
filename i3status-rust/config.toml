@@ -13,15 +13,15 @@ block = "music"
 format = " $icon {$combo.str(max_w:20) $prev $play $next |}"
 [[block]]
 block = "cpu"
-[[block]]
-block = "disk_space"
-path = "/"
-info_type = "available"
-alert_unit = "GB"
-interval = 20
-warning = 20.0
-alert = 10.0
-format = " $icon root: $used.eng(w:2) "
+# [[block]]
+# block = "disk_space"
+# path = "/"
+# info_type = "available"
+# alert_unit = "GB"
+# interval = 20
+# warning = 20.0
+# alert = 10.0
+# format = " $icon root: $used.eng(w:2) "
 [[block]]
 block = "battery"
 format = "$icon $time $percentage $power"

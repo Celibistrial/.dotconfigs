@@ -43,6 +43,7 @@
   (setq lsp-ui-sideline-enable t)
   (setq lsp-eldoc-enable-hover t)
   (setq lsp-completion-show-detail t)
+ (setq lsp-signature-auto-activate nil)
   (setq lsp-completion-show-kind t))
  (setq lsp-auto-guess-root t)
 (defun lsp-ui-sideline--compute-height nil '(height unspecified))
