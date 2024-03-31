@@ -62,7 +62,6 @@
       system.nixos.tags = ["battery-saver"];
       hardware.nvidiaOptimus.disable = lib.mkForce true;
       systemd.services.nbfc_service.enable = lib.mkForce false;
-      services.undervolt.turbo = lib.mkForce 1;
     };
   };
 

@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # envycontrol.url = "github:bayasdev/envycontrol";
     nbfc-linux = {
       url = "github:Celibistrial/nbfc-linux";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,7 +17,6 @@
     home-manager,
     ...
   } @ inputs: {
-    # Please replace my-nixos with your hostname
     nixosConfigurations.hp-pav = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {inherit inputs;};
@@ -29,10 +27,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-
           home-manager.users.gaurav = import ./hosts/hp-pav/home.nix;
-
-          # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
         }
       ];
     };
