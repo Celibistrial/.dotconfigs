@@ -87,8 +87,8 @@
     LC_TELEPHONE = "en_IN";
     LC_TIME = "en_IN";
   };
-  environment.sessionVariables = rec {
-    EDITOR = "emacsclient -t -a ''";
+  environment.sessionVariables = {
+    EDITOR = "vim";
     # Tell xdg-open to chill and just use the following default applications.
     # Without this setting, xdg-open will try to defer to exo-open despite not
     # using XFCE.  exo-open will use whatever XFCE4 defaults you may have left
@@ -123,22 +123,11 @@
     font-awesome
     noto-fonts-cjk
     noto-fonts-emoji
-    liberation_ttf
-    fira-code
-    fira-code-symbols
-    mplus-outline-fonts.githubRelease
-    dina-font
-    proggyfonts
-    dejavu_fonts
-    nerdfonts
+    (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
   ];
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
-  # programs.steam = {
-  #   enable = true;
-  # };
   programs.zsh.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
@@ -159,13 +148,14 @@
       sonixd
       firefox
       emacs
+      vim
       gnome.eog
+      anki
       xdg-user-dirs
       chromium
       btop
       zoxide
       zathura
-      anki
       neofetch
       fzf
       nil
@@ -198,6 +188,18 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
+    auto-cpufreq.settings = {
+      enable = true;
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+
+      battery = {
+        governor = "powersave";
+        turbo = "auto";
+      };
+    };
     undervolt = {
       enable = true;
       coreOffset = -100;
@@ -222,7 +224,6 @@
           xidlehook
           i3status-rust
           i3-swallow
-          eww
           autotiling
         ];
       };
@@ -269,10 +270,10 @@
       user = "gaurav";
       configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
     };
-
+    # Disabled due to xy backdoor
     openssh = {
-      enable = true;
-      settings.PasswordAuthentication = true;
+      enable = false;
+      settings.PasswordAuthentication = false;
     };
     # Enable CUPS to print documents.
     printing.enable = true;

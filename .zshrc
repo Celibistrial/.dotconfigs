@@ -127,7 +127,6 @@ source ~/.powerlevel10k/powerlevel10k.zsh-theme
 alias icat="kitty +kitten icat"
 alias zm="swallow zathura"
 alias zr="swallow zaread"
-alias vim="emacsclient -t -a ''"
 alias em="emacsclient -t -a ''"
 alias ls='exa'
 alias cat='bat'
@@ -137,7 +136,7 @@ alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
 bindkey -v
 eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
   source "$(fzf-share)/completion.zsh"

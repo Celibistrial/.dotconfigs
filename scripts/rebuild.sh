@@ -22,7 +22,7 @@ pushd ~/.dotconfigs/nixos/
 alejandra . >/dev/null -q
 
 # Shows your changes
-git diff -U0 *.nix
+git diff -U0 **/*.nix
 
 echo "NixOS Rebuilding..."
 
