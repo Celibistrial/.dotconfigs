@@ -165,6 +165,7 @@
       flameshot
       pandoc
       jupyter
+      inputs.nixctl.packages.x86_64-linux.default
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
     ];
   };
