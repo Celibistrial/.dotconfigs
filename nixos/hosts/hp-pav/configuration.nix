@@ -147,6 +147,7 @@
       gnome.nautilus
       sonixd
       firefox
+      inputs.nixctl.packages.x86_64-linux.default
       emacs
       vim
       gnome.eog

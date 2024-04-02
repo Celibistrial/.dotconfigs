@@ -15,7 +15,7 @@
 (map!
  :leader
  :nv
- "!" #'comint-dynamic-complete-filename)
+ "z" #'comint-dynamic-complete-filename)
 
 (setq evil-want-fine-undo t)
 ;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
