@@ -5,6 +5,10 @@
       url = "github:Celibistrial/nbfc-linux";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixctl = {
+      url = "github:Celibistrial/nixctl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
