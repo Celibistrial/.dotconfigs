@@ -7,6 +7,9 @@
   home.username = "gaurav";
   home.homeDirectory = "/home/gaurav";
   home.stateVersion = "23.11";
+  home.sessionVariables = {
+    # MOZ_DISABLE_RDD_SANDBOX = 1;
+  };
 
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
