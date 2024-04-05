@@ -129,6 +129,8 @@
     Defaults timestamp_type = global
   '';
   programs.zsh.enable = true;
+  programs.hyprland.enable = true;
+  programs.noisetorch.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
     description = "Gaurav Choudhury";
@@ -153,7 +155,6 @@
       gnome.eog
       anki
       xdg-user-dirs
-      chromium
       btop
       zoxide
       zathura
@@ -214,6 +215,7 @@
     };
     blueman.enable = true;
     xserver = {
+      excludePackages = [pkgs.xterm];
       enable = true;
       displayManager.gdm.enable = true;
       windowManager.i3 = {

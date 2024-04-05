@@ -14,6 +14,7 @@
       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
+      nvidia-vaapi-driver
     ];
   };
   hardware.nvidia = {
