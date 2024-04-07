@@ -153,3 +153,4 @@ rm -f "$tmp"
 fi
 }
 bindkey -s '^o' 'rangercd\n'
+
