@@ -7,7 +7,8 @@ ln -s ~/.dotconfigs/kitty ~/.config/
 ln -s ~/.dotconfigs/dunst ~/.config/
 ln -s ~/.dotconfigs/i3status-rust/ ~/.config/
 ln -s ~/.dotconfigs/i3/ ~/.config/
-#ln -s ~/.dotconfigs/.zshrc ~/.zshrc
+ln -s ~/.dotconfigs/.zshrc ~/.zshrc
+ln -s ~/.dotconfigs/.oh-my-zsh ~/
 ln -s ~/.dotconfigs/nvim ~/.config
 mkdir ~/.local/
 ln -s ~/.dotconfigs/scripts/ ~/.local/bin/
