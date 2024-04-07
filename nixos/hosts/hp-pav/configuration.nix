@@ -111,6 +111,7 @@
     "text/x-vcard" = emailClient;
     "text/html" = browser;
     "image/jpeg" = imageViewer;
+    "image/png" = imageViewer;
     "image/gif" = imageViewer;
   };
 
@@ -154,7 +155,6 @@
       gnome.nautilus
       sonixd
       firefox
-      xwinwrap
       inputs.nixctl.packages.x86_64-linux.default
       emacs
       vim
