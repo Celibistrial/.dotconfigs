@@ -155,8 +155,11 @@
       gnome.nautilus
       sonixd
       firefox
+      chromium
       inputs.nixctl.packages.x86_64-linux.default
       emacs
+      sqlite
+      graphviz
       vim
       gnome.eog
       anki

@@ -68,11 +68,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1712164509,
-        "narHash": "sha256-+HGiOCsF0ozgScTb10QuUpgeCmsRpXjLiZOwoUgVSvc=",
+        "lastModified": 1712553632,
+        "narHash": "sha256-e0qXg2FXMype0yz7/5jTQYROb9zqzUyIv2d9JmxDyJI=",
         "owner": "Celibistrial",
         "repo": "nixctl",
-        "rev": "698cefa347eb75e424c52f5b4305698c2651bfea",
+        "rev": "0db6a27d5e7863d1885e01b9ee5bfa7ba0c6d8fe",
         "type": "github"
       },
       "original": {
