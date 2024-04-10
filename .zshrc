@@ -136,7 +136,7 @@ alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
 bindkey -v
 eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh --cmd cd)"
+eval "$(zoxide init zsh)"
 if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
   source "$(fzf-share)/completion.zsh"
