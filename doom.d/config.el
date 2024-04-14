@@ -2,8 +2,6 @@
       user-mail-address "gauravchoudhury80222@gmail.com")
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq org-directory "~/org/")
-(setq org-agenda-files '("~/org/"))
 (setq select-enable-clipboard nil)
 
 (map!
@@ -58,9 +56,23 @@
   :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 (setq org-log-done 'time)
 (after! org
-  (set-popup-rule! "^\\*Org Src" :ignore t))
-(after! org
-  (setq org-src-window-setup 'split-window-right))
+  ;; (set-popup-rule! "^\\*Org Src" :ignore t)
+  (setq org-agenda-files '("~/org/"))
+  (setq org-directory "~/org/"))
+(setq org-src-window-setup 'split-window-right)
+(after! org-roam
+  ;; (setq org-roam-directory "~/exocortex/")
+  (setq org-roam-capture-templates
+        '(
+          ("d" "default" plain "%?" :target
+           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+FILETAGS:  :%<%Y-%m-%d>:\n ")
+           :unnarrowed t)
+          )
+        )
+  (setq org-roam-dailies-capture-templates '(("d" "default" entry "* %<%r> %?"
+					      :target
+					      (file+head "%<%Y-%m-%d>.org" "#+title: %<%A %Y-%m-%d>\n#+FILETAGS:  :%<%Y-%m-%d>: "))))
+  )
 (after! org
 (use-package! org-download))
 ;; put your css files there
@@ -114,15 +126,16 @@
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
           ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO  %? %i
  %a")
+          ("w" "Workout Journal" entry (file "~/org/workout journal.org") "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n ")
           ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
 %i %a" :prepend t)
-         ("j" "Journal Entry" entry
+          ("j" "Journal Entry" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n%?")
           ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
 %a" :prepend t)
-("J" "Journal Entry With Prompt" entry
+          ("J" "Journal Entry With Prompt" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n** Prompt:%(org-random-choice \"~/org/journaling_prompts.org\")  \n%?")
           ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
@@ -140,7 +153,6 @@
  %a" :heading "Changelog" :prepend t))
         )
   )
-;;(load! "org-website" doom-user-dir)
 (after! epa
   (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
 (setq ispell-local-dictionary "en_GB")
