@@ -55,4 +55,5 @@
 ;; (package! eldoc :disable t)
 (package! org-download)
 (package! git-timemachine)
+(package! org-roam-ui)
 ;; (package! beacon)
