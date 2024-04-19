@@ -169,7 +169,6 @@
       zathura
       neofetch
       fzf
-      nil
       alejandra
       obs-studio
       audacity
@@ -216,12 +215,6 @@
       enable = true;
       coreOffset = -100;
       gpuOffset = -100;
-    };
-    # for printers
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      openFirewall = true;
     };
     blueman.enable = true;
     xserver = {
@@ -279,6 +272,7 @@
       enable = true;
     };
     syncthing = {
+      openDefaultPorts = true;
       enable = true;
       user = "gaurav";
       configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
@@ -290,6 +284,7 @@
     };
     # Enable CUPS to print documents.
     printing.enable = true;
+    printing.drivers = [pkgs.hplip];
 
     # Enable touchpad support (enabled default in most desktopManager).
     xserver.libinput.enable = true;

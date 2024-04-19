@@ -4,18 +4,11 @@
 (setq display-line-numbers-type t)
 (setq select-enable-clipboard nil)
 
-(map!
- :nv
- "C-S-v" #'clipboard-yank)
-(map!
- :nv
- "C-S-c" #'clipboard-kill-ring-save)
-(map!
- :leader
- :nv
- "z" #'comint-dynamic-complete-filename)
+;; (use-package-hook! evil
+;;   :pre-init
+;;   (setq evil-respect-visual-line-mode t) ;; sane j and k behavior
+;;   t)
 
-(setq evil-want-fine-undo t)
 ;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
 (set-fontset-font t 'symbol "Apple Color Emoji")
 (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
@@ -24,6 +17,36 @@
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
+(defun copy-current-line-to-clipboard ()
+  "Copy the current line to the system clipboard."
+  (interactive)
+  (save-excursion
+    (back-to-indentation)
+    (set-mark (line-end-position))
+    (copy-region-as-kill (point) (mark)))
+  (clipboard-kill-ring-save (region-beginning) (region-end))
+  (message "Line copied to clipboard"))
+
+(map!
+ :leader
+ :nv
+ :desc "Copy line to system clipboard" "Y" #'copy-current-line-to-clipboard)
+(map!
+ :leader
+ :nv
+ :desc "Copy to system clipboard" "y" #'clipboard-kill-ring-save)
+
+(map!
+ :nv
+ "C-S-v" #'clipboard-yank)
+(map!
+ :nv
+ "C-S-c" #'clipboard-kill-ring-save)
+
+(map!
+ :leader
+ :nv
+ "z" #'comint-dynamic-complete-filename)
 (setq projectile-indexing-method 'alien)
 (map!
  :leader
@@ -56,12 +79,9 @@
   :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 (setq org-log-done 'time)
 (after! org
-  ;; (set-popup-rule! "^\\*Org Src" :ignore t)
   (setq org-agenda-files '("~/org/"))
   (setq org-directory "~/org/"))
-(setq org-src-window-setup 'split-window-right)
 (after! org-roam
-  ;; (setq org-roam-directory "~/exocortex/")
   (setq org-roam-capture-templates
         '(
           ("d" "default" plain "%?" :target
