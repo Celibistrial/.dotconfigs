@@ -41,10 +41,10 @@
   fileSystems."/nocow" = {
     device = "/dev/disk/by-uuid/d827308c-517a-4955-a0ff-ec1b9b9d7c67";
     fsType = "btrfs";
-    options = ["subvol=@nocow"];
+    options = ["subvol=@nocow" "nodatacow"];
   };
 
-  swapDevices = [];
+  swapDevices = [{device = "/dev/disk/by-uuid/627c4eab-2d00-4464-b515-09c7bda0f618disk";}];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

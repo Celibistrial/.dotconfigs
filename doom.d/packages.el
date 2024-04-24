@@ -56,4 +56,5 @@
 (package! org-download)
 (package! git-timemachine)
 (package! org-roam-ui)
+;; (package! gptel)
 ;; (package! beacon)

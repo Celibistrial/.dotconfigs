@@ -13,24 +13,10 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
+    # ./../../containers/ollama-webui.nix
   ];
-  nixpkgs.overlays = [
-    (final: prev: {
-      # see https://github.com/svenstaro/rofi-calc/issues/117
-      # libqalculate = prev.libqalculate.overrideAttrs (_: rec {
-      #   pname = "libqalculate";
-      #   version = "4.8.1";
-
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "qalculate";
-      #     repo = "libqalculate";
-      #     rev = "v${version}";
-      #     sha256 = "sha256-4WqKlwVf4/ixVr98lPFVfNL6EOIfHHfL55xLsYqxkhY=";
-      #   };
-      # });
-    })
-  ];
-
+  nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
+  nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
@@ -73,6 +59,7 @@
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.nftables.enable = true;
   networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [11434];
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -89,6 +76,7 @@
   };
   environment.sessionVariables = {
     EDITOR = "vim";
+    FLAKE = "/home/gaurav/.dotconfigs/nixos/";
     # Tell xdg-open to chill and just use the following default applications.
     # Without this setting, xdg-open will try to defer to exo-open despite not
     # using XFCE.  exo-open will use whatever XFCE4 defaults you may have left
@@ -135,7 +123,6 @@
     #    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     #    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
-
   programs.noisetorch.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
@@ -152,18 +139,21 @@
       papirus-icon-theme
       fd
       ranger
-      gnome.nautilus
+      cinnamon.nemo
       sonixd
       firefox
       chromium
-      inputs.nixctl.packages.x86_64-linux.default
       emacs
+      nh
+      gimp
+      upscayl
       sqlite
       graphviz
       vim
       gnome.eog
       anki
       xdg-user-dirs
+      encfs
       btop
       zoxide
       zathura
@@ -175,6 +165,7 @@
       mpv
       flameshot
       pandoc
+      nil
       jupyter
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
     ];
@@ -199,6 +190,10 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
+    # ollama = {
+    #   enable = true;
+    #   acceleration = "cuda";
+    # };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -217,6 +212,7 @@
       gpuOffset = -100;
     };
     blueman.enable = true;
+
     xserver = {
       excludePackages = [pkgs.xterm];
       enable = true;
@@ -234,7 +230,6 @@
         ];
       };
     };
-
     pipewire = {
       enable = true;
       alsa.enable = true;

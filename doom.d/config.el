@@ -175,4 +175,34 @@
   )
 (after! epa
   (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
+(after! org-crypt
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance '("crypt"))
+
+  (setq org-crypt-key "82810795+Celibistrial@users.noreply.github.com")
+  ;; GPG key to use for encryption.
+  ;; nil means  use symmetric encryption unconditionally.
+  ;; "" means use symmetric encryption unless heading sets CRYPTKEY property.
+
+  (setq auto-save-default nil)
+  )
+(map! "C-x <f12>" #'org-decrypt-entries)
+(map! "C-x <f11>" #'org-decrypt-entry)
 (setq ispell-local-dictionary "en_GB")
+;; (use-package! gptel
+;;   :config
+;;   (setq!
+;;    gptel-model "mistral:7b"
+;;    gptel-default-mode #'org-mode
+;;    gptel-backend (gptel-make-ollama "Ollama"
+;;                    :host "localhost:11434"
+;;                    :stream t
+;;                    :models '("mistral:7b")))
+;;   )
+;; (after! gptel
+;;   (gptel-make-ollama "Ollama"             ;Any name of your choosing
+;;     :host "localhost:11434"               ;Where it's running
+;;     :stream t                             ;Stream responses
+;;     :models '("llama3:latest"))          ;List of models
+
+;;   )
