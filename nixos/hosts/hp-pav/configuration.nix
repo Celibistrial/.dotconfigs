@@ -18,6 +18,10 @@
   nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
   nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
   boot = {
+    tmp = {
+      useTmpfs = true;
+      tmpfsSize = 100;
+    };
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
     initrd.verbose = false;
@@ -143,6 +147,7 @@
       sonixd
       firefox
       chromium
+      (callPackage ./../../pkgs/lmstudio.nix {})
       emacs
       nh
       gimp
