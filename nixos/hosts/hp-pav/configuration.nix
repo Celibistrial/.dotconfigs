@@ -20,7 +20,7 @@
   boot = {
     tmp = {
       useTmpfs = true;
-      tmpfsSize = 100;
+      tmpfsSize = "100%";
     };
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
@@ -122,6 +122,7 @@
     Defaults timestamp_type = global
   '';
   programs.zsh.enable = true;
+  programs.nix-ld.enable = true;
   programs.steam = {
     enable = true;
     #    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -147,7 +148,6 @@
       sonixd
       firefox
       chromium
-      (callPackage ./../../pkgs/lmstudio.nix {})
       emacs
       nh
       gimp
@@ -292,6 +292,13 @@
     gvfs.enable = true;
     greenclip.enable = true;
   };
+  # virtualisation.docker = {
+  #   enable = true;
+  #   enableNvidia = true;
+  #   daemon.settings = {
+  #     data-root = "/data/docker/";
+  #   };
+  # };
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
