@@ -40,7 +40,7 @@
     };
 
     tmux = {
-      enable = true;
+      enable = false;
       plugins = with pkgs.tmuxPlugins; [
         sensible
         vim-tmux-navigator
