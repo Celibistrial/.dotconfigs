@@ -189,20 +189,20 @@
 (map! "C-x <f12>" #'org-decrypt-entries)
 (map! "C-x <f11>" #'org-decrypt-entry)
 (setq ispell-local-dictionary "en_GB")
-;; (use-package! gptel
-;;   :config
-;;   (setq!
-;;    gptel-model "mistral:7b"
-;;    gptel-default-mode #'org-mode
-;;    gptel-backend (gptel-make-ollama "Ollama"
-;;                    :host "localhost:11434"
-;;                    :stream t
-;;                    :models '("mistral:7b")))
-;;   )
-;; (after! gptel
-;;   (gptel-make-ollama "Ollama"             ;Any name of your choosing
-;;     :host "localhost:11434"               ;Where it's running
-;;     :stream t                             ;Stream responses
-;;     :models '("llama3:latest"))          ;List of models
+(use-package! gptel
+  :config
+  (setq!
+   gptel-model "mistral:7b"
+   gptel-default-mode #'org-mode
+   gptel-backend (gptel-make-ollama "Ollama"
+                   :host "localhost:11434"
+                   :stream t
+                   :models '("mistral:7b")))
+  )
+(after! gptel
+  (gptel-make-ollama "Ollama"             ;Any name of your choosing
+    :host "localhost:11434"               ;Where it's running
+    :stream t                             ;Stream responses
+    :models '("llama3:7b"))          ;List of models
 
-;;   )
+  )

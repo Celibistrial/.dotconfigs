@@ -31,6 +31,7 @@ in {
             "TZ" = "Asia/Kolkata";
             "OLLAMA_API_BASE_URL" = "http://127.0.0.1:11434/api";
             "OLLAMA_BASE_URL" = "http://127.0.0.1:11434";
+            "WEBUI_SECRET_KEY" = "VHauLdSV9$NPxyUChzA9@YyYDR!WPj";
           };
 
           volumes = [

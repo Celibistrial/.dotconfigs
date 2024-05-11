@@ -13,10 +13,8 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
-    # ./../../containers/ollama-webui.nix
+    ./../../containers/ollama-webui.nix
   ];
-  nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
-  nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
   boot = {
     tmp = {
       useTmpfs = true;
@@ -62,7 +60,7 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   networking.nftables.enable = true;
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
   networking.firewall.allowedTCPPorts = [11434];
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
@@ -148,10 +146,10 @@
       sonixd
       firefox
       chromium
+      inputs.nixctl.packages.x86_64-linux.default
+      nvd
+      nix-output-monitor
       emacs
-      nh
-      gimp
-      upscayl
       sqlite
       graphviz
       vim
@@ -195,10 +193,10 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
-    # ollama = {
-    #   enable = true;
-    #   acceleration = "cuda";
-    # };
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+    };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -222,6 +220,9 @@
       excludePackages = [pkgs.xterm];
       enable = true;
       displayManager.gdm.enable = true;
+      # displayManager.sddm.enable = true;
+      # desktopManager.plasma6.enable = true;
+      # displayManager.defaultSession = "plasma";
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
@@ -287,7 +288,7 @@
     printing.drivers = [pkgs.hplip];
 
     # Enable touchpad support (enabled default in most desktopManager).
-    xserver.libinput.enable = true;
+    libinput.enable = true;
 
     gvfs.enable = true;
     greenclip.enable = true;
