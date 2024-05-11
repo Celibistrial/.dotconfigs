@@ -16,5 +16,8 @@ if [ $num_monitors -gt 1 ]; then
 
     # Turn on the built-in monitor again
 #    xrandr --output $inbuilt_monitor --auto
+else
+    dpi_value=120
+    xrdb -merge <<< "Xft.dpi: $dpi_value"
 fi
 
