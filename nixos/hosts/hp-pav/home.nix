@@ -144,12 +144,16 @@
   services.mpris-proxy.enable = true;
   gtk = {
     enable = true;
-
     # gtk.cursorTheme.package = pkgs.bibata-cursors;
     # gtk.cursorTheme.name = "Bibata-Modern-Classic";
 
     theme.package = pkgs.catppuccin-gtk;
     theme.name = "Catppuccin-Frappe-Standard-Blue-Dark";
+
+    # theme = {
+    #   package = pkgs.gnome.gnome-themes-extra;
+    #   name = "Adwaita-dark";
+    # };
 
     iconTheme.package = pkgs.papirus-icon-theme;
     iconTheme.name = "Papirus";

@@ -13,9 +13,20 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
-    ./../../containers/ollama-webui.nix
+    # ./../../containers/ollama-webui.nix
   ];
+  # nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
+  # nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
   boot = {
+    binfmt.registrations.appimage = {
+      wrapInterpreterInShell = false;
+      interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+      recognitionType = "magic";
+      offset = 0;
+      mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+      magicOrExtension = ''\x7fELF....AI\x02'';
+    };
+
     tmp = {
       useTmpfs = true;
       tmpfsSize = "100%";
@@ -57,11 +68,8 @@
   '';
 
   # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-  networking.nftables.enable = true;
   networking.firewall.enable = false;
-  networking.firewall.allowedTCPPorts = [11434];
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -119,14 +127,12 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
-  programs.zsh.enable = true;
-  programs.nix-ld.enable = true;
-  programs.steam = {
-    enable = true;
-    #    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    #    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  programs = {
+    zsh.enable = true;
+    nix-ld.enable = true;
+    gnupg.agent.enable = true;
+    noisetorch.enable = true;
   };
-  programs.noisetorch.enable = true;
   users.users.gaurav = {
     isNormalUser = true;
     description = "Gaurav Choudhury";
@@ -138,8 +144,6 @@
       feh
       networkmanagerapplet
       bat
-      catppuccin-gtk
-      papirus-icon-theme
       fd
       ranger
       cinnamon.nemo
@@ -147,9 +151,10 @@
       firefox
       chromium
       inputs.nixctl.packages.x86_64-linux.default
-      nvd
-      nix-output-monitor
+      upscayl
       emacs
+      #(callPackage ../../pkgs/lrcget.nix {})
+      texliveMedium
       sqlite
       graphviz
       vim
@@ -170,6 +175,7 @@
       pandoc
       nil
       jupyter
+      pinta
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
     ];
   };
@@ -193,10 +199,10 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
-    ollama = {
-      enable = true;
-      acceleration = "cuda";
-    };
+    # ollama = {
+    #   enable = true;
+    #   acceleration = "cuda";
+    # };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
