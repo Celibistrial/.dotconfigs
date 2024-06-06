@@ -132,6 +132,7 @@
     nix-ld.enable = true;
     gnupg.agent.enable = true;
     noisetorch.enable = true;
+    #  hyprland.enable = true;
   };
   users.users.gaurav = {
     isNormalUser = true;
@@ -149,10 +150,10 @@
       cinnamon.nemo
       sonixd
       firefox
-      chromium
       inputs.nixctl.packages.x86_64-linux.default
       upscayl
       emacs
+      qalculate-qt
       #(callPackage ../../pkgs/lrcget.nix {})
       texliveMedium
       sqlite
@@ -199,10 +200,14 @@
   # List services that you want to enable:
   location.provider = "geoclue2";
   services = {
-    # ollama = {
-    #   enable = true;
-    #   acceleration = "cuda";
-    # };
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+    };
+    open-webui = {
+      enable = true;
+      environment.OLLAMA_API_BASE_URL = "http://localhost:11434";
+    };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -226,9 +231,6 @@
       excludePackages = [pkgs.xterm];
       enable = true;
       displayManager.gdm.enable = true;
-      # displayManager.sddm.enable = true;
-      # desktopManager.plasma6.enable = true;
-      # displayManager.defaultSession = "plasma";
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
