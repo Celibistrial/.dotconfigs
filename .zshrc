@@ -88,7 +88,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting nix-shell nix-zsh-completions)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting nix-shell nix-zsh-completions direnv zoxide)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -135,8 +135,8 @@ alias remacs="pkill emacs && emacs --daemon"
 alias btop="btop --utf-force"
 #eval "$(starship init zsh)"
 bindkey -v
-eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh)"
+# eval "$(direnv hook zsh)"
+# eval "$(zoxide init zsh)"
 if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
   source "$(fzf-share)/completion.zsh"
