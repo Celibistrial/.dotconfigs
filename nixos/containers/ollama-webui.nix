@@ -5,8 +5,7 @@
   lib,
   pkgs,
   ...
-}: let
-in {
+}: {
   system.activationScripts = {
     script.text = ''
       install -d -m 755 /home/gaurav/.open-webui/data -o root -g root
