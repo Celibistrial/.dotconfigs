@@ -73,10 +73,10 @@
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode))
-(use-package! lsp-nix
-  :custom (lsp-nix-nil-formatter ["alejandra" "--quiet"]))
-(use-package! nix-mode
-  :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
+;; (use-package! lsp-nix
+  ;; :custom (lsp-nix-nil-formatter ["alejandra" "--quiet"]))
+ (use-package! nix-mode
+   :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 (setq org-log-done 'time)
 (after! org
   (setq org-agenda-files '("~/org/"))
@@ -144,21 +144,21 @@
 (after! org
   (setq org-capture-templates
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
-          ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO %? %i
- %a")
+          ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO %?")
           ("w" "Workout Journal" entry (file "~/org/workout journal.org") "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n ")
           ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
 %i %a" :prepend t)
           ("j" "Journal Entry" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n%?")
-          ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
-%i
-%a" :prepend t)
           ("J" "Journal Entry With Prompt" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n** Prompt:%(org-random-choice \"~/org/journaling_prompts.org\")  \n%?")
-          ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
+          ("p" "Protocol" entry (file+headline ,(concat org-directory "refile.org") "Inbox")
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	  ("L" "Protocol Link" entry (file+headline ,(concat org-directory "refile.org") "Inbox")
+           "* %? [[%:link][%:description]] \nCaptured On: %U")
+          ("P" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
 %a" :prepend t) ("pn" "Project-local notes" entry (file+headline +org-capture-project-notes-file "Inbox") "* %U %?
 %i

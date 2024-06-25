@@ -5,6 +5,12 @@
   ...
 }
 : {
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "blue";
+  };
+
   home = {
     username = "gaurav";
     homeDirectory = "/home/gaurav";
@@ -12,7 +18,7 @@
     packages = with pkgs; [
       rofimoji
     ];
-    pointerCursor = {
+    pointerCursor = lib.mkForce {
       x11.enable = true;
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
@@ -21,10 +27,27 @@
     };
   };
   programs = {
+    emacs = {
+      enable = true;
+      extraPackages = epkgs: [epkgs.vterm];
+    };
+    zathura = {
+      enable = true;
+      extraConfig = ''
+        set database sqlite
+      '';
+    };
+    mpv.enable = true;
+    bat.enable = true;
+    btop.enable = true;
+    ranger.enable = true;
+
     home-manager.enable = true;
     rofi = {
       enable = true;
-      theme = "Arc-Dark";
+      catppuccin.enable = false;
+
+      theme = ./../../../rofi/catpuccin-mocha.rasi;
       plugins = with pkgs; [
         rofi-calc
       ];
@@ -44,10 +67,9 @@
       plugins = with pkgs.tmuxPlugins; [
         sensible
         vim-tmux-navigator
-        catppuccin
         yank
       ];
-      prefix = "C-Space";
+      # prefix = "C-Space";
       mouse = true;
       extraConfig = ''
         set-option -sa terminal-overrides ",xterm*:Tc"
@@ -64,82 +86,6 @@
         bind % split-window -h -c "#{pane_current_path}"
       '';
     };
-    zsh = {
-      enable = false;
-      enableCompletion = true;
-      syntaxHighlighting.enable = true;
-
-      shellAliases = {
-        # ll = "ls -l";
-        # update = "sudo nixos-rebuild switch";
-      };
-      history.size = 10000;
-      shellAliases = {
-        icat = "kitty +kitten icat";
-        zm = "swallow zathura";
-        zr = "swallow zaread";
-        em = "emacsclient -t -a ''";
-        ls = "exa";
-        cat = "bat";
-        cpfile = "xclip -sel c <";
-        remacs = "pkill emacs && emacs --daemon";
-        btop = "btop --utf-force";
-      };
-      initExtra = ''
-        export TERM="xterm-256color"                      # getting proper colors
-        export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-        export MANROFFOPT="-c"
-        export PATH="$HOME/.config/emacs/bin:$PATH"
-        # Path to scripts
-        export PATH="$HOME/.local/bin:$PATH"
-        bindkey -v
-        eval "$(direnv hook zsh)"
-        eval "$(zoxide init zsh --cmd cd)"
-        if [ -n "$\{commands [fzf-share]}" ]; then
-          source "$(fzf-share)/key-bindings.zsh"
-          source "$(fzf-share)/completion.zsh"
-        fi
-
-        # use ranger to switch DIRECTORIES AND BIND IT TO CTRL-O
-        rangercd () {
-        tmp="$(mktemp)"
-        ranger --choosedir="$tmp" "$@"
-        if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-        fi
-        }
-        bindkey -s '^o' 'rangercd\n'
-      '';
-      plugins = [
-        {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-        }
-        {
-          name = "zsh-autosuggestions";
-          src = pkgs.zsh-autosuggestions;
-          file = "share/zsh-autosuggestions/zsh-autosuggestions.zsh";
-        }
-        {
-          name = "zsh-nix-shell";
-          src = pkgs.zsh-nix-shell;
-          file = "share/zsh-nix-shell/nix-shell.plugin.zsh";
-        }
-        {
-          name = "zsh-syntax-highlighting";
-          src = pkgs.zsh-syntax-highlighting;
-          file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
-        }
-        {
-          name = "zsh-nix-completions";
-          src = pkgs.nix-zsh-completions;
-          file = "share/nix-zsh-completions/nix-zsh-completions.zsh";
-        }
-      ];
-    };
   };
   services.mpris-proxy.enable = true;
   gtk = {
@@ -147,15 +93,23 @@
     # gtk.cursorTheme.package = pkgs.bibata-cursors;
     # gtk.cursorTheme.name = "Bibata-Modern-Classic";
 
-    theme.package = pkgs.catppuccin-gtk;
-    theme.name = "Catppuccin-Frappe-Standard-Blue-Dark";
-
+    #theme.package = pkgs.catppuccin-gtk;
+    #theme.name = "Catppuccin-Frappe-Standard-Blue-Dark";
+    catppuccin = {
+      enable = true;
+      flavor = "mocha";
+      accent = "blue";
+      # size = "standard";
+      tweaks = ["normal"];
+    };
     # theme = {
     #   package = pkgs.gnome.gnome-themes-extra;
     #   name = "Adwaita-dark";
     # };
 
-    iconTheme.package = pkgs.papirus-icon-theme;
-    iconTheme.name = "Papirus";
+    iconTheme = lib.mkForce {
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus";
+    };
   };
 }

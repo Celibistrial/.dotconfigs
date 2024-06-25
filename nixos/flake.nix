@@ -13,12 +13,14 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    catppuccin,
     ...
   } @ inputs: {
     nixosConfigurations.hp-pav = nixpkgs.lib.nixosSystem {
@@ -27,11 +29,18 @@
       modules = [
         ./hosts/hp-pav/configuration.nix
 
+        catppuccin.nixosModules.catppuccin
+
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.gaurav = import ./hosts/hp-pav/home.nix;
+          home-manager.backupFileExtension = "bkp";
+          # home-manager.users.gaurav = import ./hosts/hp-pav/home.nix;
+          home-manager.users.gaurav.imports = [
+            ./hosts/hp-pav/home.nix
+            catppuccin.homeManagerModules.catppuccin
+          ];
         }
       ];
     };
