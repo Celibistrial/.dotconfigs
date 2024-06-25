@@ -13,7 +13,7 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
-    # ./../../containers/ollama-webui.nix
+    ./../../containers/ollama-webui.nix
   ];
   # nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
   # nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
@@ -62,14 +62,17 @@
     dates = "weekly";
     options = "--delete-older-than 30d";
   };
-  networking.hostName = "hp-pav"; # Define your hostname.
-  networking.extraHosts = ''
-    192.168.29.85 deb1
-  '';
+  networking = {
+    hostName = "hp-pav"; # Define your hostname.
+    extraHosts = ''
+      192.168.29.85 deb1
+    '';
 
-  # Pick only one of the below networking options.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-  networking.firewall.enable = false;
+    networkmanager.enable = true;
+    firewall = {
+      enable = true;
+    };
+  };
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -93,7 +96,9 @@
     # over in your homedir.  Cursed.
     XDG_CURRENT_DESKTOP = "X-Generic";
   };
-
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  xdg.portal.config.common.default = ["gtk"];
   xdg.mime.defaultApplications = let
     browser = "firefox.desktop";
     documentViewer = "org.pwmt.zathura.desktop";
@@ -127,6 +132,12 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
+  programs.steam = {
+    enable = false;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
+
   programs = {
     zsh.enable = true;
     nix-ld.enable = true;
@@ -141,11 +152,6 @@
     shell = pkgs.zsh;
 
     packages = with pkgs; [
-      eza
-      feh
-      networkmanagerapplet
-      bat
-      fd
       ranger
       cinnamon.nemo
       sonixd
@@ -153,16 +159,19 @@
       inputs.nixctl.packages.x86_64-linux.default
       upscayl
       emacs
+      libreoffice
+      gamescope
+      mangohud
+      qbittorrent
+      trash-cli
+      xclip
       qalculate-qt
-      #(callPackage ../../pkgs/lrcget.nix {})
+      (callPackage ../../pkgs/lrcget.nix {})
       texliveMedium
       sqlite
       graphviz
-      vim
       gnome.eog
       anki
-      xdg-user-dirs
-      encfs
       btop
       zoxide
       zathura
@@ -183,6 +192,14 @@
   zramSwap.enable = true;
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
+    eza
+    feh
+    networkmanagerapplet
+    bat
+    fd
+    vim
+    file
+    xdg-user-dirs
     libnotify
     python3
     dunst
@@ -204,10 +221,17 @@
       enable = true;
       acceleration = "cuda";
     };
-    open-webui = {
-      enable = true;
-      environment.OLLAMA_API_BASE_URL = "http://localhost:11434";
-    };
+    # open-webui = {
+    #   enable = true;
+    #   environment = {
+    #     OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
+    #     HF_HOME = "/var/lib/open-webui/";
+    #     SENTENCE_TRANSFORMERS_HOME = "/var/lib/open-webui/";
+    #     WEBUI_AUTH = "False";
+    #   };
+    #   openFirewall = true;
+    #   host = "0.0.0.0";
+    # };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -220,6 +244,7 @@
         turbo = "auto";
       };
     };
+
     undervolt = {
       enable = true;
       coreOffset = -100;
@@ -230,6 +255,7 @@
     xserver = {
       excludePackages = [pkgs.xterm];
       enable = true;
+
       displayManager.gdm.enable = true;
       windowManager.i3 = {
         enable = true;
@@ -286,10 +312,9 @@
       user = "gaurav";
       configDir = "/home/gaurav/.config/syncthing"; # Folder for Syncthing's settings and keys
     };
-    # Disabled due to xy backdoor
     openssh = {
-      enable = false;
-      settings.PasswordAuthentication = false;
+      enable = true;
+      settings.PasswordAuthentication = true;
     };
     # Enable CUPS to print documents.
     printing.enable = true;

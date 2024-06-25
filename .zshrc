@@ -125,6 +125,7 @@ source ~/.powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias icat="kitty +kitten icat"
+alias tp="trash-put"
 alias zm="swallow zathura"
 alias zr="swallow zaread"
 alias em="emacsclient -t -a ''"
