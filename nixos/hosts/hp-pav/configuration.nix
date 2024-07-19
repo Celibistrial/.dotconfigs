@@ -178,18 +178,8 @@
       gimp
       jupyter
       pinta
-      neovim
-      obsidian
 
       # For emacs
-      (makeDesktopItem {
-        name = "org-protocol";
-        desktopName = "org-protocol";
-        exec = "emacsclient -- %u";
-        mimeTypes = [
-          "x-scheme-handler/org-protocol"
-        ];
-      })
       shfmt
       shellcheck
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
