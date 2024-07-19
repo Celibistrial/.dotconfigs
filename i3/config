@@ -177,7 +177,7 @@ exec_always autotiling
 exec picom
 #exec polkit-dumb-agent
 #exec /usr/lib/polkit-kde-authentication-agent-1
-exec /nix/store/$(ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{print $9}')/libexec/polkit-kde-authentication-agent-1 &
+# exec_always /nix/store/$(\ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{print $9}')/libexec/polkit-kde-authentication-agent-1 &
 # exec_always libinput-gestures-setup autostart start
 exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
 exec --no-startup-id "pulsemeeter init"

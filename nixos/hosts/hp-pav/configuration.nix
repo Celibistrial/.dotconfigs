@@ -15,8 +15,6 @@
     ./nbfc.nix
     #./../../containers/ollama-webui.nix
   ];
-  # nix.settings.trusted-substituters = ["https://nix-ai-stuff.cachix.org" "https://ai.cachix.org" "https://cuda-maintainers.cachix.org"];
-  # nix.settings.trusted-public-keys = ["nix-ai-stuff.cachix.org-1:WlUGeVCs26w9xF0/rjyg32PujDqbVMlSHufpj1fqix8=" "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="];
   boot = {
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -31,7 +29,7 @@
       useTmpfs = true;
       tmpfsSize = "100%";
     };
-    # kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
     initrd.verbose = false;
     plymouth.enable = true;
@@ -69,7 +67,7 @@
 
     networkmanager.enable = true;
     firewall = {
-      enable = true;
+      enable = false;
     };
   };
   # Set your time zone.
@@ -117,7 +115,6 @@
     "image/gif" = imageViewer;
   };
 
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   security.polkit.enable = true;
@@ -131,12 +128,6 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
-  programs.steam = {
-    enable = false;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
-
   programs = {
     zsh.enable = true;
     nix-ld.enable = true;
@@ -151,19 +142,20 @@
     shell = pkgs.zsh;
 
     packages = with pkgs; [
-      cinnamon.nemo
-      cinnamon.cinnamon-common
+      nemo-with-extensions
+      file-roller
+      cinnamon-common
+
       sonixd
+      cava
       firefox
       inputs.nixctl.packages.x86_64-linux.default
-      upscayl
       p7zip
+      gparted
       libreoffice
-      qbittorrent
       trash-cli
       xclip
       qalculate-qt
-      (callPackage ../../pkgs/lrcget.nix {})
       eog
       cheese
       ungoogled-chromium
@@ -177,7 +169,12 @@
       pandoc
       gimp
       jupyter
-      pinta
+      zathura
+      mpv
+      recoll
+      brightnessctl
+
+      # (callPackage ../../pkgs/lrcget.nix {})
 
       # For emacs
       shfmt
@@ -188,7 +185,7 @@
   zramSwap.enable = true;
   nixpkgs.config = {
     allowUnfree = true;
-    zathura.useMupdf = false;
+    zathura.useMupdf = true;
   };
   environment.systemPackages = with pkgs; [
     eza
@@ -201,16 +198,16 @@
     xdg-user-dirs
     libnotify
     python3
-    dunst
+    deadd-notification-center
     wget
     curl
     ripgrep
+    ripgrep-all
     kitty
     git
     picom
     gnupg
     pavucontrol
-    polkit-kde-agent
     pciutils
   ];
   # List services that you want to enable:
@@ -218,21 +215,6 @@
   services = {
     fstrim.enable = true;
     envfs.enable = true;
-    # ollama = {
-    #   enable = true;
-    #   acceleration = "cuda";
-    # };
-    # open-webui = {
-    #   enable = true;
-    #   environment = {
-    #     OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
-    #     HF_HOME = "/var/lib/open-webui/";
-    #     SENTENCE_TRANSFORMERS_HOME = "/var/lib/open-webui/";
-    #     WEBUI_AUTH = "False";
-    #   };
-    #   openFirewall = true;
-    #   host = "0.0.0.0";
-    # };
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -248,11 +230,10 @@
 
     undervolt = {
       enable = true;
-      coreOffset = -100;
-      gpuOffset = -100;
+      coreOffset = -80;
+      gpuOffset = -80;
     };
     blueman.enable = true;
-
     xserver = {
       excludePackages = [pkgs.xterm];
       enable = true;
@@ -277,7 +258,7 @@
       alsa.support32Bit = true;
       pulse.enable = true;
       # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
+      jack.enable = true;
     };
 
     btrbk = {

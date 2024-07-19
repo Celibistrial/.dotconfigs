@@ -12,3 +12,5 @@ ln -s ~/.dotconfigs/.oh-my-zsh ~/
 ln -s ~/.dotconfigs/nvim ~/.config
 mkdir ~/.local/
 ln -s ~/.dotconfigs/scripts/ ~/.local/bin/
+ln -s ~/.dotconfigs/nemo/ ~/.local/share/
+ln -s ~/.dotconfigs/deadd ~/.config

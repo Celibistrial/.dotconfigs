@@ -13,7 +13,7 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin.url = "github:Celibistrial/catpuccin-nix";
   };
 
   outputs = {

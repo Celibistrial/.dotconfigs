@@ -1,0 +1,9 @@
+[Nemo Action]
+
+Name=Open in Kitty
+Comment=Open the 'Kitty' terminal emulator in the selected folder
+Exec=kitty --working-directory=%F
+Icon-Name=kitty
+Selection=any
+Extensions=dir;
+EscapeSpaces=true

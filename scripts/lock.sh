@@ -17,7 +17,7 @@ xidlehook \
   --timer 10 \
     'xrandr --output "$PRIMARY_DISPLAY" --brightness 1;betterlockscreen --lock dimblur' \
     '' \
-  `# Finally, suspend 5 minutes after it locks` \
-  --timer 360 \
+  `# Finally, suspend 3 minutes after it locks` \
+  --timer 180 \
     'xrandr --output "$PRIMARY_DISPLAY" --brightness 1 && systemctl suspend' \
     ''
