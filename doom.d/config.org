@@ -214,11 +214,7 @@
           ("J" "Journal Entry With Prompt" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n** Prompt:%(org-random-choice \"~/org/journaling_prompts.org\")  \n%?")
-          ("p" "Protocol" entry (file+headline ,(concat org-directory "refile.org") "Inbox")
-           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	  ("L" "Protocol Link" entry (file+headline ,(concat org-directory "refile.org") "Inbox")
-           "* %? [[%:link][%:description]] \nCaptured On: %U")
-          ("P" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
+          ("p" "Templates for projects") ("pt" "Project-local todo" entry (file+headline +org-capture-project-todo-file "Inbox") "* TODO %?
 %i
 %a" :prepend t) ("pn" "Project-local notes" entry (file+headline +org-capture-project-notes-file "Inbox") "* %U %?
 %i
