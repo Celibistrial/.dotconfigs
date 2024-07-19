@@ -31,13 +31,6 @@
       enable = true;
       extraPackages = epkgs: [epkgs.vterm];
     };
-    zathura = {
-      enable = true;
-      extraConfig = ''
-        set database sqlite
-      '';
-    };
-    mpv.enable = true;
     bat.enable = true;
     btop.enable = true;
     ranger.enable = true;

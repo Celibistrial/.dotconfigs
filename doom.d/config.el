@@ -202,3 +202,7 @@
 ;;     :models '("llama3:7b"))          ;List of models
 
 ;;   )
+(map!
+ :leader
+ :nv
+ :desc "fuzzy find files" "F" #'affe-find)

@@ -20,6 +20,7 @@
     - [[#encryption][encryption]]
   - [[#aspell][aspell]]
   - [[#gptel][gptel]]
+  - [[#affe][affe]]
 
 * My doom config
 ** Setting doom & evil variables
@@ -272,4 +273,11 @@
 ;;     :models '("llama3:7b"))          ;List of models
 
 ;;   )
+#+end_src
+** affe
+#+begin_src emacs-lisp
+(map!
+ :leader
+ :nv
+ :desc "fuzzy find files" "F" #'affe-find)
 #+end_src
