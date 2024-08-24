@@ -31,6 +31,16 @@
       enable = true;
       extraPackages = epkgs: [epkgs.vterm];
     };
+    git = {
+      enable = true;
+      userName = "Gaurav Choudhury";
+      userEmail = "82810795+Celibistrial@users.noreply.github.com";
+      extraConfig = {
+        commit.gpgsign = true;
+        user.signingkey = "E577B32870E99F38";
+      };
+    };
+
     bat.enable = true;
     btop.enable = true;
     ranger.enable = true;
@@ -43,6 +53,7 @@
       theme = ./../../../rofi/catpuccin-mocha.rasi;
       plugins = with pkgs; [
         rofi-calc
+        rofi-power-menu
       ];
       extraConfig = {
         modi = "calc,combi,drun,run,ssh";
@@ -81,6 +92,7 @@
     };
   };
   services.mpris-proxy.enable = true;
+  services.gpg-agent.enable = true;
   gtk = {
     enable = true;
     # gtk.cursorTheme.package = pkgs.bibata-cursors;
