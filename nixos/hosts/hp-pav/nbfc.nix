@@ -8,7 +8,6 @@
   command = "bin/nbfc_service --config-file '/home/${myUser}/.config/nbfc.json'";
 in {
   environment.systemPackages = with pkgs; [
-    nix-prefetch-github
     inputs.nbfc-linux.packages.x86_64-linux.default
   ];
   systemd.services.nbfc_service = {

@@ -53,7 +53,10 @@
     powerOnBoot = true;
   };
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings = {
+    experimental-features = ["nix-command" "flakes"];
+    warn-dirty = false;
+  };
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -93,8 +96,8 @@
     # over in your homedir.  Cursed.
     XDG_CURRENT_DESKTOP = "X-Generic";
   };
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  # xdg.portal.enable = true;
+  # xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.config.common.default = ["gtk"];
   xdg.mime.defaultApplications = let
     browser = "firefox.desktop";
@@ -117,7 +120,24 @@
 
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+
   security.polkit.enable = true;
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
   fonts.packages = with pkgs; [
     noto-fonts
     font-awesome
@@ -151,7 +171,6 @@
       firefox
       inputs.nixctl.packages.x86_64-linux.default
       p7zip
-      gparted
       libreoffice
       trash-cli
       xclip
@@ -180,6 +199,8 @@
       shfmt
       shellcheck
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
+
+      jetbrains.idea-community-bin
     ];
   };
   zramSwap.enable = true;
@@ -191,6 +212,7 @@
     eza
     fzf
     feh
+    gparted
     networkmanagerapplet
     fd
     vim
@@ -204,11 +226,11 @@
     ripgrep
     ripgrep-all
     kitty
-    git
     picom
     gnupg
     pavucontrol
     pciutils
+    nixd
   ];
   # List services that you want to enable:
   location.provider = "geoclue2";
@@ -239,6 +261,7 @@
       enable = true;
 
       displayManager.gdm.enable = true;
+      # desktopManager.gnome.enable = true;
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
