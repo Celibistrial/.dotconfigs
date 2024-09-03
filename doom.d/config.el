@@ -26,6 +26,13 @@
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
+(defadvice! fixed-do-after-load-evaluation (abs-file)
+  :override #'do-after-load-evaluation
+  (dolist (a-l-element after-load-alist)
+    (when (and (stringp (car a-l-element))
+               (string-match-p (car a-l-element) abs-file))
+      (mapc #'funcall (cdr a-l-element))))
+  (run-hook-with-args 'after-load-functions abs-file))
 (defun copy-current-line-to-clipboard ()
   "Copy the current line to the system clipboard."
   (interactive)
@@ -46,10 +53,8 @@
  :desc "Copy to system clipboard" "y" #'clipboard-kill-ring-save)
 
 (map!
- :nv
  "C-S-v" #'clipboard-yank)
 (map!
- :nv
  "C-S-c" #'clipboard-kill-ring-save)
 
 (map!
