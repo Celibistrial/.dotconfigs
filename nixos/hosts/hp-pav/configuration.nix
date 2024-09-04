@@ -13,8 +13,10 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
+    # ./hyprland.nix
     #./../../containers/ollama-webui.nix
   ];
+
   boot = {
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -153,7 +155,13 @@
     nix-ld.enable = true;
     gnupg.agent.enable = true;
     noisetorch.enable = true;
-    #  hyprland.enable = true;
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+      gamescopeSession.enable = true;
+      localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+    };
   };
   users.users.gaurav = {
     isNormalUser = true;
@@ -166,14 +174,13 @@
       file-roller
       cinnamon-common
 
-      sonixd
+      feishin
       cava
       firefox
       inputs.nixctl.packages.x86_64-linux.default
       p7zip
       libreoffice
       trash-cli
-      xclip
       qalculate-qt
       eog
       cheese
@@ -193,7 +200,7 @@
       recoll
       brightnessctl
 
-      # (callPackage ../../pkgs/lrcget.nix {})
+      (callPackage ../../pkgs/lrcget.nix {})
 
       # For emacs
       shfmt
@@ -201,6 +208,14 @@
       (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
 
       jetbrains.idea-community-bin
+
+      xclip
+      xdotool
+      xorg.xprop
+      xorg.xkill
+      xorg.xwininfo
+
+      ffmpeg
     ];
   };
   zramSwap.enable = true;
@@ -232,8 +247,12 @@
     pciutils
     nixd
   ];
+  location = {
+    provider = "manual";
+    latitude = 28.0;
+    longitude = 77.0;
+  };
   # List services that you want to enable:
-  location.provider = "geoclue2";
   services = {
     fstrim.enable = true;
     envfs.enable = true;
@@ -256,12 +275,12 @@
       gpuOffset = -80;
     };
     blueman.enable = true;
+
     xserver = {
       excludePackages = [pkgs.xterm];
       enable = true;
 
       displayManager.gdm.enable = true;
-      # desktopManager.gnome.enable = true;
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
@@ -305,12 +324,6 @@
       };
     };
 
-    geoclue2 = {
-      enable = true;
-    };
-    redshift = {
-      enable = true;
-    };
     syncthing = {
       openDefaultPorts = true;
       enable = true;
@@ -331,9 +344,17 @@
     gvfs.enable = true;
     greenclip.enable = true;
   };
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+  };
   # virtualisation.docker = {
+  #   storageDriver = "btrfs";
+  #   rootless = {
+  #     enable = true;
+  #     setSocketVariable = true;
+  #   };
   #   enable = true;
-  #   enableNvidia = true;
   #   daemon.settings = {
   #     data-root = "/data/docker/";
   #   };

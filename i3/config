@@ -265,3 +265,5 @@ bar {
         urgent_workspace #2f343a #900000 #ffffff
     }
 }
+bindsym $mod+q exec "~/.config/emacs/bin/doom +everywhere"
+for_window [title="Emacs Everywhere"] floating enable

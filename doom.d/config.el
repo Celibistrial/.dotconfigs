@@ -26,13 +26,6 @@
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
-(defadvice! fixed-do-after-load-evaluation (abs-file)
-  :override #'do-after-load-evaluation
-  (dolist (a-l-element after-load-alist)
-    (when (and (stringp (car a-l-element))
-               (string-match-p (car a-l-element) abs-file))
-      (mapc #'funcall (cdr a-l-element))))
-  (run-hook-with-args 'after-load-functions abs-file))
 (defun copy-current-line-to-clipboard ()
   "Copy the current line to the system clipboard."
   (interactive)
@@ -83,7 +76,6 @@
  (setq lsp-auto-guess-root t)
 (defun lsp-ui-sideline--compute-height nil '(height unspecified))
 
-(custom-set-faces '(markdown-code-face ((t (:inherit default)))))
 (setq doom-modeline-env-version t)
 (setq doom-modeline-time t)
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode))
@@ -110,7 +102,7 @@
 (after! org
 (use-package! org-download))
 ;; put your css files there
-(defvar org-theme-css-dir "~/.doom.d/css/")
+(defvar org-theme-css-dir "~/.config/doom/css/")
 
 (defun toggle-org-custom-inline-style ()
   (interactive)
@@ -347,3 +339,4 @@ the register."
     (apply orig-fun args)))
 
 (advice-add 'ediff-quit :around #'disable-y-or-n-p)
+(setq markdown-css-paths  `(,(expand-file-name "~/.dotconfigs/doom.d/css/simple.min.css")))

@@ -149,7 +149,6 @@ bindsym $mod+r mode "resize"
 *** Starting programs
 #+begin_src conf
 bindsym $mod+m exec "rofimoji --max-recent 0"
-bindsym $mod+Shift+o exec "rofi -show file-browser-extended -file-browser-depth 5"
 bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
@@ -216,8 +215,8 @@ exec picom
 # exec_always /nix/store/$(\ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{print $9}')/libexec/polkit-kde-authentication-agent-1 &
 # exec_always libinput-gestures-setup autostart start
 exec deadd-notification-center
-exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
-exec --no-startup-id "pulsemeeter init"
+# exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
+# exec --no-startup-id "pulsemeeter init"
 exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh

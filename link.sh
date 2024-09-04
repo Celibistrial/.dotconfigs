@@ -14,3 +14,6 @@ mkdir ~/.local/
 ln -s ~/.dotconfigs/scripts/ ~/.local/bin/
 ln -s ~/.dotconfigs/nemo/ ~/.local/share/
 ln -s ~/.dotconfigs/deadd ~/.config
+ln -s ~/.dotconfigs/pandoc ~/.pandoc
+ln -s ~/.dotconfigs/kanshi ~/.config/
+ln -s ~/.dotconfigs/hypr ~/.config/
