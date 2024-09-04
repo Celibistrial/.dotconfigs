@@ -53,7 +53,6 @@
       theme = ./../../../rofi/catpuccin-mocha.rasi;
       plugins = with pkgs; [
         rofi-calc
-        rofi-power-menu
       ];
       extraConfig = {
         modi = "calc,combi,drun,run,ssh";
@@ -93,6 +92,13 @@
   };
   services.mpris-proxy.enable = true;
   services.gpg-agent.enable = true;
+  services.redshift = {
+    enable = true;
+    provider = "manual";
+    latitude = 28.0;
+    longitude = 77.0;
+  };
+
   gtk = {
     enable = true;
     # gtk.cursorTheme.package = pkgs.bibata-cursors;
