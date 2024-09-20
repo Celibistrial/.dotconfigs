@@ -120,7 +120,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 bindsym $mod+m exec "rofimoji --max-recent 0"
-bindsym $mod+Shift+o exec "rofi -show file-browser-extended -file-browser-depth 5"
 bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
@@ -180,13 +179,14 @@ exec picom
 # exec_always /nix/store/$(\ls -la /nix/store | grep polkit-kde-agent | grep '^d' | awk '{print $9}')/libexec/polkit-kde-authentication-agent-1 &
 # exec_always libinput-gestures-setup autostart start
 exec deadd-notification-center
-exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
-exec --no-startup-id "pulsemeeter init"
+# exec --no-startup-id ~/.dotconfigs/scripts/force-composition-pipeline.sh
+# exec --no-startup-id "pulsemeeter init"
 exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
 #exec --no-startup-id "greenclip daemon"
+exec --no-startup-id /usr/lib/kdeconnectd
 for_window [class="gnome-calculator"] floating enable
 for_window [class="steam"] floating enable
 for_window [class="gnome-todo"] floating enable
@@ -265,5 +265,3 @@ bar {
         urgent_workspace #2f343a #900000 #ffffff
     }
 }
-bindsym $mod+q exec "~/.config/emacs/bin/doom +everywhere"
-for_window [title="Emacs Everywhere"] floating enable

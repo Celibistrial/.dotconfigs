@@ -1,10 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nbfc-linux = {
-      url = "github:Celibistrial/nbfc-linux";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixctl = {
       url = "github:Celibistrial/nixctl";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,13 +10,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:Celibistrial/catpuccin-nix";
+    anyrun = {
+      url = "github:anyrun-org/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
-    catppuccin,
     ...
   } @ inputs: {
     nixosConfigurations.hp-pav = nixpkgs.lib.nixosSystem {
@@ -29,7 +28,7 @@
       modules = [
         ./hosts/hp-pav/configuration.nix
 
-        catppuccin.nixosModules.catppuccin
+        inputs.catppuccin.nixosModules.catppuccin
 
         home-manager.nixosModules.home-manager
         {
@@ -37,10 +36,14 @@
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bkp";
           # home-manager.users.gaurav = import ./hosts/hp-pav/home.nix;
-          home-manager.users.gaurav.imports = [
-            ./hosts/hp-pav/home.nix
-            catppuccin.homeManagerModules.catppuccin
-          ];
+          home-manager.extraSpecialArgs = {inherit inputs;};
+          home-manager.users.gaurav = {
+            imports = [
+              ./hosts/hp-pav/home.nix
+              inputs.catppuccin.homeManagerModules.catppuccin
+              inputs.anyrun.homeManagerModules.default
+            ];
+          };
         }
       ];
     };

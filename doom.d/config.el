@@ -85,6 +85,7 @@
    :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 (setq org-log-done 'time)
 (after! org
+  (add-to-list 'org-modules 'org-habit)
   (setq org-agenda-files '("~/org/"))
   (setq org-directory "~/org/"))
 (after! org-roam
