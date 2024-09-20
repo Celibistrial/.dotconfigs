@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }
 : {
@@ -27,16 +28,12 @@
     };
   };
   programs = {
-    emacs = {
-      enable = true;
-      extraPackages = epkgs: [epkgs.vterm];
-    };
     git = {
       enable = true;
       userName = "Gaurav Choudhury";
       userEmail = "82810795+Celibistrial@users.noreply.github.com";
       extraConfig = {
-        commit.gpgsign = true;
+        commit.gpgsign = false;
         user.signingkey = "E577B32870E99F38";
       };
     };
@@ -64,7 +61,39 @@
       enableZshIntegration = true; # see note on other shells below
       nix-direnv.enable = true;
     };
+    anyrun = {
+      enable = false;
+      config = {
+        plugins = with inputs.anyrun.packages.${pkgs.system}; [
+          applications
+          shell
+        ];
+        width.fraction = 0.3;
+        y.absolute = 15;
+        closeOnClick = true;
+        hidePluginInfo = false;
+        # x = {fraction = 0.5;};
+        # y = {fraction = 0.3;};
+        # width = {fraction = 0.3;};
+        # hideIcons = false;
+        # ignoreExclusiveZones = false;
+        # layer = "overlay";
+        # hidePluginInfo = false;
+        # closeOnClick = false;
+        # showResultsImmediately = false;
+        # maxEntries = null;
+      };
+      extraCss = ''
+      '';
 
+      extraConfigFiles."some-plugin.ron".text = ''
+        Config(
+          // for any other plugin
+          // this file will be put in ~/.config/anyrun/some-plugin.ron
+          // refer to docs of xdg.configFile for available options
+        )
+      '';
+    };
     tmux = {
       enable = false;
       plugins = with pkgs.tmuxPlugins; [
@@ -90,15 +119,16 @@
       '';
     };
   };
-  services.mpris-proxy.enable = true;
-  services.gpg-agent.enable = true;
-  services.redshift = {
-    enable = true;
-    provider = "manual";
-    latitude = 28.0;
-    longitude = 77.0;
+  services = {
+    mpris-proxy.enable = true;
+    gpg-agent.enable = true;
+    redshift = {
+      enable = true;
+      provider = "manual";
+      latitude = 28.0;
+      longitude = 77.0;
+    };
   };
-
   gtk = {
     enable = true;
     # gtk.cursorTheme.package = pkgs.bibata-cursors;

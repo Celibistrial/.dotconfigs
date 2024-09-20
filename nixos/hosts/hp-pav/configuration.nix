@@ -13,10 +13,10 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
+    ./overlays.nix
     # ./hyprland.nix
     #./../../containers/ollama-webui.nix
   ];
-
   boot = {
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -59,11 +59,11 @@
     experimental-features = ["nix-command" "flakes"];
     warn-dirty = false;
   };
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
+  # nix.gc = {
+  #   automatic = true;
+  #   dates = "weekly";
+  #   options = "--delete-older-than 30d";
+  # };
   networking = {
     hostName = "hp-pav"; # Define your hostname.
     extraHosts = ''
@@ -91,12 +91,7 @@
   };
   environment.sessionVariables = {
     EDITOR = "vim";
-    FLAKE = "/home/gaurav/.dotconfigs/nixos/";
-    # Tell xdg-open to chill and just use the following default applications.
-    # Without this setting, xdg-open will try to defer to exo-open despite not
-    # using XFCE.  exo-open will use whatever XFCE4 defaults you may have left
-    # over in your homedir.  Cursed.
-    XDG_CURRENT_DESKTOP = "X-Generic";
+    QT_STYLE_OVERRIDE = "kvantum";
   };
   # xdg.portal.enable = true;
   # xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
@@ -125,7 +120,27 @@
 
   security.polkit.enable = true;
   systemd = {
+    timers.sync_data = {
+      enable = true;
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "18:00:00";
+        RandomizedDelaySec = "0min";
+        Persistent = true;
+        Unit = "sync_data.service";
+      };
+    };
+    services.sync_data = {
+      enable = true;
+      path = [pkgs.bash pkgs.rsync pkgs.openssh pkgs.unixtools.ping];
+      serviceConfig = {
+        ExecStart = "/home/gaurav/.dotconfigs/scripts/sync_data.sh";
+        Type = "oneshot";
+        User = "gaurav";
+      };
+    };
     user.services.polkit-gnome-authentication-agent-1 = {
+      enable = true;
       description = "polkit-gnome-authentication-agent-1";
       wantedBy = ["graphical-session.target"];
       wants = ["graphical-session.target"];
@@ -151,72 +166,92 @@
     Defaults timestamp_type = global
   '';
   programs = {
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = "/home/gaurav/.dotconfigs/nixos/";
+    };
+    gamemode.enable = true;
     zsh.enable = true;
     nix-ld.enable = true;
     gnupg.agent.enable = true;
     noisetorch.enable = true;
     steam = {
-      enable = true;
+      enable = false;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
       gamescopeSession.enable = true;
       localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
     };
   };
-  users.users.gaurav = {
-    isNormalUser = true;
-    description = "Gaurav Choudhury";
-    extraGroups = ["networkmanager" "wheel"];
-    shell = pkgs.zsh;
+  users.users = {
+    gaurav = {
+      isNormalUser = true;
+      description = "Gaurav Choudhury";
+      extraGroups = ["networkmanager" "wheel"];
+      shell = pkgs.zsh;
 
-    packages = with pkgs; [
-      nemo-with-extensions
-      file-roller
-      cinnamon-common
+      packages = with pkgs; [
+        nemo-with-extensions
+        poppler_utils
+        file-roller
+        cinnamon-common
 
-      feishin
-      cava
-      firefox
-      inputs.nixctl.packages.x86_64-linux.default
-      p7zip
-      libreoffice
-      trash-cli
-      qalculate-qt
-      eog
-      cheese
-      ungoogled-chromium
-      anki
-      zoxide
-      neofetch
-      alejandra
-      obs-studio
-      audacity
-      flameshot
-      pandoc
-      gimp
-      jupyter
-      zathura
-      mpv
-      recoll
-      brightnessctl
+        feishin
+        firefox
+        p7zip
 
-      (callPackage ../../pkgs/lrcget.nix {})
+        libreoffice
+        hunspell
+        hunspellDicts.en_GB-large
 
-      # For emacs
-      shfmt
-      shellcheck
-      (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
+        trash-cli
+        qalculate-qt
+        eog
+        cheese
+        ungoogled-chromium
+        anki
+        zoxide
+        neofetch
+        alejandra
+        obs-studio
+        audacity
+        flameshot
+        pandoc
+        gimp
+        jupyter
+        zathura
+        mpv
+        brightnessctl
+        bottles
+        rquickshare
+        thunderbird
 
-      jetbrains.idea-community-bin
+        (callPackage ../../pkgs/lrcget.nix {})
+        # (callPackage ../../pkgs/msty.nix {})
+        (callPackage ../../pkgs/balena-etcher.nix {})
+        lmstudio
 
-      xclip
-      xdotool
-      xorg.xprop
-      xorg.xkill
-      xorg.xwininfo
+        # For emacs
+        shfmt
+        shellcheck
+        emacs
 
-      ffmpeg
-    ];
+        jetbrains.idea-community-bin
+
+        xclip
+        xdotool
+        xorg.xprop
+        xorg.xkill
+        xorg.xwininfo
+
+        ffmpeg
+        encfs
+        wireguard-tools
+        rsync
+      ];
+    };
   };
   zramSwap.enable = true;
   nixpkgs.config = {
@@ -246,6 +281,7 @@
     pavucontrol
     pciutils
     nixd
+    libsForQt5.qtstyleplugin-kvantum
   ];
   location = {
     provider = "manual";
@@ -256,16 +292,16 @@
   services = {
     fstrim.enable = true;
     envfs.enable = true;
+    auto-cpufreq.enable = true;
     auto-cpufreq.settings = {
-      enable = true;
       charger = {
         governor = "performance";
-        turbo = "auto";
+        turbo = "always";
       };
 
       battery = {
         governor = "powersave";
-        turbo = "auto";
+        turbo = "never";
       };
     };
 
@@ -343,11 +379,14 @@
 
     gvfs.enable = true;
     greenclip.enable = true;
+    mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+    };
   };
-  services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;
-  };
+  # Install open ssh but do not start it
+  systemd.services.sshd.wantedBy = lib.mkForce [];
+
   # virtualisation.docker = {
   #   storageDriver = "btrfs";
   #   rootless = {

@@ -19,7 +19,7 @@
     - [[#easy-export-with-css][easy export with css]]
     - [[#org-capture][org-capture]]
     - [[#encryption][encryption]]
-  - [[#aspell][aspell]]
+  - [[#spell-check][spell check]]
   - [[#gptel][gptel]]
   - [[#affe][affe]]
   - [[#ediff][ediff]]
@@ -142,8 +142,10 @@
 #+begin_src emacs-lisp
 (setq org-log-done 'time)
 (after! org
+  (add-to-list 'org-modules 'org-habit)
   (setq org-agenda-files '("~/org/"))
   (setq org-directory "~/org/"))
+
 #+end_src
 *** org-roam
 #+begin_src emacs-lisp
@@ -263,7 +265,7 @@
 (map! "C-x <f12>" #'org-decrypt-entries)
 (map! "C-x <f11>" #'org-decrypt-entry)
 #+end_src
-** aspell
+** spell check
 #+begin_src emacs-lisp
 (setq ispell-local-dictionary "en_GB")
 #+end_src
