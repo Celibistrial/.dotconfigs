@@ -17,6 +17,10 @@
     # ./hyprland.nix
     #./../../containers/ollama-webui.nix
   ];
+  nix.extraOptions = ''
+    extra-substituters = https://devenv.cachix.org
+    extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
+  '';
   boot = {
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -68,6 +72,10 @@
     hostName = "hp-pav"; # Define your hostname.
     extraHosts = ''
       192.168.29.85 deb1
+      10.21.103.1 deb1
+
+      192.168.29.22 m35
+      10.21.103.3 m35
     '';
 
     networkmanager.enable = true;
@@ -91,6 +99,7 @@
   };
   environment.sessionVariables = {
     EDITOR = "vim";
+    KWIN_DRM_NO_AMS = 1;
     QT_STYLE_OVERRIDE = "kvantum";
   };
   # xdg.portal.enable = true;
@@ -120,6 +129,9 @@
 
   security.polkit.enable = true;
   systemd = {
+    services.nix-daemon = {
+      environment.TMPDIR = "/var/tmp";
+    };
     timers.sync_data = {
       enable = true;
       wantedBy = ["timers.target"];
@@ -156,11 +168,12 @@
   };
 
   fonts.packages = with pkgs; [
-    noto-fonts
+    noto-fonts-extra
     font-awesome
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
-    (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
   ];
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
@@ -178,10 +191,9 @@
     gnupg.agent.enable = true;
     noisetorch.enable = true;
     steam = {
-      enable = false;
+      enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      gamescopeSession.enable = true;
       localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
     };
   };
@@ -220,7 +232,7 @@
         flameshot
         pandoc
         gimp
-        jupyter
+        # jupyter
         zathura
         mpv
         brightnessctl
@@ -228,17 +240,20 @@
         rquickshare
         thunderbird
 
-        (callPackage ../../pkgs/lrcget.nix {})
-        # (callPackage ../../pkgs/msty.nix {})
+        # (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
         (callPackage ../../pkgs/balena-etcher.nix {})
-        lmstudio
+        # (callPackage ../../pkgs/jdownloader2.nix {})
+        # lmstudio
 
         # For emacs
         shfmt
         shellcheck
-        emacs
+        ((emacsPackagesFor emacs).emacsWithPackages (
+          epkgs: [epkgs.vterm]
+        ))
+        distrobox
 
-        jetbrains.idea-community-bin
+        # jetbrains.idea-community-bin
 
         xclip
         xdotool
@@ -246,10 +261,18 @@
         xorg.xkill
         xorg.xwininfo
 
-        ffmpeg
-        encfs
+        ffmpeg-full
+        handbrake
+        gocryptfs
         wireguard-tools
         rsync
+        rclone
+
+        nicotine-plus
+        qbittorrent
+        gcc
+        gnumake
+        keepassxc
       ];
     };
   };
@@ -270,6 +293,7 @@
     xdg-user-dirs
     libnotify
     python3
+    devenv
     deadd-notification-center
     wget
     curl
@@ -290,18 +314,31 @@
   };
   # List services that you want to enable:
   services = {
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+      };
+    };
     fstrim.enable = true;
     envfs.enable = true;
-    auto-cpufreq.enable = true;
     auto-cpufreq.settings = {
+      enable = true;
       charger = {
         governor = "performance";
         turbo = "always";
       };
 
       battery = {
-        governor = "powersave";
-        turbo = "never";
+        governor = "default";
+        turbo = "auto";
       };
     };
 
@@ -311,7 +348,6 @@
       gpuOffset = -80;
     };
     blueman.enable = true;
-
     xserver = {
       excludePackages = [pkgs.xterm];
       enable = true;
@@ -384,20 +420,19 @@
       package = pkgs.mariadb;
     };
   };
-  # Install open ssh but do not start it
-  systemd.services.sshd.wantedBy = lib.mkForce [];
+  virtualisation.containers.enable = true;
 
-  # virtualisation.docker = {
-  #   storageDriver = "btrfs";
-  #   rootless = {
-  #     enable = true;
-  #     setSocketVariable = true;
-  #   };
-  #   enable = true;
-  #   daemon.settings = {
-  #     data-root = "/data/docker/";
-  #   };
-  # };
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #

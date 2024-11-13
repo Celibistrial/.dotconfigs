@@ -12,17 +12,15 @@
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
 (setq select-enable-clipboard nil)
-
 ;; (use-package-hook! evil
 ;;   :pre-init
 ;;   (setq evil-respect-visual-line-mode t) ;; sane j and k behavior
 ;;   t)
-
 ;; Emoji: 😄, 🤦, 🏴󠁧󠁢󠁳󠁣󠁴󠁿
-(set-fontset-font t 'symbol "Apple Color Emoji")
-(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
-(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-(set-fontset-font t 'symbol "Symbola" nil 'append)
+;; (set-fontset-font t 'symbol "Apple Color Emoji")
+;; (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+;; (set-fontset-font t 'symbol "Symbola" nil 'append)
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
@@ -87,7 +85,21 @@
 (after! org
   (add-to-list 'org-modules 'org-habit)
   (setq org-agenda-files '("~/org/"))
-  (setq org-directory "~/org/"))
+  (setq org-directory "~/org/")
+  )
+
+(defun org-toggle-emphasis ()
+  "Toggle hiding/showing of org emphasize markers."
+  (interactive)
+  (if org-hide-emphasis-markers
+      (set-variable 'org-hide-emphasis-markers nil)
+    (set-variable 'org-hide-emphasis-markers t))
+  (org-mode-restart))
+;; (define-key org-mode-map (kbd "C-c e") 'org-toggle-emphasis)
+
+(map!
+ :map org-mode-map
+ "C-c e" #'org-toggle-emphasis)
 (after! org-roam
   (setq org-roam-capture-templates
         '(
@@ -153,8 +165,7 @@
         '(("x" "Quick note" entry (file+headline "~/org/refile.org" "TEMP") "** %? " )
           ("t" "Personal todo" entry (file+headline "~/org/refile.org" "TODOS") "** TODO %?")
           ("w" "Workout Journal" entry (file "~/org/workout journal.org") "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n ")
-          ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?
-%i %a" :prepend t)
+          ("n" "Personal notes" entry (file+headline "~/org/refile.org" "NOTES") "* %u %?\n%i %a" :prepend t)
           ("j" "Journal Entry" entry
            (file+olp+datetree "~/org/journal.org.gpg")
            "* %<%H:%M> \n%?")
@@ -191,6 +202,87 @@
   )
 (map! "C-x <f12>" #'org-decrypt-entries)
 (map! "C-x <f11>" #'org-decrypt-entry)
+(use-package whisper
+  :config
+  (setq whisper-install-directory "~/.cache/whisper/"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil
+        whisper-use-threads (/ (num-processors) 4)))
+(load-file "~/.config/doom/whisper-custom.el")
+(use-package! org-media-note
+  :init (setq org-media-note-use-org-ref nil)
+  :hook (org-mode .  org-media-note-mode)
+  :config
+  (setq org-media-note-screenshot-image-dir "~/org/.attach/org-media-images")  ;; Folder to save screenshot
+  (setq org-media-note-use-refcite-first t)  ;; use videocite link instead of video link if possible
+  )
+(map!
+ :leader
+ :map org-mode-map
+ :nv
+ :desc "org media note show interface"
+ "i m" #'org-media-note-show-interface
+ )
+(defun delete-and-remove-hook (file)
+  (delete-file file)
+  (setq whisper-after-insert-hook nil)
+
+  )
+(defun transcribe-and-attach-audio-file ()
+  "Ask for an audio file, rename it to the current day date and time, org-attach it, and transcribe it using whisper."
+  (interactive)
+  (gocryptfs-mount-if-not-mounted)
+  (let ((file (expand-file-name (read-file-name "Media file: " (expand-file-name "~/data/Voice Notes/") nil t))))
+    (unless (file-readable-p file)
+      (error "Media file doesn't exist or isn't readable"))
+    (let ((new-file-name (format-time-string "%Y-%m-%d-%H-%M" (current-time))))
+      (rename-file file (concat (file-name-directory file) new-file-name "." (file-name-extension file)) t)
+      (org-attach-attach (concat (file-name-directory file) new-file-name "." (file-name-extension file)))
+      (insert "\n~transcript~\n")
+      (insert "#+BEGIN_QUOTE\n\n#+END_QUOTE")
+      (forward-line -1)
+      (whisper-custom-run (concat (file-name-directory file) new-file-name "." (file-name-extension file)))
+      ;; (whisper-custom-run (concat (string-trim (substring (car (cdr (car (org-collect-keywords '("PROPERTY" "ATTACH_DIR"))))) (length "ATTACH_DIR "))) new-file-name "." (file-name-extension file)))
+      ;; (delete-file (concat (file-name-directory file) new-file-name "." (file-name-extension file)))
+      (add-hook 'whisper-after-insert-hook
+                (apply-partially #'delete-and-remove-hook (concat (file-name-directory file) new-file-name "." (file-name-extension file))))
+
+
+      )))
+
+(map!
+ :leader
+ :map org-mode-map
+ :nv
+ :desc "transcribe and attach audio file"
+ "i t" #'transcribe-and-attach-audio-file
+ )
+;; (use-package! org-timeblock
+;;   :config
+;;   (evil-define-key 'normal org-timeblock-mode-map "q" #'org-timeblock-quit)
+;;   (evil-define-key 'normal org-timeblock-mode-map "l" #'org-timeblock-day-later)
+;;   (evil-define-key 'normal org-timeblock-mode-map "h" #'org-timeblock-day-earlier)
+;;   (evil-define-key 'normal org-timeblock-mode-map "j" #'org-timeblock-jump-to-day)
+;;   (evil-define-key 'normal org-timeblock-mode-map "v" #'org-timeblock-change-span)
+;;   (evil-define-key 'normal org-timeblock-mode-map "s" #'org-timeblock-schedule)
+;;   (evil-define-key 'normal org-timeblock-mode-map "d" #'org-timeblock-set-duration)
+;;   (evil-define-key 'normal org-timeblock-mode-map "m" #'org-timeblock-mark-block)
+;;   (evil-define-key 'normal org-timeblock-mode-map "u" #'org-timeblock-unmark-block)
+;;   (evil-define-key 'normal org-timeblock-mode-map "U" #'org-timeblock-unmark-all-blocks)
+;;   (evil-define-key 'normal org-timeblock-mode-map "+" #'org-timeblock-new-task)
+;;   :custom
+;;   (org-timeblock-show-future-repeats t)
+;;   :bind
+;;   (:map doom-leader-open-map
+;;         ("a b" . org-timeblock)))
+;; (map!
+;;  :leader
+;;  :nv
+;;  :desc "Open org timeblock"
+;;  "o a t" #'org-timeblock)
+
+
 (setq ispell-local-dictionary "en_GB")
 ;; (use-package! gptel
 ;;   :config
@@ -213,6 +305,49 @@
  :leader
  :nv
  :desc "fuzzy find files" "F" #'affe-find)
+(defvar gocryptfs-ciphertext-dir "~/data/.encrypted"
+  "Path to the encrypted directory.")
+
+(defvar gocryptfs-plaintext-dir "~/.prv/"
+  "Path to the mount point for the decrypted directory.")
+
+(defun mount-gocryptfs ()
+  "Mounts a gocryptfs encrypted directory."
+  (interactive)
+  (let ((mounted-file (concat gocryptfs-plaintext-dir "/.mounted")))
+    (if (file-exists-p mounted-file)
+        (if (y-or-n-p (format "%s is already mounted. Unmount and remount? " gocryptfs-plaintext-dir))
+            (progn
+              (unmount-gocryptfs)
+              (let ((password (read-passwd "Enter password: ")))
+                (let ((command (format "echo '%s' | gocryptfs %s %s" password gocryptfs-ciphertext-dir gocryptfs-plaintext-dir)))
+                  (shell-command command))))
+          (message (format "%s is already mounted. Not mounting." gocryptfs-plaintext-dir)))
+      (let ((password (read-passwd "Enter password: ")))
+        (let ((command (format "echo '%s' | gocryptfs %s %s && touch %s" password gocryptfs-ciphertext-dir gocryptfs-plaintext-dir mounted-file)))
+          (shell-command command)
+          (run-at-time "30 min" nil 'unmount-gocryptfs)
+          )))))
+
+(defun unmount-gocryptfs ()
+  "Unmounts a gocryptfs encrypted directory."
+  (interactive)
+  (let ((command (format "fusermount -u %s" gocryptfs-plaintext-dir)))
+    (shell-command command)))
+
+(defun gocryptfs-is-mounted-p ()
+  (interactive)
+  "Check if the gocryptfs directory is mounted."
+  (let ((mounted-file (concat gocryptfs-plaintext-dir "/.mounted")))
+    (file-exists-p mounted-file)))
+
+(defun gocryptfs-mount-if-not-mounted ()
+  "Mount the gocryptfs directory if it's not already mounted."
+  (if (not (gocryptfs-is-mounted-p))
+      (let ((password (read-passwd "Enter password: ")))
+        (let ((command (format "echo '%s' | gocryptfs %s %s && touch %s" password gocryptfs-ciphertext-dir gocryptfs-plaintext-dir (concat gocryptfs-ciphertext-dir "/.mounted"))))
+          (shell-command command)))
+    (message "Directory is already mounted.")))
 ;;; cc-ediff-mode.el --- Ediff configuration for Charles Choi
 ;; ediff-mode
 

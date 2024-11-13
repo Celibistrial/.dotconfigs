@@ -40,6 +40,9 @@
 
     bat.enable = true;
     btop.enable = true;
+    btop.package = pkgs.btop.override {
+      cudaSupport = true;
+    };
     ranger.enable = true;
 
     home-manager.enable = true;

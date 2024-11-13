@@ -4,16 +4,14 @@
   pkgs,
   ...
 }: {
+  # boot.kernelParams = ["nvidia_drm.fbdev=1" "nvidia-drm.modeset=1"];
   services.xserver.videoDrivers = lib.mkDefault ["nvidia"];
   hardware = {
     graphics = {
       enable = true;
       enable32Bit = true;
-      # extraPackages = with pkgs; [
-      #   intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      #   intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-      #   libvdpau-va-gl
-      # ];
+      extraPackages = with pkgs; [
+      ];
     };
   };
   hardware.nvidia = {
