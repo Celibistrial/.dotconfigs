@@ -59,3 +59,5 @@
 (package! affe)
 ;; (package! gptel)
 ;; (package! beacon)
+(package! whisper :recipe (:host github :repo "/natrys/whisper.el"))
+(package! org-media-note :recipe (:host github :repo "yuchen-lea/org-media-note"))

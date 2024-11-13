@@ -1,17 +1,14 @@
+#!/usr/bin/zsh
 #
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 #
 #
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
-  exec startx
-fi
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-export TERM="xterm-256color"                      # getting proper colors
+export TERM="xterm-256color" # getting proper colors
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 # If you come from bash you might have to change your $PATH.
@@ -118,8 +115,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-
-
 GITSTATUS_LOG_LEVEL=DEBUG
 source ~/.powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -136,6 +131,7 @@ alias remacs="pkill emacs && emacs --daemon"
 alias btop="btop --utf-force"
 alias sr="nix-shell -p steamPackages.steam-fhsenv-without-steam.run"
 alias scan="clamdscan --multiscan --fdpass"
+alias arch="distrobox enter arch"
 #eval "$(starship init zsh)"
 bindkey -v
 # eval "$(direnv hook zsh)"
@@ -145,34 +141,44 @@ if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/completion.zsh"
 fi
 
+# use zsh instead of bash in nix shells
+alias nix-shell='nix-shell --run $SHELL'
+nix() {
+  if [[ $1 == "develop" ]]; then
+    shift
+    command nix develop -c $SHELL "$@"
+  else
+    command nix "$@"
+  fi
+}
 # use ranger to switch DIRECTORIES AND BIND IT TO CTRL-O
-rangercd () {
-tmp="$(mktemp)"
-ranger --choosedir="$tmp" "$@"
-if [ -f "$tmp" ]; then
-dir="$(cat "$tmp")"
-rm -f "$tmp"
-[ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-fi
+rangercd() {
+  tmp="$(mktemp)"
+  ranger --choosedir="$tmp" "$@"
+  if [ -f "$tmp" ]; then
+    dir="$(cat "$tmp")"
+    rm -f "$tmp"
+    [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+  fi
 }
 bindkey -s '^o' 'rangercd\n'
 
 extract() {
-  if [[ -f $1 ]] ; then
+  if [[ -f $1 ]]; then
     case $1 in
-      *.tar.bz2)    tar xvjf $1    ;;
-      *.tar.gz)    tar xvzf $1    ;;
-      *.tar.xz)    tar xf $1      ;;
-      *.bz2)        7z x $1     ;;
-      *.rar)        7z x $1     ;;
-      *.gz)        7z x $1      ;;
-      *.tar)        tar xvf $1     ;;
-      *.tbz2)        tar xvjf $1    ;;
-      *.tgz)        tar xvzf $1    ;;
-      *.zip)        7z x $1       ;;
-      *.Z)        7z x $1  ;;
-      *.7z)        7z x $1        ;;
-      *)        echo "don't know how to extract '$1'..." ;;
+    *.tar.bz2) tar xvjf $1 ;;
+    *.tar.gz) tar xvzf $1 ;;
+    *.tar.xz) tar xf $1 ;;
+    *.bz2) 7z x $1 ;;
+    *.rar) 7z x $1 ;;
+    *.gz) 7z x $1 ;;
+    *.tar) tar xvf $1 ;;
+    *.tbz2) tar xvjf $1 ;;
+    *.tgz) tar xvzf $1 ;;
+    *.zip) 7z x $1 ;;
+    *.Z) 7z x $1 ;;
+    *.7z) 7z x $1 ;;
+    *) echo "don't know how to extract '$1'..." ;;
     esac
   else
     echo "'$1' is not a valid file!"

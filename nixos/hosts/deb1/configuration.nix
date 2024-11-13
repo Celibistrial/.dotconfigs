@@ -75,6 +75,7 @@
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     libnotify
+    vim
     python3
     wget
     curl
@@ -82,42 +83,9 @@
     git
     gnupg
     pciutils
-    jellyfin
-    jellyfin-web
-    jellyfin-ffmpeg
   ];
+  virtualisation.docker.enable = true;
   services = {
-    adguardhome = {
-      enable = true;
-      mutableSettings = true;
-      openFirewall = true;
-      settings.bind_port = 8000;
-    };
-    jellyfin = {
-      enable = true;
-      openFirewall = true;
-    };
-    # btrbk = {
-    #   instances.data = {
-    #     onCalendar = "hourly";
-    #     settings = {
-    #       # 48h means 48 hourly snapshots are preversed , 7d means 7 daily snapshots are preserved
-    #       snapshot_preserve = "7d";
-    #       snapshot_preserve_min = "2d";
-
-    #       volume = {
-    #         "/data" = {
-    #           snapshot_dir = "/dataSnaps";
-    #           subvolume = {
-    #             "." = {
-    #             };
-    #           };
-    #         };
-    #       };
-    #     };
-    #   };
-    # };
-
     syncthing = {
       enable = true;
       user = "gaurav";

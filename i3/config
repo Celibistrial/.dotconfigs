@@ -68,6 +68,9 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+# Define worksapces on the fly!
+bindsym $mod+grave exec "i3-input -F 'workspace %s' -P 'go to workspace: '"
+bindsym $mod+shift+grave exec "i3-input -F 'move container to workspace %s' -P 'move to workspace: '"
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
@@ -185,8 +188,8 @@ exec --no-startup-id "emacs --daemon"
 exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
+exec keepassxc
 #exec --no-startup-id "greenclip daemon"
-exec --no-startup-id /usr/lib/kdeconnectd
 for_window [class="gnome-calculator"] floating enable
 for_window [class="steam"] floating enable
 for_window [class="gnome-todo"] floating enable
@@ -207,10 +210,12 @@ mode "Utility" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" -v|grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.2; done
-exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" -v|grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
-exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
-exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.4; done
+# exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" |grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.2; done
+# exec_always for id in $(xinput list | grep "pointer"|grep "Keyboard" |grep "Gaming Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
+# exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
+# exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.4; done
+
+exec_always for id in $(xinput list | grep "pointer" | grep "USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' 0.3; done
 exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
 exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1, 0; done
 # Use pactl to adjust volume in PulseAudio.
