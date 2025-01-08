@@ -23,6 +23,17 @@
     options = ["subvol=@"];
   };
 
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/84efd03d-cd35-48a4-91bb-8a1a854d7112";
+    fsType = "btrfs";
+    options = ["subvol=@home"];
+  };
+  fileSystems."/homeSnaps" = {
+    device = "/dev/disk/by-uuid/84efd03d-cd35-48a4-91bb-8a1a854d7112";
+    fsType = "btrfs";
+    options = ["subvol=@home_snaps"];
+  };
+
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/750D-3BB8";
     fsType = "vfat";

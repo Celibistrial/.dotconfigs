@@ -273,6 +273,8 @@
         gcc
         gnumake
         keepassxc
+
+        pamixer
       ];
     };
   };
@@ -384,6 +386,14 @@
           snapshot_preserve_min = "2d";
 
           volume = {
+            "/home" = {
+              snapshot_dir = "/homeSnaps";
+              subvolume = {
+                "." = {
+                };
+              };
+            };
+
             "/data" = {
               snapshot_dir = "/dataSnaps";
               subvolume = {
