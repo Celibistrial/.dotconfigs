@@ -134,6 +134,8 @@ bindsym $mod+shift+s exec "flameshot gui"
 bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
 bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
 bindsym XF86AudioMute exec --no-startup-id pamixer -t
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s 5%-
 # Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
 
 set $mode_gaps Gaps: (o) outer, (i) inner
@@ -192,7 +194,7 @@ exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
 exec keepassxc
-#exec --no-startup-id "greenclip daemon"
+exec --no-startup-id "greenclip daemon"
 for_window [class="gnome-calculator"] floating enable
 for_window [class="steam"] floating enable
 for_window [class="gnome-todo"] floating enable
@@ -203,11 +205,12 @@ assign [class="Free Download Manager"] $ws10
 bindsym $mod+x mode "Utility"
 
 mode "Utility" {
-    bindsym l exec betterlockscreen --lock dimblur 2>/dev/null, mode "default"
+    bindsym l exec xidlehook-client --socket /tmp/xidlehook.socket control --action trigger --timer 1 >/dev/null, mode "default"
     bindsym b exec xrandr --output HDMI-0 --brightness 1,mode "default"
     bindsym g exec ~/.screenlayout/gaming.sh,mode "default"
     bindsym m exec ~/.dotconfigs/scripts/monitor,mode "default"
-    bindsym s exec  betterlockscreen --lock dimblur 2>/dev/null & systemctl suspend, mode "default"
+    bindsym s exec systemctl suspend, mode "default"
+    bindsym p exec shutdown now, mode "default"
     bindsym h exec xrandr --output eDP-1-1 --auto, mode "default"
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -218,7 +221,10 @@ mode "Utility" {
 # exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
 # exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.4; done
 
-exec_always for id in $(xinput list | grep "pointer" | grep "USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' 0.3; done
+exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.8; done
+exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile' 0, 1; done
+exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
+# exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1; done
 # exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
 # exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1, 0; done
 # Use pactl to adjust volume in PulseAudio.
@@ -254,10 +260,10 @@ client.focused_inactive $colorf   $colorf   #ffffff   $colorf   $colorf
 client.unfocused        $colorf   $colorf   #ffffff   $colors   $colorf
 for_window [class="^.*"] border pixel 2
 font pango:DejaVu Sans Mono 12
-mode  "Passthrough Mode - Press Alt+F12 to exit" {
+mode  "Passthrough Mode - Press mod+F12 to exit" {
         bindsym $mod+F12 mode "default"
 }
-bindsym $mod+F12 mode "Passthrough Mode - Press Alt+F12 to exit"
+bindsym $mod+F12 mode "Passthrough Mode - Press mod+F12 to exit"
 bar {
   tray_output primary
     font pango:DejaVu Sans Mono, FontAwesome 12

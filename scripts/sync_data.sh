@@ -6,7 +6,7 @@ DST_FOLDER=~/hp-pav/
 #LOCAL_IP=deb1
 #REMOTE_IP=10.21.103.1
 
-EXCLUDED_FOLDERS=(AI Music target .cache .direnv .Trash .Trash-1000)
+EXCLUDED_FOLDERS=(AI Music target .cache .direnv .Trash .Trash-1000 cache temp tmp)
 
 #if ping -c 1 $LOCAL_IP &>/dev/null; then
 #  DST_IP=$LOCAL_IP

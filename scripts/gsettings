@@ -1,0 +1,14 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p glib.dev
+schemas=""
+for p in $NIX_PROFILES; do
+    if [[ -d "$p" ]]; then
+        for d in $(nix-store --query --references "$p"); do
+            schemas_dir=$(echo "$d"/share/gsettings-schemas/*)
+            if [[ -d "$schemas_dir/glib-2.0/schemas" ]]; then
+                schemas="$schemas${schemas:+:}$schemas_dir"
+            fi
+        done
+    fi
+done
+env XDG_DATA_DIRS=$schemas gsettings "$@"

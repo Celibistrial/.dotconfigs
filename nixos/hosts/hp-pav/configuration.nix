@@ -8,6 +8,9 @@
   inputs,
   ...
 }: {
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-31.7.7"
+  ];
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -33,7 +36,6 @@
 
     tmp = {
       useTmpfs = true;
-      tmpfsSize = "100%";
     };
     kernelPackages = pkgs.linuxPackages_latest;
     consoleLogLevel = 0;
@@ -53,6 +55,8 @@
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
+    extraModulePackages = [
+    ];
   };
   hardware.bluetooth = {
     enable = true;
@@ -98,7 +102,7 @@
     LC_TIME = "en_GB.UTF-8";
   };
   environment.sessionVariables = {
-    EDITOR = "vim";
+    EDITOR = "nvim";
     KWIN_DRM_NO_AMS = 1;
     QT_STYLE_OVERRIDE = "kvantum";
   };
@@ -124,7 +128,6 @@
     "image/gif" = imageViewer;
   };
 
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   security.polkit.enable = true;
@@ -141,6 +144,19 @@
         Persistent = true;
         Unit = "sync_data.service";
       };
+    };
+    services.betterlockscreen = {
+      enable = true;
+      description = "Locks screen when going to sleep/suspend";
+      environment = {DISPLAY = ":0";};
+      serviceConfig = {
+        User = "gaurav";
+        Type = "simple";
+        ExecStart = ''${pkgs.xidlehook}/bin/xidlehook-client --socket /tmp/xidlehook.socket control --action trigger --timer 1 '';
+        TimeoutSec = "infinity";
+      };
+      before = ["sleep.target" "suspend.target"];
+      wantedBy = ["sleep.target" "suspend.target"];
     };
     services.sync_data = {
       enable = true;
@@ -179,6 +195,7 @@
     Defaults timestamp_type = global
   '';
   programs = {
+    dconf.enable = true;
     nh = {
       enable = true;
       clean.enable = true;
@@ -203,12 +220,14 @@
       description = "Gaurav Choudhury";
       extraGroups = ["networkmanager" "wheel"];
       shell = pkgs.zsh;
-
       packages = with pkgs; [
+        prismlauncher
+
         nemo-with-extensions
         poppler_utils
         file-roller
         cinnamon-common
+        cinnamon-desktop
 
         feishin
         firefox
@@ -222,9 +241,7 @@
         qalculate-qt
         eog
         cheese
-        ungoogled-chromium
         anki
-        zoxide
         neofetch
         alejandra
         obs-studio
@@ -232,12 +249,21 @@
         flameshot
         pandoc
         gimp
+        haskellPackages.greenclip
         # jupyter
         zathura
         mpv
         brightnessctl
-        bottles
-        rquickshare
+        wine64
+        wine
+        winetricks
+        (lutris.override {
+          extraLibraries = pkgs: [
+            # List library dependencies here
+          ];
+        })
+        gwe
+
         thunderbird
 
         # (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
@@ -278,7 +304,7 @@
       ];
     };
   };
-  zramSwap.enable = true;
+  # zramSwap.enable = true;
   nixpkgs.config = {
     allowUnfree = true;
     zathura.useMupdf = true;
@@ -290,7 +316,7 @@
     gparted
     networkmanagerapplet
     fd
-    vim
+    neovim
     file
     xdg-user-dirs
     libnotify
@@ -316,6 +342,12 @@
   };
   # List services that you want to enable:
   services = {
+    logind = {
+      powerKey = "suspend";
+      lidSwitch = "suspend-then-hibernate";
+      lidSwitchDocked = "ignore";
+      lidSwitchExternalPower = "ignore";
+    };
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -351,6 +383,9 @@
     };
     blueman.enable = true;
     xserver = {
+      deviceSection = ''
+        Option "Coolbits" "24"
+      '';
       excludePackages = [pkgs.xterm];
       enable = true;
 
@@ -424,7 +459,6 @@
     libinput.enable = true;
 
     gvfs.enable = true;
-    greenclip.enable = true;
     mysql = {
       enable = true;
       package = pkgs.mariadb;

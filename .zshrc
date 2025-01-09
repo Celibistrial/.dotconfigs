@@ -141,16 +141,7 @@ if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/completion.zsh"
 fi
 
-# use zsh instead of bash in nix shells
-alias nix-shell='nix-shell --run $SHELL'
-nix() {
-  if [[ $1 == "develop" ]]; then
-    shift
-    command nix develop -c $SHELL "$@"
-  else
-    command nix "$@"
-  fi
-}
+
 # use ranger to switch DIRECTORIES AND BIND IT TO CTRL-O
 rangercd() {
   tmp="$(mktemp)"
