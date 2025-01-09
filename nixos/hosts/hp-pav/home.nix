@@ -23,17 +23,18 @@
       x11.enable = true;
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
-      size = 20;
+      size = 22;
       gtk.enable = true;
     };
   };
   programs = {
+    zoxide.enable = true;
     git = {
       enable = true;
       userName = "Gaurav Choudhury";
       userEmail = "82810795+Celibistrial@users.noreply.github.com";
       extraConfig = {
-        commit.gpgsign = false;
+        commit.gpgsign = true;
         user.signingkey = "E577B32870E99F38";
       };
     };
@@ -56,6 +57,20 @@
       ];
       extraConfig = {
         modi = "calc,combi,drun,run,ssh";
+        show-icons = true;
+      };
+    };
+    ssh = {
+      enable = true;
+      matchBlocks = {
+        m35 = {
+          hostname = "m35";
+          port = 8022;
+          user = "u0_a339";
+        };
+        deb1 = {
+          hostname = "deb1";
+        };
       };
     };
 
@@ -124,7 +139,9 @@
   };
   services = {
     mpris-proxy.enable = true;
-    gpg-agent.enable = true;
+    gpg-agent = {
+      enable = true;
+    };
     redshift = {
       enable = true;
       provider = "manual";

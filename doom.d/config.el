@@ -7,6 +7,8 @@
 (define-key! help-map
   "di"   #'doom/ediff-init-and-example
   )
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
 (setq user-full-name "Gaurav Choudhury"
       user-mail-address "gauravchoudhury80222@gmail.com")
 (setq doom-theme 'doom-one)
@@ -188,7 +190,9 @@
         )
   )
 (after! epa
-  (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
+  (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com")
+ (setq epg-pinentry-mode 'loopback)
+  )
 (after! org-crypt
   (org-crypt-use-before-save-magic)
   (setq org-tags-exclude-from-inheritance '("crypt"))

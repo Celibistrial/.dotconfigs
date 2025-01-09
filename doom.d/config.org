@@ -5,6 +5,7 @@
 * Table of contents :toc_3:
 - [[#my-doom-config][My doom config]]
   - [[#doom-helper-functions][doom helper functions]]
+  - [[#auto-revert][auto revert]]
   - [[#setting-doom--evil-variables][Setting doom & evil variables]]
   - [[#fonts][fonts]]
   - [[#clipboard][clipboard]]
@@ -46,6 +47,11 @@
   )
 
 
+#+end_src
+** auto revert
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
 #+end_src
 ** Setting doom & evil variables
 #+begin_src emacs-lisp
@@ -291,7 +297,9 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 *** encryption
 #+begin_src emacs-lisp
 (after! epa
-  (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com"))
+  (setq epa-file-encrypt-to "82810795+Celibistrial@users.noreply.github.com")
+ (setq epg-pinentry-mode 'loopback)
+  )
 (after! org-crypt
   (org-crypt-use-before-save-magic)
   (setq org-tags-exclude-from-inheritance '("crypt"))
