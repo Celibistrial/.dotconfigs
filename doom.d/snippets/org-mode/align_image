@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: align_image
+# key: align_image
+# uuid: align_image
+# --
+#+attr_html: :align ${1:centre}

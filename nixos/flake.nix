@@ -10,10 +10,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:Celibistrial/catpuccin-nix";
-    anyrun = {
-      url = "github:anyrun-org/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
@@ -41,7 +37,6 @@
             imports = [
               ./hosts/hp-pav/home.nix
               inputs.catppuccin.homeManagerModules.catppuccin
-              inputs.anyrun.homeManagerModules.default
             ];
           };
         }

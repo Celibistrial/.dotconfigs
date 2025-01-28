@@ -17,6 +17,7 @@
     ./nvidia.nix
     ./nbfc.nix
     ./overlays.nix
+    ./audio.nix
     # ./hyprland.nix
     #./../../containers/ollama-webui.nix
   ];
@@ -42,6 +43,7 @@
     initrd.verbose = false;
     plymouth.enable = true;
     kernelParams = [
+      # "preempt=full"
       "quiet"
       "splash"
       "loglevel=3"
@@ -57,6 +59,18 @@
     };
     extraModulePackages = [
     ];
+    extraModprobeConfig = ''
+      options nvidia_modeset vblank_sem_control=0
+      options snd_hda_intel power_save=0
+    '';
+
+    # extraModprobeConfig = ''
+    #   options nvidia NVreg_UsePageAttributeTable=1
+    #   options nvidia NVreg_RegistryDwords="OverrideMaxPerf=0x1"
+    #   options nvidia NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp
+    #   options nvidia_modeset vblank_sem_control=0
+    #   options snd_hda_intel power_save=0
+    # '';
   };
   hardware.bluetooth = {
     enable = true;
@@ -84,7 +98,12 @@
 
     networkmanager.enable = true;
     firewall = {
-      enable = false;
+      enable = true;
+      extraCommands = ''
+        iptables -A nixos-fw -p tcp --source 192.168.29.0/24 --dport 80:80 -j nixos-fw-accept || true
+        iptables -A nixos-fw -p tcp --source 192.168.29.0/24 --dport 22:22 -j nixos-fw-accept || true
+        # iptables -A nixos-fw -p udp --source 192.168.29.0/24 --dport 80:80 -j nixos-fw-accept
+      '';
     };
   };
   # Set your time zone.
@@ -131,6 +150,7 @@
   security.rtkit.enable = true;
 
   security.polkit.enable = true;
+  security.pam.services.i3lock.enable = true;
   systemd = {
     services.nix-daemon = {
       environment.TMPDIR = "/var/tmp";
@@ -155,8 +175,8 @@
         ExecStart = ''${pkgs.xidlehook}/bin/xidlehook-client --socket /tmp/xidlehook.socket control --action trigger --timer 1 '';
         TimeoutSec = "infinity";
       };
-      before = ["sleep.target" "suspend.target"];
-      wantedBy = ["sleep.target" "suspend.target"];
+      before = ["sleep.target" "suspend.target" "hibernate.target"];
+      wantedBy = ["sleep.target" "suspend.target" "hibernate.target"];
     };
     services.sync_data = {
       enable = true;
@@ -190,11 +210,29 @@
     noto-fonts-emoji
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
+    # for excalidraw_export
+    fg-virgil
+    cascadia-code
   ];
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
   '';
   programs = {
+    obs-studio = {
+      enable = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-pipewire-audio-capture
+        # wlrobs
+      ];
+      package = pkgs.obs-studio.override {
+        cudaSupport = true;
+      };
+    };
+    firefox = {
+      enable = true;
+      package = pkgs.firefox;
+      nativeMessagingHosts.packages = [pkgs.firefoxpwa];
+    };
     dconf.enable = true;
     nh = {
       enable = true;
@@ -204,11 +242,10 @@
     };
     gamemode.enable = true;
     zsh.enable = true;
-    nix-ld.enable = true;
     gnupg.agent.enable = true;
     noisetorch.enable = true;
     steam = {
-      enable = true;
+      enable = false;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
       localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
@@ -218,11 +255,9 @@
     gaurav = {
       isNormalUser = true;
       description = "Gaurav Choudhury";
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "wheel" "audio"];
       shell = pkgs.zsh;
       packages = with pkgs; [
-        prismlauncher
-
         nemo-with-extensions
         poppler_utils
         file-roller
@@ -230,8 +265,10 @@
         cinnamon-desktop
 
         feishin
-        firefox
+        #firefox
+        firefoxpwa
         p7zip
+        unzip
 
         libreoffice
         hunspell
@@ -244,40 +281,52 @@
         anki
         neofetch
         alejandra
-        obs-studio
         audacity
         flameshot
         pandoc
-        gimp
+        gimp3
         haskellPackages.greenclip
         # jupyter
         zathura
         mpv
         brightnessctl
-        wine64
-        wine
-        winetricks
-        (lutris.override {
-          extraLibraries = pkgs: [
-            # List library dependencies here
-          ];
-        })
-        gwe
+        bottles
+        # gwe
 
         thunderbird
 
         # (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
-        (callPackage ../../pkgs/balena-etcher.nix {})
+        # (callPackage ../../pkgs/balena-etcher.nix {})
         # (callPackage ../../pkgs/jdownloader2.nix {})
         # lmstudio
+        alsa-utils
+        # (openai-whisper-cpp.override {cudaSupport = true;})
 
         # For emacs
         shfmt
         shellcheck
         ((emacsPackagesFor emacs).emacsWithPackages (
-          epkgs: [epkgs.vterm]
+          epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars]
         ))
-        distrobox
+
+        # ((emacsPackagesFor (emacs-gtk.override {withXwidgets = true;})).emacsWithPackages (
+        #   epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars org-xlatex]
+        # ))
+        # distrobox
+        # texliveMedium
+        (texlive.combine {
+          inherit
+            (texlive)
+            scheme-medium
+            latexmk
+            wrapfig
+            ulem
+            capt-of
+            collection-fontsrecommended
+            ;
+        })
+
+        # excalidraw_export
 
         # jetbrains.idea-community-bin
 
@@ -288,11 +337,15 @@
         xorg.xwininfo
 
         ffmpeg-full
-        handbrake
+        carla
+        # patchage
+        lsp-plugins
+        # calf
+        # handbrake
         gocryptfs
         wireguard-tools
         rsync
-        rclone
+        # rclone
 
         nicotine-plus
         qbittorrent
@@ -306,6 +359,7 @@
   };
   # zramSwap.enable = true;
   nixpkgs.config = {
+    # cudaSupport = true;
     allowUnfree = true;
     zathura.useMupdf = true;
   };
@@ -327,6 +381,8 @@
     curl
     ripgrep
     ripgrep-all
+    recoll
+    python3Packages.recoll
     kitty
     picom
     gnupg
@@ -360,6 +416,7 @@
         userServices = true;
         workstation = true;
       };
+      openFirewall = true;
     };
     fstrim.enable = true;
     envfs.enable = true;
@@ -403,15 +460,6 @@
         ];
       };
     };
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      jack.enable = true;
-    };
-
     btrbk = {
       instances.data = {
         onCalendar = "hourly";
@@ -450,6 +498,7 @@
     openssh = {
       enable = true;
       settings.PasswordAuthentication = true;
+      openFirewall = false;
     };
     # Enable CUPS to print documents.
     printing.enable = true;
@@ -460,7 +509,7 @@
 
     gvfs.enable = true;
     mysql = {
-      enable = true;
+      enable = false;
       package = pkgs.mariadb;
     };
   };
@@ -468,7 +517,7 @@
 
   virtualisation = {
     podman = {
-      enable = true;
+      enable = false;
 
       # Create a `docker` alias for podman, to use it as a drop-in replacement
       dockerCompat = true;

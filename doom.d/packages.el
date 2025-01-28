@@ -57,7 +57,17 @@
 (package! git-timemachine)
 (package! org-roam-ui)
 (package! affe)
+(package! fuzzy-finder)
+(package! org-excalidraw
+  :recipe (:host github :repo "wdavew/org-excalidraw")
+  ;; :config
+  ;; (org-excalidraw-directory "~/path_to_store_excalidraw_files")
+  )
 ;; (package! gptel)
 ;; (package! beacon)
 (package! whisper :recipe (:host github :repo "/natrys/whisper.el"))
 (package! org-media-note :recipe (:host github :repo "yuchen-lea/org-media-note"))
+(package! catppuccin-theme)
+(package! org-web-tools)
+;; (package! activity-watch-mode)
+(package! org-fragtog)

@@ -180,6 +180,7 @@ exec ~/.dotconfigs/scripts/monitor
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
 exec_always autotiling
+# exec --no-startup-id "sh -c 'sleep 5; exec aw-qt'"
 #exec --no-startup-id picom
 exec picom
 #exec polkit-dumb-agent
@@ -224,6 +225,8 @@ mode "Utility" {
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.8; done
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile' 0, 1; done
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
+exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Natural Scrolling Enabled' 1; done
+
 # exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1; done
 # exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
 # exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1, 0; done
@@ -266,7 +269,7 @@ mode  "Passthrough Mode - Press mod+F12 to exit" {
 bindsym $mod+F12 mode "Passthrough Mode - Press mod+F12 to exit"
 bar {
   tray_output primary
-    font pango:DejaVu Sans Mono, FontAwesome 12
+    font pango:JetBrainsMono Nerd Font, Font Awesome 6 Free
     position top
     status_command i3status-rs
     colors {

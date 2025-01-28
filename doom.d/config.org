@@ -11,9 +11,11 @@
   - [[#clipboard][clipboard]]
   - [[#vertico][vertico]]
   - [[#smartparens][smartparens]]
-  - [[#lsp][LSP]]
+  - [[#tree-sitter][tree-sitter]]
+  - [[#languages][languages]]
     - [[#lsp-ui][lsp-ui]]
     - [[#lsp-nix][lsp-nix]]
+    - [[#cc][C/C++]]
   - [[#org][org]]
     - [[#general][general]]
     - [[#org-roam][org-roam]]
@@ -26,12 +28,22 @@
     - [[#org-timeblock][org-timeblock]]
     - [[#org-hyperscheduler][org-hyperscheduler]]
     - [[#custom-org-functions][custom org functions]]
+    - [[#org-timeblock-1][org-timeblock]]
+    - [[#org-excalidraw][org-excalidraw]]
+    - [[#org-web-tools][org-web-tools]]
+    - [[#org-frag-tog][org-frag-tog]]
+    - [[#ox-hugo][ox-hugo]]
+    - [[#org-yasnippet][org yasnippet]]
   - [[#spell-check][spell check]]
   - [[#gptel][gptel]]
   - [[#affe][affe]]
+  - [[#fuzzy-finder][fuzzy-finder]]
   - [[#gocryptfs][gocryptfs]]
   - [[#ediff][ediff]]
   - [[#markdown][markdown]]
+  - [[#emacs-29-shenanigans][emacs 29 shenanigans]]
+  - [[#activity-watch-mode-activity-watcher][activity-watch-mode (activity watcher)]]
+  - [[#iscrollel][iscroll.el]]
 
 * My doom config
 ** doom helper functions
@@ -57,7 +69,11 @@
 #+begin_src emacs-lisp
 (setq user-full-name "Gaurav Choudhury"
       user-mail-address "gauravchoudhury80222@gmail.com")
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-vibrant)
+
+
+;;(custom-set-faces!
+;;  '(font-lock-variable-name-face :foreground ,(doom-color 'white)))
 (setq display-line-numbers-type t)
 (setq select-enable-clipboard nil)
 ;; (use-package-hook! evil
@@ -145,7 +161,11 @@ wasn't installed correctly. Font issues are rarely Doom issues!
   (smartparens-mode 1)
   (smartparens-global-mode 1))
 #+end_src
-** LSP
+** tree-sitter
+#+begin_src emacs-lisp
+(setq +tree-sitter-hl-enabled-modes t)
+#+end_src
+** languages
 *** lsp-ui
 #+begin_src emacs-lisp
 (after! lsp-ui
@@ -172,14 +192,24 @@ wasn't installed correctly. Font issues are rarely Doom issues!
  (use-package! nix-mode
    :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 #+end_src
+*** C/C++
+#+begin_src emacs-lisp
+ ;; (custom-set-faces!
+ ;;   `(font-lock-variable-name-face :foreground ,(doom-color 'white) )
+ ;;   `(font-lock-builtin-face :foreground ,(doom-color 'yellow)  )
+ ;;   `(font-lock-function-name-face :foreground ,(doom-color 'blue) :weight bold)
+ ;;   )
+#+end_src
 ** org
 *** general
 #+begin_src emacs-lisp
 (setq org-log-done 'time)
 (after! org
   (add-to-list 'org-modules 'org-habit)
-  (setq org-agenda-files '("~/org/"))
+ ;; (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$"))
+
   (setq org-directory "~/org/")
+  (setq org-attach-id-dir "data/")
   )
 
 (defun org-toggle-emphasis ()
@@ -198,6 +228,13 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 *** org-roam
 #+begin_src emacs-lisp
 (after! org-roam
+  (setq org-roam-capture-ref-templates
+        '(("w" "ref" plain "%(org-web-tools--url-as-readable-org \"${ref}\")"
+           :target (file+head "clips/${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)))
+  (setq org-roam-db-node-include-function
+        (lambda ()
+          (not (member "ATTACH" (org-get-tags)))))
   (setq org-roam-capture-templates
         '(
           ("d" "default" plain "%?" :target
@@ -214,6 +251,7 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 #+begin_src emacs-lisp
 (after! org
 (use-package! org-download))
+
 #+end_src
 *** easy export with css
 #+begin_src emacs-lisp
@@ -319,10 +357,24 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 (use-package whisper
   :config
   (setq whisper-install-directory "~/.cache/whisper/"
+        ;; whisper-install-whispercpp nil
+        ;; whisper-model "distil-large-v3"
         whisper-model "base"
         whisper-language "en"
         whisper-translate nil
-        whisper-use-threads (/ (num-processors) 4)))
+        ))
+
+;; (defun whisper--nix-command (input-file)
+;;   `("whisper-cpp"
+;;     "--model" ,(expand-file-name (concat "~/data/AI/whisper/" "ggml-" whisper-model ".bin"))
+;;     ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+;;     ,@(when whisper-translate '("--translate"))
+;;     ,@(when whisper-show-progress-in-mode-line '("--print-progress"))
+;;     "--language" ,whisper-language
+;;     "--no-timestamps"
+;;     "--file" ,input-file))
+
+;; (advice-add 'whisper-command :override #'whisper--nix-command)
 (load-file "~/.config/doom/whisper-custom.el")
 #+end_src
 *** org media notes
@@ -334,6 +386,7 @@ wasn't installed correctly. Font issues are rarely Doom issues!
   (setq org-media-note-screenshot-image-dir "~/org/.attach/org-media-images")  ;; Folder to save screenshot
   (setq org-media-note-use-refcite-first t)  ;; use videocite link instead of video link if possible
   )
+(setq mpv-default-options '("--ao=alsa"))
 (map!
  :leader
  :map org-mode-map
@@ -409,6 +462,43 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 *** custom org functions
 #+begin_src emacs-lisp
 #+end_src
+*** org-timeblock
+#+begin_src emacs-lisp
+#+end_src
+*** org-excalidraw
+#+begin_src emacs-lisp
+(after! org-excalidraw
+  (setq org-excalidraw-directory "~/org/excalidraw"))
+#+end_src
+*** org-web-tools
+#+begin_src emacs-lisp
+(use-package! org-web-tools
+  :commands org-web-tools--url-as-readable-org)
+#+end_src
+*** org-frag-tog
+#+begin_src emacs-lisp
+(after! org
+  (add-hook 'org-mode-hook 'org-fragtog-mode)  )
+#+end_src
+*** ox-hugo
+#+begin_src emacs-lisp
+;; (use-package! ox-hugo)
+;; (after! org
+;;   (setq org-hugo-base-dir "~/data/quartz")
+;;   (setq org-hugo-front-matter-format "yaml")
+;;   (org-hugo-auto-export-mode)
+;;   )
+#+end_src
+*** org yasnippet
+#+begin_src emacs-lisp
+(map! :map org-mode-map
+      :after yasnippet
+      ;; Retain org-mode's native TAB functionality but allow yas-expand when a snippet is available
+      :nvi [tab]        yas-maybe-expand
+      ;; Optionally, bind other keys for snippet navigation
+      :nvi "C-c n"      #'yas-next-field
+      :nvi "C-c p"      #'yas-prev-field)
+#+end_src
 ** spell check
 #+begin_src emacs-lisp
 (setq ispell-local-dictionary "en_GB")
@@ -436,10 +526,17 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 #+end_src
 ** affe
 #+begin_src emacs-lisp
+;; (map!
+;;  :leader
+;;  :nv
+;;  :desc "fuzzy find files" "F" #'affe-find)
+#+end_src
+** fuzzy-finder
+#+begin_src emacs-lisp
 (map!
  :leader
  :nv
- :desc "fuzzy find files" "F" #'affe-find)
+ :desc "fuzzy find files" "F" #'fuzzy-finder)
 #+end_src
 ** gocryptfs
 #+begin_src emacs-lisp
@@ -622,4 +719,17 @@ the register."
 ** markdown
 #+begin_src emacs-lisp
 (setq markdown-css-paths  `(,(expand-file-name "~/.dotconfigs/doom.d/css/simple.min.css")))
+#+end_src
+** emacs 29 shenanigans
+#+begin_src emacs-lisp
+(setq major-mode-remap-alist major-mode-remap-defaults)
+#+end_src
+** activity-watch-mode (activity watcher)
+#+begin_src emacs-lisp
+;; (run-with-timer 15 nil #'(lambda () (global-activity-watch-mode)))
+  ;; (global-activity-watch-mode)
+#+end_src
+** iscroll.el
+#+begin_src emacs-lisp
+(load-file "~/.config/doom/iscroll.el")
 #+end_src

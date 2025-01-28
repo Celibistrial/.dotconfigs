@@ -3,8 +3,10 @@
 #!/bin/sh
 
 ## Location where org-mode stores attachments
-datadir="$HOME/org/.attach";
+datadir="$HOME/org/data";
+#datadir="$HOME/org/roam/data";
 orgdir="$HOME/org/"
+#orgdir="$HOME/org/roam/"
 
 echo "The following files appear orphaned:";
 
@@ -32,3 +34,4 @@ case $delete in
         ;;
 esac
 find $datadir -depth -type d -empty -delete
+

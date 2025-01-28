@@ -11,7 +11,11 @@
 (setq global-auto-revert-non-file-buffers t)
 (setq user-full-name "Gaurav Choudhury"
       user-mail-address "gauravchoudhury80222@gmail.com")
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-vibrant)
+
+
+;;(custom-set-faces!
+;;  '(font-lock-variable-name-face :foreground ,(doom-color 'white)))
 (setq display-line-numbers-type t)
 (setq select-enable-clipboard nil)
 ;; (use-package-hook! evil
@@ -63,6 +67,7 @@
 (after! smartparens
   (smartparens-mode 1)
   (smartparens-global-mode 1))
+(setq +tree-sitter-hl-enabled-modes t)
 (after! lsp-ui
   (setq lsp-ui-sideline-show-code-actions   nil)
   (setq lsp-headerline-breadcrumb-enable nil)
@@ -83,11 +88,18 @@
   ;; :custom (lsp-nix-nil-formatter ["alejandra" "--quiet"]))
  (use-package! nix-mode
    :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
+;; (custom-set-faces!
+;;   `(font-lock-variable-name-face :foreground ,(doom-color 'white) )
+;;   `(font-lock-builtin-face :foreground ,(doom-color 'yellow)  )
+;;   `(font-lock-function-name-face :foreground ,(doom-color 'blue) :weight bold)
+;;   )
 (setq org-log-done 'time)
 (after! org
   (add-to-list 'org-modules 'org-habit)
-  (setq org-agenda-files '("~/org/"))
+ ;; (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$"))
+
   (setq org-directory "~/org/")
+  (setq org-attach-id-dir "data/")
   )
 
 (defun org-toggle-emphasis ()
@@ -103,6 +115,13 @@
  :map org-mode-map
  "C-c e" #'org-toggle-emphasis)
 (after! org-roam
+  (setq org-roam-capture-ref-templates
+        '(("w" "ref" plain "%(org-web-tools--url-as-readable-org \"${ref}\")"
+           :target (file+head "clips/${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)))
+  (setq org-roam-db-node-include-function
+        (lambda ()
+          (not (member "ATTACH" (org-get-tags)))))
   (setq org-roam-capture-templates
         '(
           ("d" "default" plain "%?" :target
@@ -209,10 +228,24 @@
 (use-package whisper
   :config
   (setq whisper-install-directory "~/.cache/whisper/"
+        ;; whisper-install-whispercpp nil
+        ;; whisper-model "distil-large-v3"
         whisper-model "base"
         whisper-language "en"
         whisper-translate nil
-        whisper-use-threads (/ (num-processors) 4)))
+        ))
+
+;; (defun whisper--nix-command (input-file)
+;;   `("whisper-cpp"
+;;     "--model" ,(expand-file-name (concat "~/data/AI/whisper/" "ggml-" whisper-model ".bin"))
+;;     ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+;;     ,@(when whisper-translate '("--translate"))
+;;     ,@(when whisper-show-progress-in-mode-line '("--print-progress"))
+;;     "--language" ,whisper-language
+;;     "--no-timestamps"
+;;     "--file" ,input-file))
+
+;; (advice-add 'whisper-command :override #'whisper--nix-command)
 (load-file "~/.config/doom/whisper-custom.el")
 (use-package! org-media-note
   :init (setq org-media-note-use-org-ref nil)
@@ -221,6 +254,7 @@
   (setq org-media-note-screenshot-image-dir "~/org/.attach/org-media-images")  ;; Folder to save screenshot
   (setq org-media-note-use-refcite-first t)  ;; use videocite link instead of video link if possible
   )
+(setq mpv-default-options '("--ao=alsa"))
 (map!
  :leader
  :map org-mode-map
@@ -287,6 +321,26 @@
 ;;  "o a t" #'org-timeblock)
 
 
+
+(after! org-excalidraw
+  (setq org-excalidraw-directory "~/org/excalidraw"))
+(use-package! org-web-tools
+  :commands org-web-tools--url-as-readable-org)
+(after! org
+  (add-hook 'org-mode-hook 'org-fragtog-mode)  )
+;; (use-package! ox-hugo)
+;; (after! org
+;;   (setq org-hugo-base-dir "~/data/quartz")
+;;   (setq org-hugo-front-matter-format "yaml")
+;;   (org-hugo-auto-export-mode)
+;;   )
+(map! :map org-mode-map
+      :after yasnippet
+      ;; Retain org-mode's native TAB functionality but allow yas-expand when a snippet is available
+      :nvi [tab]        yas-maybe-expand
+      ;; Optionally, bind other keys for snippet navigation
+      :nvi "C-c n"      #'yas-next-field
+      :nvi "C-c p"      #'yas-prev-field)
 (setq ispell-local-dictionary "en_GB")
 ;; (use-package! gptel
 ;;   :config
@@ -305,10 +359,14 @@
 ;;     :models '("llama3:7b"))          ;List of models
 
 ;;   )
+;; (map!
+;;  :leader
+;;  :nv
+;;  :desc "fuzzy find files" "F" #'affe-find)
 (map!
  :leader
  :nv
- :desc "fuzzy find files" "F" #'affe-find)
+ :desc "fuzzy find files" "F" #'fuzzy-finder)
 (defvar gocryptfs-ciphertext-dir "~/data/.encrypted"
   "Path to the encrypted directory.")
 
@@ -480,3 +538,7 @@ the register."
 
 (advice-add 'ediff-quit :around #'disable-y-or-n-p)
 (setq markdown-css-paths  `(,(expand-file-name "~/.dotconfigs/doom.d/css/simple.min.css")))
+(setq major-mode-remap-alist major-mode-remap-defaults)
+;; (run-with-timer 15 nil #'(lambda () (global-activity-watch-mode)))
+  ;; (global-activity-watch-mode)
+(load-file "~/.config/doom/iscroll.el")
