@@ -32,7 +32,7 @@
     git = {
       enable = true;
       userName = "Celibistrial";
-      userEmail = "82810795+Celibistrial@users.noreply.github.com";
+      userEmail = "celibistrial@gmail.com";
       extraConfig = {
         commit.gpgsign = false;
         user.signingkey = "E577B32870E99F38";

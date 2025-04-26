@@ -19,7 +19,7 @@
     ./overlays.nix
     ./audio.nix
     # ./hyprland.nix
-    #./../../containers/ollama-webui.nix
+    # ./../../containers/ollama-webui.nix
   ];
   nix.extraOptions = ''
     extra-substituters = https://devenv.cachix.org
@@ -94,6 +94,11 @@
 
       192.168.29.22 m35
       10.21.103.3 m35
+      # 0.0.0.0 youtube.com
+      # 0.0.0.0 www.youtube.com
+      # 0.0.0.0 reddit.com
+      # 0.0.0.0 www.reddit.com
+
     '';
 
     networkmanager.enable = true;
@@ -278,7 +283,7 @@
         qalculate-qt
         eog
         cheese
-        anki
+        anki-bin
         neofetch
         alejandra
         audacity

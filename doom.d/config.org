@@ -34,6 +34,7 @@
     - [[#org-frag-tog][org-frag-tog]]
     - [[#ox-hugo][ox-hugo]]
     - [[#org-yasnippet][org yasnippet]]
+    - [[#org-latex][org-latex]]
   - [[#spell-check][spell check]]
   - [[#gptel][gptel]]
   - [[#affe][affe]]
@@ -498,6 +499,11 @@ wasn't installed correctly. Font issues are rarely Doom issues!
       ;; Optionally, bind other keys for snippet navigation
       :nvi "C-c n"      #'yas-next-field
       :nvi "C-c p"      #'yas-prev-field)
+#+end_src
+*** org-latex
+#+begin_src emacs-lisp
+(after! org
+  (remove-hook 'org-mode-hook #'org-cdlatex-mode))
 #+end_src
 ** spell check
 #+begin_src emacs-lisp

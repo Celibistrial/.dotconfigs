@@ -341,6 +341,8 @@
       ;; Optionally, bind other keys for snippet navigation
       :nvi "C-c n"      #'yas-next-field
       :nvi "C-c p"      #'yas-prev-field)
+(after! org
+  (remove-hook 'org-mode-hook #'org-cdlatex-mode))
 (setq ispell-local-dictionary "en_GB")
 ;; (use-package! gptel
 ;;   :config
