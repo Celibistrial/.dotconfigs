@@ -16,27 +16,21 @@
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
+  boot.initrd.luks.devices = {
+    root = {
+      device = "/dev/nvme0n1p2";
+      preLVM = true;
+    };
+  };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/84efd03d-cd35-48a4-91bb-8a1a854d7112";
+    device = "/dev/disk/by-uuid/7f474145-2fbf-4d9e-a9f8-d493ef65300d";
     fsType = "btrfs";
-    options = ["subvol=@"];
   };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/84efd03d-cd35-48a4-91bb-8a1a854d7112";
-    fsType = "btrfs";
-    options = ["subvol=@home"];
-  };
-  fileSystems."/homeSnaps" = {
-    device = "/dev/disk/by-uuid/84efd03d-cd35-48a4-91bb-8a1a854d7112";
-    fsType = "btrfs";
-    options = ["subvol=@home_snaps"];
-  };
-
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/750D-3BB8";
+    device = "/dev/disk/by-uuid/74D4-B9C5";
     fsType = "vfat";
+    options = ["fmask=0022" "dmask=0022"];
   };
   fileSystems."/data" = {
     device = "/dev/disk/by-uuid/d827308c-517a-4955-a0ff-ec1b9b9d7c67";
@@ -54,11 +48,8 @@
     fsType = "btrfs";
     options = ["subvol=@nocow,nodatacow"];
   };
-
   swapDevices = [
-    {
-      device = "/dev/disk/by-uuid/627c4eab-2d00-4464-b515-09c7bda0f618";
-    }
+    {device = "/dev/disk/by-uuid/1b99863a-da2b-4953-b016-03f4c35022c2";}
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
