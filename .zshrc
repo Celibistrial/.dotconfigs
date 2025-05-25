@@ -128,7 +128,7 @@ alias ls='exa'
 alias cat='bat --style=plain'
 alias cpfile="xclip -sel c <"
 alias remacs="pkill emacs && emacs --daemon"
-alias btop="btop --utf-force"
+# alias btop="btop --utf-force"
 alias sr="nix-shell -p steamPackages.steam-fhsenv-without-steam.run"
 alias scan="clamdscan --multiscan --fdpass"
 alias arch="distrobox enter arch"

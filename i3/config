@@ -1,3 +1,4 @@
+exec ~/.dotconfigs/scripts/monitor
 bindsym $mod+Ctrl+Tab move scratchpad
 bindsym $mod+Tab scratchpad show
 set $mod Mod4
@@ -123,9 +124,10 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 bindsym $mod+m exec "rofimoji --max-recent 0"
-bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
+# bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
 bindsym $mod+Return exec kitty
-bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
+# bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
+bindsym $mod+o exec "kitty --execute rangercd"
 bindsym $mod+Shift+q kill
 bindsym $mod+c exec "rofi -show calc -modi calc -no-show-match -no-sort"
 bindsym $mod+d exec "rofi -show drun"
@@ -176,7 +178,6 @@ mode "$mode_gaps_outer" {
 #exec --no-startup-id "~/.dotconfigs/scripts/bar"
 #exec /usr/lib/geoclue-2.0/demos/agent
 #exec redshift
-exec ~/.dotconfigs/scripts/monitor
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
 exec_always autotiling
@@ -195,6 +196,7 @@ exec --no-startup-id ~/.dotconfigs/scripts/walpaper
 exec --no-startup-id ~/.dotconfigs/scripts/lock.sh
 exec xsetroot -cursor_name left_ptr
 exec keepassxc
+exec systemctl --user start libinput-gestures
 exec --no-startup-id "greenclip daemon"
 for_window [class="gnome-calculator"] floating enable
 for_window [class="steam"] floating enable
@@ -222,10 +224,11 @@ mode "Utility" {
 # exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
 # exec_always for id in $(xinput list | grep "pointer"|grep "Logitech USB Optical Mouse" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.4; done
 
-exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.8; done
+exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' -0.6; done
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile' 0, 1; done
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
 exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Natural Scrolling Enabled' 1; done
+exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' 0.3; done
 
 # exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1; done
 # exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
@@ -268,7 +271,7 @@ mode  "Passthrough Mode - Press mod+F12 to exit" {
 }
 bindsym $mod+F12 mode "Passthrough Mode - Press mod+F12 to exit"
 bar {
-  tray_output primary
+  # tray_output primary
     font pango:JetBrainsMono Nerd Font, Font Awesome 6 Free
     position top
     status_command i3status-rs
@@ -282,3 +285,5 @@ bar {
         urgent_workspace #2f343a #900000 #ffffff
     }
 }
+exec --no-startup-id sleep 0.5 && ~/.dotconfigs/scripts/walpaper
+exec reload

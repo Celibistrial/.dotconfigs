@@ -3,6 +3,7 @@
 #+PROPERTY: header-args :tangle config :cache yes :results silent :padline no
 * Table of contents :toc:
 - [[#i3-config][i3-config]]
+  - [[#monitors][Monitors]]
   - [[#keybinds][Keybinds]]
   - [[#cool-screenshot][Cool screenshot]]
   - [[#startup-scriptsprograms][Startup scripts/programs]]
@@ -15,6 +16,11 @@
 
 * i3-config
 Celibistrial's i3wm config
+** Monitors
+This should be at the very top or weird things happen
+#+begin_src conf
+exec ~/.dotconfigs/scripts/monitor
+#+end_src
 ** Keybinds
 *** Base
 #+begin_src conf
@@ -155,6 +161,7 @@ bindsym $mod+m exec "rofimoji --max-recent 0"
 bindsym $mod+n exec "emacsclient -c -a 'emacs' -e '(org-capture)'&"
 bindsym $mod+Return exec kitty
 bindsym $mod+Shift+Return exec "emacsclient -c -a 'emacs' "
+bindsym $mod+o exec "kitty --execute rangercd"
 bindsym $mod+Shift+q kill
 bindsym $mod+c exec "rofi -show calc -modi calc -no-show-match -no-sort"
 bindsym $mod+d exec "rofi -show drun"
@@ -215,7 +222,6 @@ mode "$mode_gaps_outer" {
 #exec --no-startup-id "~/.dotconfigs/scripts/bar"
 #exec /usr/lib/geoclue-2.0/demos/agent
 #exec redshift
-exec ~/.dotconfigs/scripts/monitor
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
 exec_always autotiling
@@ -277,6 +283,7 @@ exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d 
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile' 0, 1; done
 exec_always for id in $(xinput list | grep "pointer" | grep "Logitech" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Middle Emulation Enabled' 0; done
 exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Natural Scrolling Enabled' 1; done
+exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Speed' 0.3; done
 
 # exec_always for id in $(xinput list | grep "Touchpad" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 1; done
 # exec_always for id in $(xinput list | grep "pointer" | cut -d '=' -f 2 | cut -f 1); do xinput --set-prop $id 'libinput Accel Profile Enabled' 0, 1; done
@@ -339,7 +346,7 @@ bindsym $mod+F12 mode "Passthrough Mode - Press mod+F12 to exit"
 ** i3bar
 #+begin_src conf
 bar {
-  tray_output primary
+  # tray_output primary
     font pango:JetBrainsMono Nerd Font, Font Awesome 6 Free
     position top
     status_command i3status-rs
@@ -356,6 +363,12 @@ bar {
 
 #+end_src
 
+Source fehbg again cuz its so weird
+#+begin_src conf
+
+exec --no-startup-id sleep 0.5 && ~/.dotconfigs/scripts/walpaper
+exec reload
+#+end_src
 ;; Local Variables:
 ;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
 ;; End:

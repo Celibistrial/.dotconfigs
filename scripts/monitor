@@ -10,9 +10,9 @@ if [ $num_monitors -gt 1 ]; then
     inbuilt_monitor="eDP-1-1"
     # Turn off the built-in monitor
     xrandr --output $inbuilt_monitor --off
-#    xrandr --output HDMI-1-0 --primary --auto --output eDP1 --auto --right-of HDMI-1-0
+    #    xrandr --output HDMI-1-0 --primary --auto --output eDP1 --auto --right-of HDMI-1-0
     # Wait for a few seconds to ensure the monitor has been turned off
-#    sleep 5
+    #    sleep 5
 
     # Turn on the built-in monitor again
 #    xrandr --output $inbuilt_monitor --auto
@@ -20,4 +20,3 @@ else
     dpi_value=120
     xrdb -merge <<< "Xft.dpi: $dpi_value"
 fi
-

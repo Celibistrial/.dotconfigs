@@ -10,6 +10,7 @@ require("lazy-lsp").setup {
 		"rnix",              -- archived on Jan 25, 2024
 		"scry",              -- archived on Jun 1, 2023
 		"tailwindcss",       -- associates with too many filetypes
+		"nil_ls"
 	},
 	-- Alternatively specify preferred servers for a filetype (others will be ignored).
 	preferred_servers = {
@@ -34,6 +35,15 @@ require("lazy-lsp").setup {
 					diagnostics = {
 						-- Get the language server to recognize the `vim` global
 						globals = { "vim" },
+					},
+				},
+			},
+		},
+		nixd = {
+			settings = {
+				nixd = {
+					formatting = {
+						command = { "alejandra" },
 					},
 				},
 			},
@@ -75,15 +85,15 @@ lsp_zero.on_attach(function(client, bufnr)
 	keymap(bufnr, "n", "cd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 	keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
 	keymap(bufnr, "n", "cI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-	keymap(bufnr, "n", "cr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+	keymap(bufnr, "n", "<leader>cr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 	keymap(bufnr, "n", "cl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-	keymap(bufnr, "n", "<leader>cf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
-	keymap(bufnr, "n", "<leader>li", "<cmd>LspInfo<cr>", opts)
-	keymap(bufnr, "n", "<leader>lI", "<cmd>LspInstallInfo<cr>", opts)
-	keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+	keymap(bufnr, "n", "cf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", opts)
+	-- keymap(bufnr, "n", "li", "<cmd>LspInfo<cr>", opts)
+	-- keymap(bufnr, "n", "<leader>lI", "<cmd>LspInstallInfo<cr>", opts)
+	keymap(bufnr, "n", "ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
 	keymap(bufnr, "n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", opts)
 	keymap(bufnr, "n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
-	keymap(bufnr, "n", "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+	keymap(bufnr, "n", "cr", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 	keymap(bufnr, "n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	keymap(bufnr, "n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
 end)

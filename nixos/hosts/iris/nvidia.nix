@@ -5,6 +5,7 @@
   ...
 }: {
   # boot.kernelParams = ["nvidia_drm.fbdev=1" "nvidia-drm.modeset=1"];
+  services.xserver.videoDrivers = lib.mkDefault ["nvidia"];
   hardware = {
     graphics = {
       enable = true;
@@ -46,41 +47,37 @@
       nvidiaBusId = "PCI:1:0:0";
     };
   };
-
-  services.xserver.videoDrivers = lib.mkDefault ["nvidia" "modesetting"];
-  boot.extraModprobeConfig = ''
-    blacklist nouveau
-    options nouveau modeset=0
-  '';
-
-  services.udev.extraRules = ''
-    # Remove NVIDIA USB xHCI Host Controller devices, if present
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{power/control}="auto", ATTR{remove}="1"
-    # Remove NVIDIA USB Type-C UCSI devices, if present
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{power/control}="auto", ATTR{remove}="1"
-    # Remove NVIDIA Audio devices, if present
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{power/control}="auto", ATTR{remove}="1"
-    # Remove NVIDIA VGA/3D controller devices
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{power/control}="auto", ATTR{remove}="1"
-  '';
-  boot.blacklistedKernelModules = ["nouveau" "nvidia" "nvidia_drm" "nvidia_modeset"];
-
   specialisation = {
-    hybrid.configuration = {
-      system.nixos.tags = ["hybrid"];
+    on-the-go.configuration = {
+      system.nixos.tags = ["on-the-go"];
       hardware.nvidia = {
         prime.offload.enable = lib.mkForce true;
         prime.offload.enableOffloadCmd = lib.mkForce true;
         prime.sync.enable = lib.mkForce false;
       };
     };
-    dgpu.configuration = {
-      system.nixos.tags = ["dgpu"];
-      services.xserver.videoDrivers = lib.mkForce ["nvidia"];
-      systemd.services.nbfc_service.enable = lib.mkForce true;
-      services.udev.extraRules = lib.mkForce '''';
-      boot.extraModprobeConfig = lib.mkForce '''';
-      boot.blacklistedKernelModules = lib.mkForce [];
+    battery-saver.configuration = {
+      system.nixos.tags = ["battery-saver"];
+
+      services.xserver.videoDrivers = lib.mkForce ["nvidia" "modesetting"];
+      boot.extraModprobeConfig = ''
+        blacklist nouveau
+        options nouveau modeset=0
+      '';
+
+      services.udev.extraRules = ''
+        # Remove NVIDIA USB xHCI Host Controller devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA USB Type-C UCSI devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA Audio devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA VGA/3D controller devices
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{power/control}="auto", ATTR{remove}="1"
+      '';
+      boot.blacklistedKernelModules = ["nouveau" "nvidia" "nvidia_drm" "nvidia_modeset"];
+
+      systemd.services.nbfc_service.enable = lib.mkForce false;
     };
   };
 

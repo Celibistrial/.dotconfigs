@@ -10,7 +10,7 @@
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 (setq user-full-name "Gaurav Choudhury"
-      user-mail-address "gauravchoudhury80222@gmail.com")
+      user-mail-address "ryan80222@gmail.com")
 (setq doom-theme 'doom-vibrant)
 
 
@@ -58,6 +58,16 @@
  :leader
  :nv
  "z" #'comint-dynamic-complete-filename)
+(defun my/vterm-paste-clipboard ()
+  "Paste system clipboard into vterm using clipboard-yank."
+  (interactive)
+  (let ((clip-text (with-temp-buffer
+                     (clipboard-yank)
+                     (buffer-string))))
+    (when clip-text
+      (vterm-send-string clip-text))))
+(map! :map vterm-mode-map
+      "C-S-v" #'my/vterm-paste-clipboard)
 (setq projectile-indexing-method 'alien)
 (map!
  :leader
@@ -89,10 +99,28 @@
  (use-package! nix-mode
    :custom (nix-nixfmt-bin "~/.dotconfigs/scripts/alejandra-the-quiet.sh" ))
 ;; (custom-set-faces!
-;;   `(font-lock-variable-name-face :foreground ,(doom-color 'white) )
-;;   `(font-lock-builtin-face :foreground ,(doom-color 'yellow)  )
-;;   `(font-lock-function-name-face :foreground ,(doom-color 'blue) :weight bold)
-;;   )
+ ;;   `(font-lock-variable-name-face :foreground ,(doom-color 'white) )
+ ;;   `(font-lock-builtin-face :foreground ,(doom-color 'yellow)  )
+ ;;   `(font-lock-function-name-face :foreground ,(doom-color 'blue) :weight bold)
+ ;;   )
+(map! :leader
+      (:prefix ("e" . "execute")
+        :desc "C/C++"
+        "c" #'compileandrun))
+(defun compileandrun()
+  "Compile and run the current C/C++ file in vterm."
+  (interactive)
+  (let* ((src (buffer-file-name))
+         (exe (file-name-sans-extension (file-name-nondirectory src)))
+         (cmd (format "g++ %s -o %s && ./%s" src exe exe)))
+    (vterm)
+    (vterm-send-string cmd)
+    (vterm-send-return)))
+;; (defun compileandrun()
+;;   (interactive)
+;;   (let* ((src (file-name-nondirectory (buffer-file-name)))
+;;          (exe (file-name-sans-extension src)))
+;;     (compile (concat "g++ " src " -o " exe " && timeout 1s ./" exe ))))
 (setq org-log-done 'time)
 (after! org
   (add-to-list 'org-modules 'org-habit)
@@ -343,6 +371,14 @@
       :nvi "C-c p"      #'yas-prev-field)
 (after! org
   (remove-hook 'org-mode-hook #'org-cdlatex-mode))
+(after! org
+  (setq org-modern-star "replace")
+  (setq org-modern-checkbox nil)
+  )
+(after! org-modern
+  (setq org-modern-star "replace")
+  (setq org-modern-checkbox nil)
+  )
 (setq ispell-local-dictionary "en_GB")
 ;; (use-package! gptel
 ;;   :config

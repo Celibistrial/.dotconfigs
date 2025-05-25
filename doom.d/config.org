@@ -35,6 +35,7 @@
     - [[#ox-hugo][ox-hugo]]
     - [[#org-yasnippet][org yasnippet]]
     - [[#org-latex][org-latex]]
+    - [[#org-modern][org-modern]]
   - [[#spell-check][spell check]]
   - [[#gptel][gptel]]
   - [[#affe][affe]]
@@ -69,7 +70,7 @@
 ** Setting doom & evil variables
 #+begin_src emacs-lisp
 (setq user-full-name "Gaurav Choudhury"
-      user-mail-address "gauravchoudhury80222@gmail.com")
+      user-mail-address "ryan80222@gmail.com")
 (setq doom-theme 'doom-vibrant)
 
 
@@ -112,7 +113,6 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 ;; (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
 ;; (setq emojify-display-style "unicode")
 ;; (setq vterm-font "JetBrainsMono Nerd Font:size=12")
-
 #+end_src
 ** clipboard
 #+begin_src emacs-lisp
@@ -144,6 +144,16 @@ wasn't installed correctly. Font issues are rarely Doom issues!
  :leader
  :nv
  "z" #'comint-dynamic-complete-filename)
+(defun my/vterm-paste-clipboard ()
+  "Paste system clipboard into vterm using clipboard-yank."
+  (interactive)
+  (let ((clip-text (with-temp-buffer
+                     (clipboard-yank)
+                     (buffer-string))))
+    (when clip-text
+      (vterm-send-string clip-text))))
+(map! :map vterm-mode-map
+      "C-S-v" #'my/vterm-paste-clipboard)
 
 
 #+end_src
@@ -200,6 +210,24 @@ wasn't installed correctly. Font issues are rarely Doom issues!
  ;;   `(font-lock-builtin-face :foreground ,(doom-color 'yellow)  )
  ;;   `(font-lock-function-name-face :foreground ,(doom-color 'blue) :weight bold)
  ;;   )
+(map! :leader
+      (:prefix ("e" . "execute")
+        :desc "C/C++"
+        "c" #'compileandrun))
+(defun compileandrun()
+  "Compile and run the current C/C++ file in vterm."
+  (interactive)
+  (let* ((src (buffer-file-name))
+         (exe (file-name-sans-extension (file-name-nondirectory src)))
+         (cmd (format "g++ %s -o %s && ./%s" src exe exe)))
+    (vterm)
+    (vterm-send-string cmd)
+    (vterm-send-return)))
+;; (defun compileandrun()
+;;   (interactive)
+;;   (let* ((src (file-name-nondirectory (buffer-file-name)))
+;;          (exe (file-name-sans-extension src)))
+;;     (compile (concat "g++ " src " -o " exe " && timeout 1s ./" exe ))))
 #+end_src
 ** org
 *** general
@@ -504,6 +532,17 @@ wasn't installed correctly. Font issues are rarely Doom issues!
 #+begin_src emacs-lisp
 (after! org
   (remove-hook 'org-mode-hook #'org-cdlatex-mode))
+#+end_src
+*** org-modern
+#+begin_src emacs-lisp
+(after! org
+  (setq org-modern-star "replace")
+  (setq org-modern-checkbox nil)
+  )
+(after! org-modern
+  (setq org-modern-star "replace")
+  (setq org-modern-checkbox nil)
+  )
 #+end_src
 ** spell check
 #+begin_src emacs-lisp

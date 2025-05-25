@@ -24,7 +24,7 @@ alert = 10.0
 format = " $icon root: $used.eng(w:2) "
 [[block]]
 block = "battery"
-format = "$icon $time $percentage $power"
+device = "BAT1"
 [[block]]
 block = "memory"
 format = " $icon $mem_used_percents.eng(w:2) "

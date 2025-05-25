@@ -14,17 +14,29 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./nvidia.nix
-    ./nbfc.nix
     ./overlays.nix
     ./audio.nix
-    # ./hyprland.nix
+    ./hyprland.nix
     # ./../../containers/ollama-webui.nix
   ];
+
+  services.fprintd = {
+    enable = true;
+    package = pkgs.fprintd-tod;
+    tod = {
+      enable = true;
+      driver = pkgs.libfprint-2-tod1-goodix;
+    };
+  };
+  ### Intel
+  hardware.intel-gpu-tools.enable = true;
+
+  # ### NixOS power management
   powerManagement = {
     enable = true;
     powertop.enable = true;
   };
+
   boot = {
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -47,9 +59,6 @@
       "quiet"
       "splash"
       "loglevel=3"
-      "rd.systemd.show_status=false"
-      "rd.udev.log_level=3"
-      "udev.log_priority=3"
     ];
     loader = {
       # holding SPACE will make it appear
@@ -60,17 +69,7 @@
     extraModulePackages = [
     ];
     extraModprobeConfig = ''
-      options nvidia_modeset vblank_sem_control=0
-      options snd_hda_intel power_save=0
     '';
-
-    # extraModprobeConfig = ''
-    #   options nvidia NVreg_UsePageAttributeTable=1
-    #   options nvidia NVreg_RegistryDwords="OverrideMaxPerf=0x1"
-    #   options nvidia NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp
-    #   options nvidia_modeset vblank_sem_control=0
-    #   options snd_hda_intel power_save=0
-    # '';
   };
   hardware.bluetooth = {
     enable = true;
@@ -81,13 +80,8 @@
     experimental-features = ["nix-command" "flakes"];
     warn-dirty = false;
   };
-  # nix.gc = {
-  #   automatic = true;
-  #   dates = "weekly";
-  #   options = "--delete-older-than 30d";
-  # };
   networking = {
-    hostName = "hp-pav"; # Define your hostname.
+    hostName = "iris";
     extraHosts = ''
       192.168.29.85 deb1
       10.21.103.1 deb1
@@ -132,7 +126,7 @@
   };
   # xdg.portal.enable = true;
   # xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
-  # xdg.portal.config.common.default = ["gtk"];
+  xdg.portal.config.common.default = ["gtk"];
   xdg.mime.defaultApplications = let
     browser = "firefox.desktop";
     documentViewer = "org.pwmt.zathura.desktop";
@@ -157,7 +151,6 @@
   security.polkit.enable = true;
   security.pam.services.i3lock.enable = true;
   systemd = {
-    packages = [pkgs.libinput-gestures];
     services.nix-daemon = {
       environment.TMPDIR = "/var/tmp";
     };
@@ -171,19 +164,19 @@
         Unit = "sync_data.service";
       };
     };
-    services.betterlockscreen = {
-      enable = true;
-      description = "Locks screen when going to sleep/suspend";
-      environment = {DISPLAY = ":0";};
-      serviceConfig = {
-        User = "gaurav";
-        Type = "simple";
-        ExecStart = ''${pkgs.xidlehook}/bin/xidlehook-client --socket /tmp/xidlehook.socket control --action trigger --timer 1 '';
-        TimeoutSec = "infinity";
-      };
-      before = ["sleep.target" "suspend.target" "hibernate.target"];
-      wantedBy = ["sleep.target" "suspend.target" "hibernate.target"];
-    };
+    # services.betterlockscreen = {
+    #   enable = true;
+    #   description = "Locks screen when going to sleep/suspend";
+    #   environment = {DISPLAY = ":0";};
+    #   serviceConfig = {
+    #     User = "gaurav";
+    #     Type = "simple";
+    #     ExecStart = ''${pkgs.xidlehook}/bin/xidlehook-client --socket /tmp/xidlehook.socket control --action trigger --timer 1 '';
+    #     TimeoutSec = "infinity";
+    #   };
+    #   before = ["sleep.target" "suspend.target" "hibernate.target"];
+    #   wantedBy = ["sleep.target" "suspend.target" "hibernate.target"];
+    # };
     services.sync_data = {
       enable = true;
       path = [pkgs.bash pkgs.rsync pkgs.openssh pkgs.unixtools.ping];
@@ -229,13 +222,12 @@
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         obs-pipewire-audio-capture
-        # wlrobs
+        wlrobs
       ];
     };
     firefox = {
       enable = true;
       package = pkgs.firefox;
-      nativeMessagingHosts.packages = [pkgs.firefoxpwa];
     };
     dconf.enable = true;
     nh = {
@@ -259,7 +251,7 @@
     gaurav = {
       isNormalUser = true;
       description = "Gaurav Choudhury";
-      extraGroups = ["networkmanager" "wheel" "audio" "input"];
+      extraGroups = ["networkmanager" "wheel" "audio"];
       shell = pkgs.zsh;
       packages = with pkgs; [
         nemo-with-extensions
@@ -287,7 +279,7 @@
         neofetch
         alejandra
         audacity
-        flameshot
+        (flameshot.override {enableWlrSupport = true;})
         pandoc
         gimp3
         haskellPackages.greenclip
@@ -306,21 +298,16 @@
         # lmstudio
         alsa-utils
         # (openai-whisper-cpp.override {cudaSupport = true;})
-        auto-cpufreq
+        playerctl
 
-        libinput-gestures
-        obsidian
-
-        linux-wifi-hotspot
-
-        tor-browser-bundle-bin
         # For emacs
         shfmt
         shellcheck
-        ((emacsPackagesFor emacs).emacsWithPackages (
+        ((emacsPackagesFor emacs-pgtk).emacsWithPackages (
           epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars]
         ))
         github-cli
+        auto-cpufreq
 
         # ((emacsPackagesFor (emacs-gtk.override {withXwidgets = true;})).emacsWithPackages (
         #   epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars org-xlatex]
@@ -342,12 +329,6 @@
         # excalidraw_export
 
         jetbrains.idea-community-bin
-
-        xclip
-        xdotool
-        xorg.xprop
-        xorg.xkill
-        xorg.xwininfo
 
         ffmpeg-full
         carla
@@ -411,20 +392,30 @@
   };
   # List services that you want to enable:
   services = {
-    create_ap = {
-      enable = true;
-      settings = {
-        INTERNET_IFACE = "eth0";
-        WIFI_IFACE = "wlan0";
-        SSID = "hp-pav";
-        PASSPHRASE = "pleaseDontAsk";
-      };
-    };
+    # tlp = {
+    #   enable = true;
+    #   settings = {
+    #     CPU_SCALING_GOVERNOR_ON_AC = "performance";
+    #     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+    #     CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+    #     CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+    #     CPU_MIN_PERF_ON_AC = 0;
+    #     CPU_MAX_PERF_ON_AC = 100;
+    #     CPU_MIN_PERF_ON_BAT = 0;
+    #     CPU_MAX_PERF_ON_BAT = 60;
+
+    #     #Optional helps save long term battery health
+    #     # START_CHARGE_THRESH_BAT0 = 40; # 40 and below it starts to charge
+    #     # STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
+    #   };
+    # };
     fwupd.enable = true;
-    # udisks2.enable = true;
+    udisks2.enable = true;
     logind = {
       powerKey = "suspend";
-      lidSwitch = "suspend";
+      lidSwitch = "suspend-then-hibernate";
       lidSwitchDocked = "ignore";
       lidSwitchExternalPower = "ignore";
     };
@@ -432,18 +423,11 @@
       enable = true;
       nssmdns4 = true;
       nssmdns6 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        domain = true;
-        hinfo = true;
-        userServices = true;
-        workstation = true;
-      };
       openFirewall = true;
     };
     fstrim.enable = true;
     envfs.enable = true;
+
     auto-cpufreq.settings = {
       enable = true;
       charger = {
@@ -456,6 +440,7 @@
         turbo = "auto";
       };
     };
+    # power-profiles-daemon.enable = true;
 
     undervolt = {
       enable = true;
@@ -464,54 +449,34 @@
     };
     blueman.enable = true;
     displayManager.gdm.enable = true;
-    xserver = {
-      deviceSection = ''
-        Option "Coolbits" "24"
-      '';
-      excludePackages = [pkgs.xterm];
-      enable = true;
+    # btrbk = {
+    #   instances.data = {
+    #     onCalendar = "hourly";
+    #     settings = {
+    #       # 48h means 48 hourly snapshots are preversed , 7d means 7 daily snapshots are preserved
+    #       snapshot_preserve = "7d";
+    #       snapshot_preserve_min = "2d";
 
-      windowManager.i3 = {
-        enable = true;
-        extraPackages = with pkgs; [
-          betterlockscreen
-          arandr
-          lxappearance
-          xidlehook
-          i3status-rust
-          i3-swallow
-          autotiling
-        ];
-      };
-    };
-    btrbk = {
-      instances.data = {
-        onCalendar = "hourly";
-        settings = {
-          # 48h means 48 hourly snapshots are preversed , 7d means 7 daily snapshots are preserved
-          snapshot_preserve = "7d";
-          snapshot_preserve_min = "2d";
+    #       volume = {
+    #         # "/home" = {
+    #         #   snapshot_dir = "/homeSnaps";
+    #         #   subvolume = {
+    #         #     "." = {
+    #         #     };
+    #         #   };
+    #         # };
 
-          volume = {
-            # "/home" = {
-            #   snapshot_dir = "/homeSnaps";
-            #   subvolume = {
-            #     "." = {
-            #     };
-            #   };
-            # };
-
-            "/data" = {
-              snapshot_dir = "/dataSnaps";
-              subvolume = {
-                "." = {
-                };
-              };
-            };
-          };
-        };
-      };
-    };
+    #         "/data" = {
+    #           snapshot_dir = "/dataSnaps";
+    #           subvolume = {
+    #             "." = {
+    #             };
+    #           };
+    #         };
+    #       };
+    #     };
+    #   };
+    # };
 
     syncthing = {
       openDefaultPorts = true;
@@ -532,24 +497,8 @@
     libinput.enable = true;
 
     gvfs.enable = true;
-    mysql = {
-      enable = false;
-      package = pkgs.mariadb;
-    };
   };
-  virtualisation.containers.enable = true;
 
-  virtualisation = {
-    podman = {
-      enable = false;
-
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-  };
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
