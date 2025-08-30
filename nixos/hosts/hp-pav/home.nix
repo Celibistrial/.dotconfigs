@@ -32,7 +32,7 @@
     git = {
       enable = true;
       userName = "Celibistrial";
-      userEmail = "celibistrial@gmail.com";
+      userEmail = "ryan80222@gmail.com";
       extraConfig = {
         commit.gpgsign = false;
         user.signingkey = "E577B32870E99F38";
@@ -67,6 +67,10 @@
           hostname = "m35";
           port = 8022;
           user = "u0_a339";
+        };
+        drop = {
+          hostname = "drop";
+          user = "root";
         };
         deb1 = {
           hostname = "deb1";

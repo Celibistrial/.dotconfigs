@@ -286,4 +286,3 @@ bar {
     }
 }
 exec --no-startup-id sleep 0.5 && ~/.dotconfigs/scripts/walpaper
-exec reload

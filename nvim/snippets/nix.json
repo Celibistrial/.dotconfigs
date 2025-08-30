@@ -1,0 +1,15 @@
+{
+	"Nix Shell": {
+		"prefix": "ns",
+		"body": [
+			"{pkgs ? import <nixpkgs> {}}:",
+			"with pkgs;",
+			"  mkShell {",
+			"    buildInputs = [",
+			"      gcc",
+			"    ];",
+			"  }"
+		],
+		"description": "Nix Shell"
+	}
+}

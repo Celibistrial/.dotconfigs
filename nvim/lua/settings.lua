@@ -18,6 +18,7 @@ vim.keymap.set("c", "<C-BS>", "<C-w>")
 vim.keymap.set("i", "<C-H>", "<C-w>") -- using Ctrl+Backspace delete a word. ref:https://www.reddit.com/r/neovim/comments/prp8zw/using_ctrlbackspace_in_neovim/
 vim.keymap.set("c", "<C-H>", "<C-w>")
 
+
 vim.cmd([[
 "set clipboard+=unnamedplus
 " " Copy to clipboard

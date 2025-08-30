@@ -12,6 +12,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+	"nvim-lualine/lualine.nvim",
+	"nvim-tree/nvim-web-devicons",
 	{
 		'goolord/alpha-nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -19,14 +21,17 @@ require("lazy").setup({
 			require 'alpha'.setup(require 'alpha.themes.startify'.config)
 		end
 	},
-	"nvim-lualine/lualine.nvim",
-	{ "catppuccin/nvim",            name = "catppuccin", priority = 1000 },
+	{ "catppuccin/nvim",           name = "catppuccin", priority = 1000 },
 	{ "dundalek/lazy-lsp.nvim" },
-	{ "sakhnik/nvim-gdb" },
-	{ "nvim-tree/nvim-web-devicons" },
-	{ 'VonHeikemen/lsp-zero.nvim',  branch = 'v3.x' },
+	{ 'VonHeikemen/lsp-zero.nvim', branch = 'v3.x' },
+	{
+		'fredehoey/tardis.nvim',
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = true,
+	},
 	{ 'neovim/nvim-lspconfig' },
 	{ 'hrsh7th/cmp-nvim-lsp' },
+	{ 'saadparwaiz1/cmp_luasnip' },
 	{ 'hrsh7th/nvim-cmp' },
 	{
 		'windwp/nvim-autopairs',
@@ -35,50 +40,30 @@ require("lazy").setup({
 		-- use opts = {} for passing setup options
 		-- this is equalent to setup({}) function
 	},
-	{ 'L3MON4D3/LuaSnip' },
-	{ 'nvim-treesitter/nvim-treesitter' },
+	{ "L3MON4D3/LuaSnip", },
+	{"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate", highlight = {
+        enable = true,
+      },},
 	{
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
 		dependencies = { "nvim-lua/plenary.nvim", "BurntSushi/ripgrep", "sharkdp/fd" },
-		-- keys = {
-		-- 	{ "<C-t>", "<CMD>Telescope<CR>",             mode = { "n", "i", "v" } },
-		-- 	{ "<C-f>", "<CMD>Telescope find_files<CR>",  mode = { "n", "i", "v" } },
-		-- 	{ "<C-l>", "<CMD>Telescope live_grep<CR>",   mode = { "n", "i", "v" } },
-		-- 	{ "<C-c>", "<CMD>Telescope commands<CR>",    mode = { "n", "i", "v" } },
-		-- 	{ "<C-k>", "<CMD>Telescope keymaps<CR>",     mode = { "n", "i", "v" } },
-		-- 	{ "<C-s>", "<CMD>Telescope grep_string<CR>", mode = { "n", "i", "v" } },
-		-- },
 		config = true
 	},
 	"smartpde/telescope-recent-files",
 	{
-		"sindrets/diffview.nvim",
+		"NeogitOrg/neogit",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
-			{ "TimUntersberger/neogit", config = { disable_commit_confirmation = true } },
+			"nvim-lua/plenary.nvim", -- required
+			"sindrets/diffview.nvim", -- optional - Diff integration
+			"nvim-telescope/telescope.nvim", -- optional
 		},
-		keys = {
-			{ "<C-g>", "<CMD>DiffviewOpen<CR>", mode = { "n", "i", "v" } }
-		},
-		config = {
-			keymaps = {
-				view = {
-					["<C-g>"] = "<CMD>DiffviewClose<CR>",
-					["c"] = "<CMD>DiffviewClose|Neogit commit<CR>",
-				},
-				file_panel = {
-					["<C-g>"] = "<CMD>DiffviewClose<CR>",
-					["c"] = "<CMD>DiffviewClose|Neogit commit<CR>",
-				},
-			},
-		}
 	},
 	{
 		"andymass/vim-matchup",
-		setup = function()
-			vim.g.matchup_matchparen_offscreen = { method = "popup" }
-		end,
+		opts = {
+			matchup_matchparen_offscreen = { method = "popup" },
+		},
 	},
 	{
 		"nvim-telescope/telescope-file-browser.nvim",

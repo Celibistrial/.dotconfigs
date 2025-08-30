@@ -20,3 +20,4 @@ else
     dpi_value=120
     xrdb -merge <<< "Xft.dpi: $dpi_value"
 fi
+i3-msg reload

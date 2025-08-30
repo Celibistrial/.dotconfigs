@@ -1,0 +1,14 @@
+{
+  "Competetive Programing": {
+    "prefix": "cp",
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "int main() {",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Competitive Programming boilerplate"
+  }
+}
+

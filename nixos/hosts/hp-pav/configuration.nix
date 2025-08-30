@@ -91,6 +91,7 @@
     extraHosts = ''
       192.168.29.85 deb1
       10.21.103.1 deb1
+      144.126.254.140 drop
 
       # 192.168.29.22 m35
       # 10.21.103.3 m35
@@ -184,6 +185,7 @@
       before = ["sleep.target" "suspend.target" "hibernate.target"];
       wantedBy = ["sleep.target" "suspend.target" "hibernate.target"];
     };
+
     services.sync_data = {
       enable = true;
       path = [pkgs.bash pkgs.rsync pkgs.openssh pkgs.unixtools.ping];
@@ -217,9 +219,6 @@
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
     iosevka-bin
-    # for excalidraw_export
-    fg-virgil
-    cascadia-code
   ];
   security.sudo.extraConfig = ''
     Defaults timestamp_type = global
@@ -300,7 +299,7 @@
 
         thunderbird
 
-        # (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
+        (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
         # (callPackage ../../pkgs/balena-etcher.nix {})
         # (callPackage ../../pkgs/jdownloader2.nix {})
         # lmstudio
@@ -338,8 +337,6 @@
             collection-fontsrecommended
             ;
         })
-
-        # excalidraw_export
 
         jetbrains.idea-community-bin
 
@@ -411,15 +408,15 @@
   };
   # List services that you want to enable:
   services = {
-    create_ap = {
-      enable = true;
-      settings = {
-        INTERNET_IFACE = "eth0";
-        WIFI_IFACE = "wlan0";
-        SSID = "hp-pav";
-        PASSPHRASE = "pleaseDontAsk";
-      };
-    };
+    # create_ap = {
+    #   enable = true;
+    #   settings = {
+    #     INTERNET_IFACE = "eth0";
+    #     WIFI_IFACE = "wlan0";
+    #     SSID = "hp-pav";
+    #     PASSPHRASE = "pleaseDontAsk";
+    #   };
+    # };
     fwupd.enable = true;
     # udisks2.enable = true;
     logind = {

@@ -1,0 +1,21 @@
+{
+	"name": "my-snippets",
+	"publisher": "gaurav",
+	"description": "Custom snippets for LuaSnip (VSCode style)",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.0.0"
+	},
+	"contributes": {
+		"snippets": [
+			{
+				"language": "cpp",
+				"path": "./cpp.json"
+			},
+			{
+				"language": "nix",
+				"path": "./nix.json"
+			}
+		]
+	}
+}

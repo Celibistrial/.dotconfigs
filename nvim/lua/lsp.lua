@@ -1,5 +1,4 @@
 require("lazy-lsp").setup {
-	-- By default all available servers are set up. Exclude unwanted or misbehaving servers.
 	excluded_servers = {
 		"ccls",              -- prefer clangd
 		"denols",            -- prefer eslint and tsserver
@@ -12,13 +11,12 @@ require("lazy-lsp").setup {
 		"tailwindcss",       -- associates with too many filetypes
 		"nil_ls"
 	},
-	-- Alternatively specify preferred servers for a filetype (others will be ignored).
 	preferred_servers = {
 		--    markdown = {},
 		--    python = { "pyright", "ruff_lsp" },
+		-- svelte = {"eslint","svelte"}
 	},
 	prefer_local = true, -- Prefer locally installed servers over nix-shell
-	-- Default config passed to all servers to specify on_attach callback and other options.
 	default_config = {
 		flags = {
 			debounce_text_changes = 150,
@@ -54,26 +52,64 @@ require("lazy-lsp").setup {
 
 local cmp = require('cmp')
 local cmp_action = require('lsp-zero').cmp_action()
-
+require("luasnip.loaders.from_vscode").lazy_load({ paths = "./snippets" })
+local luasnip = require("luasnip")
 cmp.setup({
-	mapping = cmp.mapping.preset.insert({
-		['<Tab>'] = cmp_action.luasnip_supertab(),
-		['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
-		['<C-Space>'] = cmp.mapping.complete(),
-	}),
+	sources = {
+		{ name = 'nvim_lsp' },
+		{ name = 'luasnip' },
+	},
+	mapping = {
+
+		-- ... Your other mappings ...
+		['<CR>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				if luasnip.expandable() then
+					luasnip.expand()
+				else
+					cmp.confirm({
+						select = true,
+					})
+				end
+			else
+				fallback()
+			end
+		end),
+
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.locally_jumpable(1) then
+				luasnip.jump(1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.locally_jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+
+		-- ... Your other mappings ...
+	},
+	-- mapping = cmp.mapping.preset.insert({
+	-- 	['<Tab>'] = cmp_action.luasnip_supertab(),
+	-- 	['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+	-- 	['<C-Space>'] = cmp.mapping.complete(),
+	-- }),
 	snippet = {
 		expand = function(args)
 			require('luasnip').lsp_expand(args.body)
 		end,
 	},
 })
-
-
-
-
-
 local lsp_zero = require("lsp-zero")
-
 lsp_zero.on_attach(function(client, bufnr)
 	-- see :help lsp-zero-keybindings to learn the available actions
 	lsp_zero.default_keymaps({
