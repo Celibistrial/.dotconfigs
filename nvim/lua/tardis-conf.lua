@@ -1,7 +1,7 @@
 require('tardis-nvim').setup {
     keymap = {
-        ["prev"] = '<C-j>',             -- next entry in log (older)
-        ["next"] = '<C-k>',             -- previous entry in log (newer)
+        ["next"] = '<C-j>',             -- next entry in log (older)
+        ["prev"] = '<C-k>',             -- previous entry in log (newer)
         ["quit"] = 'q',                 -- quit all
         ["revision_message"] = '<C-m>', -- show revision message for current revision
         ["commit"] = '<C-g>',           -- replace contents of origin buffer with contents of tardis buffer

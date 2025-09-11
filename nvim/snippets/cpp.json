@@ -2,8 +2,13 @@
   "Competetive Programing": {
     "prefix": "cp",
     "body": [
-      "#include <bits/stdc++.h>",
+      "#include <vector>",
+      "#include <algorithm>",
+      "#include <string>",
+      "#include <iostream>",
+      "#define ll long long",
       "using namespace std;",
+
       "int main() {",
       "    return 0;",
       "}"
