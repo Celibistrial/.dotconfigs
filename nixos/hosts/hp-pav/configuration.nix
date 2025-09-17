@@ -8,18 +8,12 @@
   inputs,
   ...
 }: {
-  # nixpkgs.config.permittedInsecurePackages = [
-  #   "electron-31.7.7"
-  # ];
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./nvidia.nix
     ./nbfc.nix
     ./overlays.nix
     ./audio.nix
-    # ./hyprland.nix
-    # ./../../containers/ollama-webui.nix
   ];
   powerManagement = {
     enable = true;
@@ -81,11 +75,11 @@
     experimental-features = ["nix-command" "flakes"];
     warn-dirty = false;
   };
-  # nix.gc = {
-  #   automatic = true;
-  #   dates = "weekly";
-  #   options = "--delete-older-than 30d";
-  # };
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
   networking = {
     hostName = "hp-pav"; # Define your hostname.
     extraHosts = ''
@@ -231,11 +225,7 @@
         # wlrobs
       ];
     };
-    firefox = {
-      enable = true;
-      package = pkgs.firefox;
-      nativeMessagingHosts.packages = [pkgs.firefoxpwa];
-    };
+    
     dconf.enable = true;
     nh = {
       enable = true;
@@ -267,12 +257,9 @@
         cinnamon-common
         cinnamon-desktop
 
-        feishin
         spotify-unwrapped
-        #firefox
-        firefoxpwa
+        firefox
         p7zip
-        unzip
 
         libreoffice
         hunspell
@@ -287,19 +274,14 @@
         alejandra
         audacity
         flameshot
-        pandoc
-        gimp3
+	pinta
         haskellPackages.greenclip
-        # jupyter
-        zathura
         mpv
         brightnessctl
-        bottles
-        # gwe
 
-        thunderbird
+        # thunderbird
 
-        (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
+        # (callPackage ../../pkgs/davinci-resolve-studio-19.nix {})
         # (callPackage ../../pkgs/balena-etcher.nix {})
         # (callPackage ../../pkgs/jdownloader2.nix {})
         # lmstudio
@@ -307,18 +289,18 @@
         # (openai-whisper-cpp.override {cudaSupport = true;})
         auto-cpufreq
 
-        libinput-gestures
+        # libinput-gestures
         obsidian
 
         linux-wifi-hotspot
 
         tor-browser-bundle-bin
         # For emacs
-        shfmt
-        shellcheck
-        ((emacsPackagesFor emacs).emacsWithPackages (
-          epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars]
-        ))
+        # shfmt
+        # shellcheck
+        # ((emacsPackagesFor emacs).emacsWithPackages (
+        #   epkgs: with epkgs; [vterm tree-sitter tree-sitter-langs treesit-grammars.with-all-grammars]
+        # ))
         github-cli
 
         # ((emacsPackagesFor (emacs-gtk.override {withXwidgets = true;})).emacsWithPackages (
@@ -347,9 +329,9 @@
         xorg.xwininfo
 
         ffmpeg-full
-        carla
+        # carla
         # patchage
-        lsp-plugins
+        # lsp-plugins
         # calf
         # handbrake
         gocryptfs
@@ -359,8 +341,6 @@
 
         nicotine-plus
         qbittorrent
-        gcc
-        gnumake
         keepassxc
 
         pamixer
