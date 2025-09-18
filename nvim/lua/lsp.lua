@@ -1,10 +1,11 @@
----------------------------------------------------------------------
+---------------------------------------------------------------------lsp
 -- 🌟 Lazy-LSP Setup
 -- Handles automatic LSP server setup using mason/other backends
 ---------------------------------------------------------------------
 require("lazy-lsp").setup {
 	excluded_servers = {
 		"ccls",
+		"sourcekit",
 		"denols",
 		"docker_compose_language_service",
 		"flow",
@@ -12,7 +13,7 @@ require("lazy-lsp").setup {
 		"quick_lint_js",
 		"rnix",
 		"scry",
-		-- "tailwindcss",
+		"tailwindcss",
 		"nil_ls",
 	},
 	prefer_local = true,
@@ -34,10 +35,50 @@ require("lazy-lsp").setup {
 }
 
 ---------------------------------------------------------------------
--- 🌟 nvim-cmp Setup (Completion + Snippets)
+-- 🌟 Snippets
 ---------------------------------------------------------------------
 require("luasnip.loaders.from_vscode").lazy_load({ paths = "./snippets" })
 local luasnip = require("luasnip")
+
+---------------------------------------------------------------------
+-- 🌟 LSP Keymaps
+---------------------------------------------------------------------
+vim.api.nvim_set_keymap("n", "<CR>", "<CR><Cmd>cclose<CR>", { noremap = false, silent = true })
+vim.api.nvim_set_keymap("n", "<ESC>", "<Cmd>cclose<CR>", { noremap = false, silent = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+
+	callback = function()
+		local bufmap = function(mode, lhs, rhs)
+			vim.keymap.set(mode, lhs, rhs, { buffer = true })
+		end
+
+		bufmap("n", "K", vim.lsp.buf.hover)
+		bufmap("n", "gd", vim.lsp.buf.definition)
+		-- vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', { desc = 'LSP Definitions' })
+
+		-- vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<CR>', { desc: 'LSP References' })
+		bufmap("n", "gD", vim.lsp.buf.declaration)
+		bufmap("n", "gi", vim.lsp.buf.implementation)
+		bufmap("n", "go", vim.lsp.buf.type_definition)
+		bufmap("n", "gr", vim.lsp.buf.references)
+		bufmap("n", "gs", vim.lsp.buf.signature_help)
+		bufmap("n", "cr", vim.lsp.buf.rename)
+		-- bufmap("n", "cr", function()
+		-- 	local curr_name = vim.fn.expand("<cword>")
+		-- 	vim.ui.input({ prompt = "Rename to: ", default = curr_name }, function(new_name)
+		-- 		if new_name and #new_name > 0 and new_name ~= curr_name then
+		-- 			vim.lsp.buf.rename(new_name)
+		-- 		end
+		-- 	end)
+		-- end)
+
+		bufmap("n", "ca", vim.lsp.buf.code_action)
+		bufmap("n", "cl", vim.diagnostic.open_float)
+		bufmap("n", "[d", vim.diagnostic.goto_prev)
+		bufmap("n", "]d", vim.diagnostic.goto_next)
+	end,
+})
+
 
 ---------------------------------------------------------------------
 -- 🌟 Conform.nvim Setup
@@ -49,6 +90,8 @@ require("conform").setup({
 		rust       = { "rustfmt", lsp_format = "fallback" },
 		javascript = { "prettierd", "prettier", stop_after_first = true },
 		nix        = { "alejandra" },
+		c        = { "clang-format", lsp_format = "fallback" },
+		cpp        = { "clang-format", lsp_format = "fallback" },
 	},
 })
 

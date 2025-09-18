@@ -32,4 +32,6 @@ nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
 
+set foldmethod=syntax
+set nofoldenable
 ]])

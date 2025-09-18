@@ -17,20 +17,20 @@ require("lazy").setup({
 		"stevearc/conform.nvim",
 		opts = {},
 	},
+	{
+		"FabijanZulj/blame.nvim",
+		lazy = false,
+		config = function()
+			require('blame').setup {}
+		end,
+		opts = {
+			blame_options = { '-w' },
+		},
+	},
 	-- lazy.nvim
 	{
 		"dundalek/lazy-lsp.nvim",
 		dependencies = { "neovim/nvim-lspconfig" },
-		config = function()
-			require("lazy-lsp").setup({})
-		end,
-	},
-	{
-		"dundalek/lazy-lsp.nvim",
-		dependencies = { "neovim/nvim-lspconfig" },
-		config = function()
-			require("lazy-lsp").setup({})
-		end,
 	},
 	"nvim-tree/nvim-web-devicons",
 	{
@@ -40,8 +40,7 @@ require("lazy").setup({
 			require("alpha").setup(require("alpha.themes.startify").config)
 		end,
 	},
-	{ "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
-	{ "dundalek/lazy-lsp.nvim" },
+	{ "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
 	{
 		"fredehoey/tardis.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -123,10 +122,11 @@ require("lazy").setup({
 			-- C-k: Toggle signature help (if signature.enabled = true)
 			--
 			-- See :h blink-cmp-config-keymap for defining your own keymap
-			keymap = { preset = 'enter',
-			['<Tab>'] = { 'select_next', 'fallback'},
-			['<S-Tab>'] = { 'select_prev' , 'fallback'},
-		},
+			keymap = {
+				preset = 'enter',
+				-- ['<Tab>'] = { 'select_next', 'fallback'},
+				-- ['<S-Tab>'] = { 'select_prev' , 'fallback'},
+			},
 
 			appearance = {
 				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'

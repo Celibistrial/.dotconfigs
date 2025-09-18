@@ -1,12 +1,12 @@
 {
   "LuaSnip": { "branch": "master", "commit": "21f74f7ba8c49f95f9d7c8293b147c2901dd2d3a" },
   "alpha-nvim": { "branch": "main", "commit": "2b3cbcdd980cae1e022409289245053f62fb50f6" },
+  "blame.nvim": { "branch": "main", "commit": "b87b8c820e4cec06fbbd2f946b7b35c45906ee0c" },
   "blink.cmp": { "branch": "main", "commit": "bae4bae0eedd1fa55f34b685862e94a222d5c6f8" },
   "catppuccin": { "branch": "main", "commit": "30fa4d122d9b22ad8b2e0ab1b533c8c26c4dde86" },
   "conform.nvim": { "branch": "master", "commit": "b4aab989db276993ea5dcb78872be494ce546521" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "fd": { "branch": "master", "commit": "4344a265407e551bc9580238951f0ec350e57ad3" },
-  "friendly-snippets": { "branch": "main", "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175" },
   "lazy-lsp.nvim": { "branch": "master", "commit": "5ea87155f84629b0bd90853a0d035422d7acd3a5" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
   "lualine.nvim": { "branch": "master", "commit": "b8c23159c0161f4b89196f74ee3a6d02cdc3a955" },
