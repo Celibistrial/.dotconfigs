@@ -34,4 +34,7 @@ vnoremap <leader>P "+P
 
 set foldmethod=syntax
 set nofoldenable
+set ic
+set smartcase
+set undofile
 ]])
